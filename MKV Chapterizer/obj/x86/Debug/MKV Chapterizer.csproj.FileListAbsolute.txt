@@ -1,0 +1,16 @@
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.exe.config
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.exe.manifest
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.application
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.exe
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.pdb
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterCreator.ChaptersExist.resources
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterCreator.MKVC.resources
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterCreator.Properties.Resources.resources
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterCreator.Settings.resources
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.exe.manifest
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.application
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.exe
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.pdb
