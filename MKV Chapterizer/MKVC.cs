@@ -39,7 +39,7 @@ using MySql.Data.MySqlClient;
 using System.Threading;
 using System.Runtime.InteropServices;
 
-namespace MKVChapterCreator
+namespace MKV_Chapterizer
 {
 
     public partial class MKVC : Form

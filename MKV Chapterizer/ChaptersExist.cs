@@ -31,7 +31,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace MKVChapterCreator
+namespace MKV_Chapterizer
 {
     public partial class ChaptersExist : Form
     {

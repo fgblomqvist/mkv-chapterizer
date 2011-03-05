@@ -1,4 +1,4 @@
-﻿namespace MKVChapterCreator
+﻿namespace MKV_Chapterizer
 {
     partial class MKVC
     {
