@@ -71,19 +71,17 @@
             this.panel1.Controls.Add(this.lblChapterCount);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(488, 171);
+            this.panel1.Size = new System.Drawing.Size(366, 139);
             this.panel1.TabIndex = 0;
             // 
             // lblMin
             // 
             this.lblMin.AutoSize = true;
             this.lblMin.Enabled = false;
-            this.lblMin.Location = new System.Drawing.Point(413, 11);
-            this.lblMin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblMin.Location = new System.Drawing.Point(310, 9);
             this.lblMin.Name = "lblMin";
-            this.lblMin.Size = new System.Drawing.Size(57, 17);
+            this.lblMin.Size = new System.Drawing.Size(43, 13);
             this.lblMin.TabIndex = 27;
             this.lblMin.Text = "minutes";
             // 
@@ -91,10 +89,9 @@
             // 
             this.lblSettings.AutoSize = true;
             this.lblSettings.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblSettings.Location = new System.Drawing.Point(16, 144);
-            this.lblSettings.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblSettings.Location = new System.Drawing.Point(12, 117);
             this.lblSettings.Name = "lblSettings";
-            this.lblSettings.Size = new System.Drawing.Size(59, 17);
+            this.lblSettings.Size = new System.Drawing.Size(45, 13);
             this.lblSettings.TabIndex = 26;
             this.lblSettings.Text = "Settings";
             this.lblSettings.Click += new System.EventHandler(this.lblSettings_Click);
@@ -102,10 +99,9 @@
             // progressBar
             // 
             this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.progressBar.Location = new System.Drawing.Point(4, 176);
-            this.progressBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.progressBar.Location = new System.Drawing.Point(3, 143);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(480, 28);
+            this.progressBar.Size = new System.Drawing.Size(360, 23);
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
             // 
@@ -114,10 +110,9 @@
             this.lblTrackbarValue.AllowDrop = true;
             this.lblTrackbarValue.AutoSize = true;
             this.lblTrackbarValue.Enabled = false;
-            this.lblTrackbarValue.Location = new System.Drawing.Point(389, 11);
-            this.lblTrackbarValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTrackbarValue.Location = new System.Drawing.Point(292, 9);
             this.lblTrackbarValue.Name = "lblTrackbarValue";
-            this.lblTrackbarValue.Size = new System.Drawing.Size(14, 17);
+            this.lblTrackbarValue.Size = new System.Drawing.Size(12, 13);
             this.lblTrackbarValue.TabIndex = 20;
             this.lblTrackbarValue.Text = "x";
             // 
@@ -125,12 +120,11 @@
             // 
             this.trackBar1.AllowDrop = true;
             this.trackBar1.Enabled = false;
-            this.trackBar1.Location = new System.Drawing.Point(137, 11);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.trackBar1.Location = new System.Drawing.Point(103, 9);
             this.trackBar1.Maximum = 30;
             this.trackBar1.Minimum = 2;
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(245, 56);
+            this.trackBar1.Size = new System.Drawing.Size(184, 45);
             this.trackBar1.TabIndex = 19;
             this.trackBar1.Value = 5;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
@@ -139,10 +133,9 @@
             // 
             this.btnMerge.AllowDrop = true;
             this.btnMerge.Enabled = false;
-            this.btnMerge.Location = new System.Drawing.Point(189, 118);
-            this.btnMerge.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnMerge.Location = new System.Drawing.Point(142, 96);
             this.btnMerge.Name = "btnMerge";
-            this.btnMerge.Size = new System.Drawing.Size(100, 28);
+            this.btnMerge.Size = new System.Drawing.Size(75, 23);
             this.btnMerge.TabIndex = 18;
             this.btnMerge.Text = "Chapterize";
             this.btnMerge.UseVisualStyleBackColor = true;
@@ -153,10 +146,9 @@
             this.label3.AllowDrop = true;
             this.label3.AutoSize = true;
             this.label3.Enabled = false;
-            this.label3.Location = new System.Drawing.Point(16, 70);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(12, 57);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(139, 17);
+            this.label3.Size = new System.Drawing.Size(104, 13);
             this.label3.TabIndex = 13;
             this.label3.Text = "Number of Chapters:";
             // 
@@ -165,10 +157,9 @@
             this.label2.AllowDrop = true;
             this.label2.AutoSize = true;
             this.label2.Enabled = false;
-            this.label2.Location = new System.Drawing.Point(16, 11);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(12, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(112, 17);
+            this.label2.Size = new System.Drawing.Size(85, 13);
             this.label2.TabIndex = 12;
             this.label2.Text = "Chapter Interval:";
             // 
@@ -178,10 +169,9 @@
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label8.Location = new System.Drawing.Point(155, 150);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Location = new System.Drawing.Point(116, 122);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(173, 15);
+            this.label8.Size = new System.Drawing.Size(132, 12);
             this.label8.TabIndex = 0;
             this.label8.Text = "Copyright 2011 © Cyb3rH4Xter";
             // 
@@ -191,10 +181,9 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label9.Location = new System.Drawing.Point(439, 150);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Location = new System.Drawing.Point(329, 122);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(12, 15);
+            this.label9.Size = new System.Drawing.Size(11, 12);
             this.label9.TabIndex = 19;
             this.label9.Text = "v";
             // 
@@ -204,10 +193,9 @@
             this.cboxOverwrite.Checked = true;
             this.cboxOverwrite.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cboxOverwrite.Enabled = false;
-            this.cboxOverwrite.Location = new System.Drawing.Point(340, 123);
-            this.cboxOverwrite.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cboxOverwrite.Location = new System.Drawing.Point(255, 100);
             this.cboxOverwrite.Name = "cboxOverwrite";
-            this.cboxOverwrite.Size = new System.Drawing.Size(135, 21);
+            this.cboxOverwrite.Size = new System.Drawing.Size(104, 17);
             this.cboxOverwrite.TabIndex = 22;
             this.cboxOverwrite.Text = "Overwrite old file";
             this.cboxOverwrite.UseVisualStyleBackColor = true;
@@ -215,10 +203,9 @@
             // lblTutorial
             // 
             this.lblTutorial.AutoSize = true;
-            this.lblTutorial.Location = new System.Drawing.Point(133, 98);
-            this.lblTutorial.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTutorial.Location = new System.Drawing.Point(100, 80);
             this.lblTutorial.Name = "lblTutorial";
-            this.lblTutorial.Size = new System.Drawing.Size(227, 17);
+            this.lblTutorial.Size = new System.Drawing.Size(170, 13);
             this.lblTutorial.TabIndex = 24;
             this.lblTutorial.Text = "Start by dropping a MKV file on me";
             // 
@@ -226,10 +213,9 @@
             // 
             this.lblChapterCount.AllowDrop = true;
             this.lblChapterCount.AutoSize = true;
-            this.lblChapterCount.Location = new System.Drawing.Point(163, 70);
-            this.lblChapterCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblChapterCount.Location = new System.Drawing.Point(122, 57);
             this.lblChapterCount.Name = "lblChapterCount";
-            this.lblChapterCount.Size = new System.Drawing.Size(0, 17);
+            this.lblChapterCount.Size = new System.Drawing.Size(0, 13);
             this.lblChapterCount.TabIndex = 17;
             // 
             // backgroundWorker
@@ -265,14 +251,13 @@
             // MKVC
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(488, 171);
+            this.ClientSize = new System.Drawing.Size(366, 139);
             this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MKVC";

@@ -554,12 +554,10 @@ namespace MKV_Chapterizer
         {
 
             //Set the form to its normal size
-            //double x = Math.Floor(372 * screenMultiplier);
-            //double y = Math.Floor(165 * screenMultiplier);
 
-           // Size sizesmall = new Size((int)x, (int)y);
+            float y = 165 * screenMultiplier;
 
-            //Size = sizesmall;
+            Size = new Size((int)this.Size.Width, (int)y);
 
             btnMerge.Text = "Chapterize";
 
