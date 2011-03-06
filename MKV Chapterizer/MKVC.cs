@@ -59,6 +59,7 @@ namespace MKV_Chapterizer
         public static int duration;
         public static FileInfo theFile;
         public static int chapterCount;
+        public static float screenMultiplier = 1.0F;
 
         public MKVC()
         {
@@ -204,10 +205,10 @@ namespace MKV_Chapterizer
 
                 //Show progressbar
 
-                Size sizebig = new Size(372, 197);
-                btnMerge.Text = "Cancel";
+                float y = 197 * screenMultiplier;
 
-                Size = sizebig;
+                Size = new Size((int)this.Size.Width, (int)y);
+                btnMerge.Text = "Cancel";
 
                 //Create chapter file
 
@@ -316,7 +317,8 @@ namespace MKV_Chapterizer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            GetScreenDPI();
+            
+            screenMultiplier = GetScreenScaleMulitplier();
             trackBar1.Value = Properties.Settings.Default.defChapInterval;
 
             lblTrackbarValue.Text = trackBar1.Value.ToString();
@@ -551,12 +553,17 @@ namespace MKV_Chapterizer
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
 
-            Size sizesmall = new Size(372, 165);
+            //Set the form to its normal size
+            //double x = Math.Floor(372 * screenMultiplier);
+            //double y = Math.Floor(165 * screenMultiplier);
 
-            Size = sizesmall;
+           // Size sizesmall = new Size((int)x, (int)y);
+
+            //Size = sizesmall;
 
             btnMerge.Text = "Chapterize";
 
+            //Reset the progressbar
             progressBar.Value = 0;
 
             //Disable controls until new drop
@@ -630,7 +637,7 @@ namespace MKV_Chapterizer
 
         
 
-        int GetScreenDPI()
+        float GetScreenScaleMulitplier()
         {
             IntPtr hdcScreen = GetDC(NULL);
             int iDPI = -1; // assume failure
@@ -639,8 +646,10 @@ namespace MKV_Chapterizer
                 iDPI = GetDeviceCaps(hdcScreen, LOGPIXELSX);
                 ReleaseDC(NULL, hdcScreen);
             }
+
+            float multiplier = (float)iDPI / (float)96;
+            return multiplier;
             
-            return iDPI;
         }
 
     }

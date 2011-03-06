@@ -11,4 +11,13 @@
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <RemoteDebugEnabled>false</RemoteDebugEnabled>
+    <StartAction>Project</StartAction>
+    <RemoteDebugMachine>VMDebug@WIN-DD8COJUEV1J</RemoteDebugMachine>
+    <StartProgram>\\vmware-host\Shared Folders\MKVChapterizerDebug\MKVChapterizer.exe</StartProgram>
+  </PropertyGroup>
+  <PropertyGroup>
+    <EnableSecurityDebugging>false</EnableSecurityDebugging>
+  </PropertyGroup>
 </Project>
