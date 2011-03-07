@@ -44,10 +44,11 @@
             this.cboxOverwrite = new System.Windows.Forms.CheckBox();
             this.lblTutorial = new System.Windows.Forms.Label();
             this.lblChapterCount = new System.Windows.Forms.Label();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.bwAddChapters = new System.ComponentModel.BackgroundWorker();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.bwRemoveChapters = new System.ComponentModel.BackgroundWorker();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.contextMenu.SuspendLayout();
@@ -218,13 +219,13 @@
             this.lblChapterCount.Size = new System.Drawing.Size(0, 13);
             this.lblChapterCount.TabIndex = 17;
             // 
-            // backgroundWorker
+            // bwAddChapters
             // 
-            this.backgroundWorker.WorkerReportsProgress = true;
-            this.backgroundWorker.WorkerSupportsCancellation = true;
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            this.bwAddChapters.WorkerReportsProgress = true;
+            this.bwAddChapters.WorkerSupportsCancellation = true;
+            this.bwAddChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwAddChapters_DoWork);
+            this.bwAddChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwAddChapters_ProgressChanged);
+            this.bwAddChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwAddChapters_RunWorkerCompleted);
             // 
             // toolStripMenuItem1
             // 
@@ -247,6 +248,14 @@
             this.websiteToolStripMenuItem});
             this.contextMenu.Name = "contextMenu";
             this.contextMenu.Size = new System.Drawing.Size(172, 48);
+            // 
+            // bwRemoveChapters
+            // 
+            this.bwRemoveChapters.WorkerReportsProgress = true;
+            this.bwRemoveChapters.WorkerSupportsCancellation = true;
+            this.bwRemoveChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwRemoveChapters_DoWork);
+            this.bwRemoveChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwRemoveChapters_ProgressChanged);
+            this.bwRemoveChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwRemoveChapters_RunWorkerCompleted);
             // 
             // MKVC
             // 
@@ -284,7 +293,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.ComponentModel.BackgroundWorker bwAddChapters;
         private System.Windows.Forms.CheckBox cboxOverwrite;
         private System.Windows.Forms.Label lblTutorial;
         private WinForms.Controls.ProgressBarWithPercentage progressBar;
@@ -293,6 +302,7 @@
         private System.Windows.Forms.ToolStripMenuItem websiteToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.Label lblMin;
+        private System.ComponentModel.BackgroundWorker bwRemoveChapters;
     }
 }
 

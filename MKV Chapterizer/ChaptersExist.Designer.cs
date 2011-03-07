@@ -87,6 +87,8 @@
             this.Controls.Add(this.btnRemove);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ChaptersExist";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Chapters Detected";
             this.Load += new System.EventHandler(this.ChaptersExist_Load);
             this.ResumeLayout(false);
