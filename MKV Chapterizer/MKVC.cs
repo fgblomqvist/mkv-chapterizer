@@ -156,13 +156,13 @@ namespace MKV_Chapterizer
                         break;
 
                     case 2:
-
+                        
                         //Remove and Insert New
 
                         mode = "replace";
                         sargs = new string[] { fi.FullName, "true" };
 
-                        btnMerge.Text = "Chapterize";
+                        btnMerge.Text = "Re-Chapterize";
 
                         break;
                 }
@@ -195,9 +195,7 @@ namespace MKV_Chapterizer
             label3.Enabled = true;
 
             //Hide the tutorial message
-
             lblTutorial.Visible = false;
-
         }
 
         bool ChaptersExist(String file)
@@ -241,21 +239,22 @@ namespace MKV_Chapterizer
                 Size = new Size((int)this.Size.Width, (int)y);
                 btnMerge.Text = "Cancel";
 
-                if (mode == "add")
-                {
-
                     //Create chapter file
                     CreateChapterFile();
 
                     //Start the merging process
                     bwAddChapters.RunWorkerAsync(theFile.FullName);
 
-                }
-                else if (mode == "replace")
-                {
-                    //Start the replacing process
-                    bwRemoveChapters.RunWorkerAsync(sargs);
-                }
+            }
+            else if (btnMerge.Text == "Re-Chapterize")
+            {
+                //Show progressbar
+                float y = 197 * screenMultiplier;
+                Size = new Size((int)this.Size.Width, (int)y);
+                btnMerge.Text = "Cancel";
+
+                //Start the replacing process
+                bwRemoveChapters.RunWorkerAsync(sargs);
             }
             else if (btnMerge.Text == "Cancel")
             {
@@ -523,7 +522,10 @@ namespace MKV_Chapterizer
             MI.Open(info.FullName);
 
             String cpath = "chapters.xml";
-            String newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
+            String newFileName = null;
+
+            newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
+            
 
             ProcessStartInfo prcinfo = new ProcessStartInfo();
             Process prc = new Process();
@@ -590,6 +592,14 @@ namespace MKV_Chapterizer
             {
                 File.Delete(info.FullName);
                 File.Move(info.DirectoryName + "\\" + newFileName, info.FullName);
+
+                if (mode == "replace")
+                {
+                    //Delete the original file
+                    File.Delete(theFile.FullName);
+
+                    File.Move(info.FullName, theFile.FullName);
+                }
             }
 
         }
@@ -626,6 +636,10 @@ namespace MKV_Chapterizer
             //Enable tutorial message
 
             lblTutorial.Visible = true;
+
+            //Set its message
+
+            lblTutorial.Text = "Start by dropping a MKV file on me";
 
             //Display a messagebox with success message or error info
 
@@ -785,7 +799,7 @@ namespace MKV_Chapterizer
             else if (mode == "replace")
             {
 
-                //Don't overwrite any file, keep the -new (choosable) tag
+                //Don't overwrite any file, keep the new (choosable) tag
                 return;
 
             }
@@ -839,6 +853,10 @@ namespace MKV_Chapterizer
                 //Enable tutorial message
 
                 lblTutorial.Visible = true;
+
+                //Set its message
+
+                lblTutorial.Text = "Start by dropping a MKV file on me";
 
                 //Display a messagebox with success message or error info
 

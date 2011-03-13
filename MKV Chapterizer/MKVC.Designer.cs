@@ -33,7 +33,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblMin = new System.Windows.Forms.Label();
             this.lblSettings = new System.Windows.Forms.Label();
-            this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
             this.lblTrackbarValue = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.btnMerge = new System.Windows.Forms.Button();
@@ -49,6 +48,7 @@
             this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.bwRemoveChapters = new System.ComponentModel.BackgroundWorker();
+            this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.contextMenu.SuspendLayout();
@@ -97,15 +97,6 @@
             this.lblSettings.Text = "Settings";
             this.lblSettings.Click += new System.EventHandler(this.lblSettings_Click);
             // 
-            // progressBar
-            // 
-            this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.progressBar.Location = new System.Drawing.Point(3, 143);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(360, 23);
-            this.progressBar.TabIndex = 25;
-            this.progressBar.Text = "0%";
-            // 
             // lblTrackbarValue
             // 
             this.lblTrackbarValue.AllowDrop = true;
@@ -134,9 +125,9 @@
             // 
             this.btnMerge.AllowDrop = true;
             this.btnMerge.Enabled = false;
-            this.btnMerge.Location = new System.Drawing.Point(142, 96);
+            this.btnMerge.Location = new System.Drawing.Point(141, 96);
             this.btnMerge.Name = "btnMerge";
-            this.btnMerge.Size = new System.Drawing.Size(75, 23);
+            this.btnMerge.Size = new System.Drawing.Size(85, 23);
             this.btnMerge.TabIndex = 18;
             this.btnMerge.Text = "Chapterize";
             this.btnMerge.UseVisualStyleBackColor = true;
@@ -256,6 +247,15 @@
             this.bwRemoveChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwRemoveChapters_DoWork);
             this.bwRemoveChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwRemoveChapters_ProgressChanged);
             this.bwRemoveChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwRemoveChapters_RunWorkerCompleted);
+            // 
+            // progressBar
+            // 
+            this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.progressBar.Location = new System.Drawing.Point(3, 143);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(360, 23);
+            this.progressBar.TabIndex = 25;
+            this.progressBar.Text = "0%";
             // 
             // MKVC
             // 
