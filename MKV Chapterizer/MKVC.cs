@@ -794,8 +794,14 @@ namespace MKV_Chapterizer
 
         private void bwRemoveChapters_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-
-            progressBar.Value = e.ProgressPercentage / 2;
+            if (mode == "replace")
+            {
+                progressBar.Value = e.ProgressPercentage / 2;
+            }
+            else
+            {
+                progressBar.Value = e.ProgressPercentage;
+            }
 
         }
 
