@@ -124,7 +124,9 @@ namespace WinForms.Controls
         {
             get
             {
-                return Value.ToString() + "%";
+
+                int val = Value;
+                return val.ToString() + "%";
             }
         }
 
