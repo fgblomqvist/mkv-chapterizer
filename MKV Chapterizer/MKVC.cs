@@ -61,6 +61,7 @@ namespace MKV_Chapterizer
         public static int chapterCount;
         public static float screenMultiplier = 1.0F;
         public static string mode = "add";
+        public static string[] sargs;
 
         static AutoResetEvent autoEvent = new AutoResetEvent(false);
 
@@ -159,18 +160,9 @@ namespace MKV_Chapterizer
                         //Remove and Insert New
 
                         mode = "replace";
-                        args = new string[] { fi.FullName, "true" };
+                        sargs = new string[] { fi.FullName, "true" };
 
-                        //Show progressbar
-
-                        y = 197 * screenMultiplier;
-
-                        Size = new Size((int)this.Size.Width, (int)y);
-
-                        btnMerge.Text = "Cancel";
-
-                        //Start the merging process
-                        bwRemoveChapters.RunWorkerAsync(args);
+                        btnMerge.Text = "Chapterize";
 
                         break;
                 }
@@ -217,7 +209,7 @@ namespace MKV_Chapterizer
 
             info.Option("Inform", "XML");
             info.Option("Complete");
-            if (info.Inform().Contains("<track type=\"Menu\">"))
+            if (info.Inform().Contains("<track type=\"Menu\""))
                 {
                     return true;
                 }
@@ -245,31 +237,36 @@ namespace MKV_Chapterizer
             {
 
                 //Show progressbar
-
                 float y = 197 * screenMultiplier;
-
                 Size = new Size((int)this.Size.Width, (int)y);
                 btnMerge.Text = "Cancel";
 
-                //Create chapter file
-
-                CreateChapterFile();
-
-                //Start the merging process
-
-                bwAddChapters.RunWorkerAsync(theFile.FullName);
-
-                }
-                else if (btnMerge.Text == "Cancel")
+                if (mode == "add")
                 {
 
-                    //Cancel the ongoing merge
+                    //Create chapter file
+                    CreateChapterFile();
 
-                    btnMerge.Text = "Cancelling...";
-                    bwAddChapters.CancelAsync();
-                    bwRemoveChapters.CancelAsync();
+                    //Start the merging process
+                    bwAddChapters.RunWorkerAsync(theFile.FullName);
 
                 }
+                else if (mode == "replace")
+                {
+                    //Start the replacing process
+                    bwRemoveChapters.RunWorkerAsync(sargs);
+                }
+            }
+            else if (btnMerge.Text == "Cancel")
+            {
+
+                //Cancel the ongoing merge
+
+                btnMerge.Text = "Cancelling...";
+                bwAddChapters.CancelAsync();
+                bwRemoveChapters.CancelAsync();
+
+            }
 
             
         }
@@ -535,7 +532,7 @@ namespace MKV_Chapterizer
             String newpath = q + info.DirectoryName + "\\" + newFileName + q;
             String oldpath = q + info.FullName + q;
 
-            String args = "-o " + newpath + " --chapters --compression none" + q + cpath + q + " " + oldpath;
+            String args = "-o " + newpath + " --chapters " + q + cpath + q + " --compression -1:none " + oldpath;
 
             prcinfo.FileName = "mkvmerge.exe";
             prcinfo.Arguments = args;
@@ -722,7 +719,7 @@ namespace MKV_Chapterizer
             String newpath = q + info.DirectoryName + "\\" + newFileName + q;
             String oldpath = q + info.FullName + q;
 
-            String pArgs = "-o " + newpath + " --no-chapters --compression none" + oldpath;
+            String pArgs = "-o " + newpath + " --no-chapters --compression -1:none " + oldpath;
 
             ProcessStartInfo prcinfo = new ProcessStartInfo();
             Process prc = new Process();

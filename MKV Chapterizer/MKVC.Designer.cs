@@ -33,6 +33,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblMin = new System.Windows.Forms.Label();
             this.lblSettings = new System.Windows.Forms.Label();
+            this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
             this.lblTrackbarValue = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.btnMerge = new System.Windows.Forms.Button();
@@ -48,8 +49,6 @@
             this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.bwRemoveChapters = new System.ComponentModel.BackgroundWorker();
-            this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.contextMenu.SuspendLayout();
@@ -58,7 +57,6 @@
             // panel1
             // 
             this.panel1.AllowDrop = true;
-            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.lblMin);
             this.panel1.Controls.Add(this.lblSettings);
             this.panel1.Controls.Add(this.progressBar);
@@ -98,6 +96,15 @@
             this.lblSettings.TabIndex = 26;
             this.lblSettings.Text = "Settings";
             this.lblSettings.Click += new System.EventHandler(this.lblSettings_Click);
+            // 
+            // progressBar
+            // 
+            this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.progressBar.Location = new System.Drawing.Point(3, 143);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(360, 23);
+            this.progressBar.TabIndex = 25;
+            this.progressBar.Text = "0%";
             // 
             // lblTrackbarValue
             // 
@@ -250,24 +257,6 @@
             this.bwRemoveChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwRemoveChapters_ProgressChanged);
             this.bwRemoveChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwRemoveChapters_RunWorkerCompleted);
             // 
-            // progressBar
-            // 
-            this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.progressBar.Location = new System.Drawing.Point(3, 143);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(360, 23);
-            this.progressBar.TabIndex = 25;
-            this.progressBar.Text = "0%";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(319, 69);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 28;
-            this.label1.Text = "label1";
-            // 
             // MKVC
             // 
             this.AllowDrop = true;
@@ -314,7 +303,6 @@
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.Label lblMin;
         private System.ComponentModel.BackgroundWorker bwRemoveChapters;
-        private System.Windows.Forms.Label label1;
     }
 }
 
