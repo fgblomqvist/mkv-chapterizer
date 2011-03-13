@@ -4,7 +4,7 @@
   <description asmv2:iconFile="icon.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="MKVChapterizer" version="1.2.0.0" language="neutral" processorArchitecture="x86" />
+    <assemblyIdentity name="MKVChapterizer" version="2.0.0.0" language="neutral" processorArchitecture="x86" />
     <commandLine file="MKVChapterizer.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -56,25 +56,13 @@
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MKVChapterizer.exe" size="183296">
-      <assemblyIdentity name="MKVChapterizer" version="1.2.0.0" language="neutral" processorArchitecture="x86" />
+      <assemblyIdentity name="MKVChapterizer" version="2.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>nwVyES4SU4yyWFeFM5PXqrg33iw=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MKVChapterizer.exe" size="183296">
-      <assemblyIdentity name="MKVChapterizer" version="1.2.0.0" language="neutral" processorArchitecture="x86" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>zT+tF7iTPe3H4okVAn0vCYfluA8=</dsig:DigestValue>
+        <dsig:DigestValue>8FAEwr7R+z8Ix+PmX5Ke7PHaiA4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

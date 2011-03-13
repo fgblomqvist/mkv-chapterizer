@@ -8,14 +8,14 @@
     <framework targetVersion="4.0" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="MKVChapterizer.exe.manifest" size="5833">
+    <dependentAssembly dependencyType="install" codebase="MKVChapterizer.exe.manifest" size="5205">
       <assemblyIdentity name="MKVChapterizer.exe" version="1.0.0.1" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="x86" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>QP9oUV17oLb9r6j8i9trj9IE1yc=</dsig:DigestValue>
+        <dsig:DigestValue>Nddf+3va1oBy5s2yIyCHojBIgJg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
