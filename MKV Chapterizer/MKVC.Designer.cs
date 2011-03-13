@@ -30,9 +30,17 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MKVC));
+            this.bwAddChapters = new System.ComponentModel.BackgroundWorker();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.bwRemoveChapters = new System.ComponentModel.BackgroundWorker();
+            this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
+            this.tpSettings = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblMin = new System.Windows.Forms.Label();
             this.lblSettings = new System.Windows.Forms.Label();
+            this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
             this.lblTrackbarValue = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.btnMerge = new System.Windows.Forms.Button();
@@ -43,20 +51,83 @@
             this.cboxOverwrite = new System.Windows.Forms.CheckBox();
             this.lblTutorial = new System.Windows.Forms.Label();
             this.lblChapterCount = new System.Windows.Forms.Label();
-            this.bwAddChapters = new System.ComponentModel.BackgroundWorker();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.bwRemoveChapters = new System.ComponentModel.BackgroundWorker();
-            this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
+            this.tpFiles = new System.Windows.Forms.TabPage();
+            this.btnRemove = new System.Windows.Forms.Button();
+            this.btnAdd = new System.Windows.Forms.Button();
+            this.lboxFiles = new System.Windows.Forms.ListBox();
+            this.contextMenu.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.tpSettings.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            this.contextMenu.SuspendLayout();
+            this.tpFiles.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // bwAddChapters
+            // 
+            this.bwAddChapters.WorkerReportsProgress = true;
+            this.bwAddChapters.WorkerSupportsCancellation = true;
+            this.bwAddChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwAddChapters_DoWork);
+            this.bwAddChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwAddChapters_ProgressChanged);
+            this.bwAddChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwAddChapters_RunWorkerCompleted);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(171, 22);
+            this.toolStripMenuItem1.Text = "Check for Updates";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // websiteToolStripMenuItem
+            // 
+            this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
+            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.websiteToolStripMenuItem.Text = "Website";
+            this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
+            // 
+            // contextMenu
+            // 
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.websiteToolStripMenuItem});
+            this.contextMenu.Name = "contextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(172, 48);
+            // 
+            // bwRemoveChapters
+            // 
+            this.bwRemoveChapters.WorkerReportsProgress = true;
+            this.bwRemoveChapters.WorkerSupportsCancellation = true;
+            this.bwRemoveChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwRemoveChapters_DoWork);
+            this.bwRemoveChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwRemoveChapters_ProgressChanged);
+            this.bwRemoveChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwRemoveChapters_RunWorkerCompleted);
+            // 
+            // tabControl
+            // 
+            this.tabControl.Controls.Add(this.tpSettings);
+            this.tabControl.Controls.Add(this.tpFiles);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(0, 0);
+            this.tabControl.Multiline = true;
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(379, 168);
+            this.tabControl.TabIndex = 1;
+            // 
+            // tpSettings
+            // 
+            this.tpSettings.Controls.Add(this.panel1);
+            this.tpSettings.Location = new System.Drawing.Point(4, 23);
+            this.tpSettings.Name = "tpSettings";
+            this.tpSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.tpSettings.Size = new System.Drawing.Size(371, 141);
+            this.tpSettings.TabIndex = 0;
+            this.tpSettings.Text = "Settings";
+            this.tpSettings.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
             this.panel1.AllowDrop = true;
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
             this.panel1.Controls.Add(this.lblMin);
             this.panel1.Controls.Add(this.lblSettings);
             this.panel1.Controls.Add(this.progressBar);
@@ -71,9 +142,9 @@
             this.panel1.Controls.Add(this.lblTutorial);
             this.panel1.Controls.Add(this.lblChapterCount);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(366, 139);
+            this.panel1.Size = new System.Drawing.Size(365, 135);
             this.panel1.TabIndex = 0;
             // 
             // lblMin
@@ -97,6 +168,15 @@
             this.lblSettings.Text = "Settings";
             this.lblSettings.Click += new System.EventHandler(this.lblSettings_Click);
             // 
+            // progressBar
+            // 
+            this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.progressBar.Location = new System.Drawing.Point(3, 143);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(360, 23);
+            this.progressBar.TabIndex = 25;
+            this.progressBar.Text = "0%";
+            // 
             // lblTrackbarValue
             // 
             this.lblTrackbarValue.AllowDrop = true;
@@ -111,6 +191,7 @@
             // trackBar1
             // 
             this.trackBar1.AllowDrop = true;
+            this.trackBar1.BackColor = System.Drawing.Color.White;
             this.trackBar1.Enabled = false;
             this.trackBar1.Location = new System.Drawing.Point(103, 9);
             this.trackBar1.Maximum = 30;
@@ -210,61 +291,56 @@
             this.lblChapterCount.Size = new System.Drawing.Size(0, 13);
             this.lblChapterCount.TabIndex = 17;
             // 
-            // bwAddChapters
+            // tpFiles
             // 
-            this.bwAddChapters.WorkerReportsProgress = true;
-            this.bwAddChapters.WorkerSupportsCancellation = true;
-            this.bwAddChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwAddChapters_DoWork);
-            this.bwAddChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwAddChapters_ProgressChanged);
-            this.bwAddChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwAddChapters_RunWorkerCompleted);
+            this.tpFiles.Controls.Add(this.btnRemove);
+            this.tpFiles.Controls.Add(this.btnAdd);
+            this.tpFiles.Controls.Add(this.lboxFiles);
+            this.tpFiles.Location = new System.Drawing.Point(4, 23);
+            this.tpFiles.Name = "tpFiles";
+            this.tpFiles.Padding = new System.Windows.Forms.Padding(3);
+            this.tpFiles.Size = new System.Drawing.Size(371, 141);
+            this.tpFiles.TabIndex = 1;
+            this.tpFiles.Text = "Files";
+            this.tpFiles.UseVisualStyleBackColor = true;
             // 
-            // toolStripMenuItem1
+            // btnRemove
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(171, 22);
-            this.toolStripMenuItem1.Text = "Check for Updates";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            this.btnRemove.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRemove.Location = new System.Drawing.Point(336, 70);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(27, 23);
+            this.btnRemove.TabIndex = 2;
+            this.btnRemove.Text = "-";
+            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
-            // websiteToolStripMenuItem
+            // btnAdd
             // 
-            this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.websiteToolStripMenuItem.Text = "Website";
-            this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
+            this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdd.Location = new System.Drawing.Point(336, 41);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(27, 23);
+            this.btnAdd.TabIndex = 1;
+            this.btnAdd.Text = "+";
+            this.btnAdd.UseVisualStyleBackColor = true;
             // 
-            // contextMenu
+            // lboxFiles
             // 
-            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1,
-            this.websiteToolStripMenuItem});
-            this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(172, 48);
-            // 
-            // bwRemoveChapters
-            // 
-            this.bwRemoveChapters.WorkerReportsProgress = true;
-            this.bwRemoveChapters.WorkerSupportsCancellation = true;
-            this.bwRemoveChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwRemoveChapters_DoWork);
-            this.bwRemoveChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwRemoveChapters_ProgressChanged);
-            this.bwRemoveChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwRemoveChapters_RunWorkerCompleted);
-            // 
-            // progressBar
-            // 
-            this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.progressBar.Location = new System.Drawing.Point(3, 143);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(360, 23);
-            this.progressBar.TabIndex = 25;
-            this.progressBar.Text = "0%";
+            this.lboxFiles.FormattingEnabled = true;
+            this.lboxFiles.Location = new System.Drawing.Point(3, 6);
+            this.lboxFiles.Name = "lboxFiles";
+            this.lboxFiles.Size = new System.Drawing.Size(322, 134);
+            this.lboxFiles.TabIndex = 0;
             // 
             // MKVC
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(366, 139);
+            this.ClientSize = new System.Drawing.Size(379, 168);
             this.ContextMenuStrip = this.contextMenu;
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.tabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -274,10 +350,13 @@
             this.Text = "MKV Chapterizer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_Closing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.contextMenu.ResumeLayout(false);
+            this.tabControl.ResumeLayout(false);
+            this.tpSettings.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            this.contextMenu.ResumeLayout(false);
+            this.tpFiles.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -285,24 +364,30 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
+        private System.ComponentModel.BackgroundWorker bwAddChapters;
+        private WinForms.Controls.ProgressBarWithPercentage progressBar;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem websiteToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.ComponentModel.BackgroundWorker bwRemoveChapters;
+        private System.Windows.Forms.Label lblMin;
+        private System.Windows.Forms.Label lblSettings;
         private System.Windows.Forms.Label lblTrackbarValue;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Button btnMerge;
-        private System.Windows.Forms.Label lblChapterCount;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.ComponentModel.BackgroundWorker bwAddChapters;
         private System.Windows.Forms.CheckBox cboxOverwrite;
         private System.Windows.Forms.Label lblTutorial;
-        private WinForms.Controls.ProgressBarWithPercentage progressBar;
-        private System.Windows.Forms.Label lblSettings;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem websiteToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip contextMenu;
-        private System.Windows.Forms.Label lblMin;
-        private System.ComponentModel.BackgroundWorker bwRemoveChapters;
+        private System.Windows.Forms.Label lblChapterCount;
+        private Dotnetrix.Samples.CSharp.TabControl tabControl;
+        private System.Windows.Forms.TabPage tpSettings;
+        private System.Windows.Forms.TabPage tpFiles;
+        private System.Windows.Forms.Button btnRemove;
+        private System.Windows.Forms.Button btnAdd;
+        private System.Windows.Forms.ListBox lboxFiles;
     }
 }
 
