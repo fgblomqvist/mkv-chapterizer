@@ -154,12 +154,7 @@ namespace MKV_Chapterizer
                         mode = "remove";
                         string[] args = new string[] { fi.FullName, "false" };
 
-                        //Show progressbar
-
-                        float y = 228 * screenMultiplier;
-
-                        Size = new Size((int)this.Size.Width, (int)y);
-                        btnMerge.Text = "Cancel";
+                        PrepareForRun();
 
                         //Start the merging process
                         bwRemoveChapters.RunWorkerAsync(args);
@@ -252,10 +247,7 @@ namespace MKV_Chapterizer
             if (btnMerge.Text == "Chapterize")
             {
 
-                //Show progressbar
-                float y = 228 * screenMultiplier;
-                Size = new Size((int)this.Size.Width, (int)y);
-                btnMerge.Text = "Cancel";
+                PrepareForRun();
 
                 if (lboxFiles.Items.Count == 1)
                 {
@@ -276,10 +268,7 @@ namespace MKV_Chapterizer
             }
             else if (btnMerge.Text == "Re-Chapterize")
             {
-                //Show progressbar
-                float y = 228 * screenMultiplier;
-                Size = new Size((int)this.Size.Width, (int)y);
-                btnMerge.Text = "Cancel";
+                PrepareForRun();
 
                 //Start the replacing process
                 bwRemoveChapters.RunWorkerAsync(sargs);
@@ -648,9 +637,7 @@ namespace MKV_Chapterizer
 
             //Set the form to its normal size
 
-            float y = 196 * screenMultiplier;
-
-            Size = new Size((int)this.Size.Width, (int)y);
+            DePrepareForRun();
 
             btnMerge.Text = "Chapterize";
 
@@ -866,11 +853,7 @@ namespace MKV_Chapterizer
             if (mode == "remove")
             {
 
-                //Set the form to its normal size
-
-                float y = 196 * screenMultiplier;
-
-                Size = new Size((int)this.Size.Width, (int)y);
+                DePrepareForRun();
 
                 btnMerge.Text = "Chapterize";
 
@@ -963,6 +946,38 @@ namespace MKV_Chapterizer
                 control.DragDrop += new DragEventHandler(this.DragDropHandler);
                 control.DragEnter += new DragEventHandler(this.DragEnterHandler);
             }
+        }
+
+        private void PrepareForRun()
+        {
+            /* Enable the controls on which you set the chapterproperties and disable the ability
+             * to add new files to the queu and remove files from the queu.
+             * TODO: The ability of adding files to the queue during run and deleting files from the queu aswell */
+            trackBar1.Enabled = false;
+            cboxOverwrite.Enabled = false;
+            btnAdd.Enabled = false;
+            btnRemove.Enabled = false;
+
+            //Show progressbar
+            float y = 228 * screenMultiplier;
+            Size = new Size((int)this.Size.Width, (int)y);
+
+            btnMerge.Text = "Cancel";
+        }
+
+        private void DePrepareForRun()
+        {
+            /* Enable the controls on which you set the chapterproperties and disable the ability
+             * to add new files to the queu and remove files from the queu. */
+            trackBar1.Enabled = true;
+            cboxOverwrite.Enabled = true;
+            btnAdd.Enabled = true;
+            btnRemove.Enabled = true;
+
+            //Show progressbar
+            float y = 196 * screenMultiplier;
+            Size = new Size((int)this.Size.Width, (int)y);
+
         }
     }
 

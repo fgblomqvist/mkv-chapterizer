@@ -137,7 +137,6 @@
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="MKVChapterCreator_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
