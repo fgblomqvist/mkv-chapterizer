@@ -629,10 +629,12 @@ namespace MKV_Chapterizer
 
                     if (mode == "replace")
                     {
-                        //Delete the original file
-                        File.Delete(itm);
 
-                        File.Move(info.FullName, itm);
+                        //Delete the input file
+                        string input = itm.Replace(Properties.Settings.Default.customOutputName.Replace("%O", ""), "");
+                        File.Delete(input);
+                        File.Move(itm, input);
+ 
                     }
                 }
             }

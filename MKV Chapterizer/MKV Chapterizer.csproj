@@ -8,7 +8,7 @@
     <ProjectGuid>{C72FE30B-ED6F-4B6D-BA82-38E8913B181F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MKVChapterCreator</RootNamespace>
+    <RootNamespace>MKV_Chapterizer</RootNamespace>
     <AssemblyName>MKVChapterizer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -72,6 +72,7 @@
     </Reference>
     <Reference Include="MKVChapterizer, Version=1.2.0.0, Culture=neutral, processorArchitecture=x86">
       <ExecutableExtension>.exe</ExecutableExtension>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="MySql.Data, Version=6.3.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
