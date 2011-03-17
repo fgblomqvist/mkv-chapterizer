@@ -46,7 +46,6 @@
             this.btnMerge = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.cboxOverwrite = new System.Windows.Forms.CheckBox();
             this.lblTutorial = new System.Windows.Forms.Label();
@@ -136,7 +135,6 @@
             this.panel1.Controls.Add(this.btnMerge);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.cboxOverwrite);
             this.panel1.Controls.Add(this.lblTutorial);
@@ -236,18 +234,6 @@
             this.label2.TabIndex = 12;
             this.label2.Text = "Chapter Interval:";
             // 
-            // label8
-            // 
-            this.label8.AllowDrop = true;
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label8.Location = new System.Drawing.Point(116, 122);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(132, 12);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "Copyright 2011 © Cyb3rH4Xter";
-            // 
             // label9
             // 
             this.label9.AllowDrop = true;
@@ -259,6 +245,7 @@
             this.label9.Size = new System.Drawing.Size(11, 12);
             this.label9.TabIndex = 19;
             this.label9.Text = "v";
+            this.label9.Click += new System.EventHandler(this.label9_Click);
             // 
             // cboxOverwrite
             // 
@@ -377,7 +364,6 @@
         private System.Windows.Forms.Button btnMerge;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox cboxOverwrite;
         private System.Windows.Forms.Label lblTutorial;

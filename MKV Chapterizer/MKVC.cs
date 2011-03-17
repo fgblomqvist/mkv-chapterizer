@@ -167,6 +167,7 @@ namespace MKV_Chapterizer
                         mode = "replace";
                         sargs = new string[] { fi.FullName, "true" };
 
+                        trackBar1.Enabled = true;
                         btnMerge.Text = "Re-Chapterize";
 
                         break;
@@ -176,6 +177,7 @@ namespace MKV_Chapterizer
             else
             {
                 mode = "add";
+                trackBar1.Enabled = true;
             }
 
             decimal dd;
@@ -191,7 +193,6 @@ namespace MKV_Chapterizer
 
             //Enable the controls for the merging process
 
-            trackBar1.Enabled = true;
             label2.Enabled = true;
             lblTrackbarValue.Enabled = true;
             lblMin.Enabled = true;
@@ -619,18 +620,36 @@ namespace MKV_Chapterizer
 
                 if (cboxOverwrite.Checked)
                 {
-                    File.Delete(info.FullName);
-                    File.Move(info.DirectoryName + "\\" + newFileName, info.FullName);
+
+                    //Delete the input file
+                    string input = info.FullName.Replace(Properties.Settings.Default.customOutputName.Replace("%O", ""), "");
+                    File.Delete(input);
 
                     if (mode == "replace")
                     {
 
-                        //Delete the input file
-                        string input = itm.Replace(Properties.Settings.Default.customOutputName.Replace("%O", ""), "");
-                        File.Delete(input);
-                        File.Move(itm, input);
+                        //Delete -new file
+                        File.Delete(info.FullName);
+
+                        //Rename the -new-new file to the old files name
+                        File.Move(info.DirectoryName + "\\" + newFileName, input);
  
                     }
+                    else if (mode == "add")
+                    {
+
+                        //Rename -new file to original name
+                        File.Move(Properties.Settings.Default.customOutputName.Replace("%O", info.FullName.Replace(".mkv", "")) + ".mkv", input);
+
+                    }
+                }
+                else if (cboxOverwrite.Checked == false && mode == "replace")
+                {
+                    //Delete -new file
+                    File.Delete(info.FullName);
+
+                    //Rename the -new-new file to the old files name
+                    File.Move(info.DirectoryName + "\\" + newFileName, info.FullName);
                 }
             }
         }
@@ -984,6 +1003,11 @@ namespace MKV_Chapterizer
             float y = 196 * screenMultiplier;
             Size = new Size((int)this.Size.Width, (int)y);
 
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Copyright 2010-2011 © Fredrik Blomqvist");
         }
     }
 
