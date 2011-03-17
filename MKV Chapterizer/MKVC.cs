@@ -149,15 +149,14 @@ namespace MKV_Chapterizer
                         return;
 
                     case 1:
+
                         //Remove
 
                         mode = "remove";
-                        string[] args = new string[] { fi.FullName, "false" };
+                        sargs = new string[] { fi.FullName, "false" };
 
-                        PrepareForRun();
-
-                        //Start the merging process
-                        bwRemoveChapters.RunWorkerAsync(args);
+                        trackBar1.Enabled = false;
+                        btnMerge.Text = "De-Chapterize";
 
                         break;
 
@@ -271,6 +270,13 @@ namespace MKV_Chapterizer
                 PrepareForRun();
 
                 //Start the replacing process
+                bwRemoveChapters.RunWorkerAsync(sargs);
+            }
+            else if (btnMerge.Text == "De-Chapterize")
+            {
+                PrepareForRun();
+
+                //Start the removing process
                 bwRemoveChapters.RunWorkerAsync(sargs);
             }
             else if (btnMerge.Text == "Cancel")
