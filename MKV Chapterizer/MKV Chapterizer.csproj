@@ -70,10 +70,6 @@
     <Reference Include="CustomControls">
       <HintPath>..\..\..\..\..\Desktop\CustomControls.dll</HintPath>
     </Reference>
-    <Reference Include="MKVChapterizer, Version=1.2.0.0, Culture=neutral, processorArchitecture=x86">
-      <ExecutableExtension>.exe</ExecutableExtension>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
     <Reference Include="MySql.Data, Version=6.3.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\MySql.Data.dll</HintPath>
