@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MKVChapterizer.exe" size="184320">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MKVChapterizer.exe" size="186368">
       <assemblyIdentity name="MKVChapterizer" version="2.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>QsEpo8hV0AgrijDNMPp5kVYEBwo=</dsig:DigestValue>
+        <dsig:DigestValue>JlHacK1ufKV+8SEGJVfTBodVYVo=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -87,13 +87,13 @@
       <dsig:DigestValue>H6S5n+SfgjTWLM9r884DbhvhIJk=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="MKVChapterizer.exe.config" size="1220">
+  <file name="MKVChapterizer.exe.config" size="2199">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>ikKl9UrtsvJcZjvLSElnm+D448c=</dsig:DigestValue>
+      <dsig:DigestValue>cnKgSpup3FRHDkJelhflhHDPVy8=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

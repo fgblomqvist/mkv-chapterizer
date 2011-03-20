@@ -64,8 +64,6 @@ namespace MKV_Chapterizer
         public static string[] sargs;
         public static int tbarVal = 5;
 
-        static AutoResetEvent autoEvent = new AutoResetEvent(false);
-
         public MKVC()
         {
             InitializeComponent();
@@ -106,6 +104,12 @@ namespace MKV_Chapterizer
 
         private void DragDropHandler(object sender, System.Windows.Forms.DragEventArgs e)
         {
+
+            //temp: Clear the lboxFiles if no queue
+            if (Properties.Settings.Default.queue == false)
+            {
+                lboxFiles.Items.Clear();
+            }
 
             //Save the fileinfo in theFile
 
@@ -245,16 +249,16 @@ namespace MKV_Chapterizer
         {
             /* this is used for queue processing
              * for now just pass the list forward to the add processing */
-            List<string> newList = new List<string>();
+            List<string> addList = new List<string>();
             foreach (string s in listOfMKV)
             {
                 if (ChaptersExist(s) == false)
                 {
-                    newList.Add(s);
+                    addList.Add(s);
                 }
             }
 
-            bwAddChapters.RunWorkerAsync(newList);
+            bwAddChapters.RunWorkerAsync(addList);
             
         }
         private void button1_Click(object sender,EventArgs e)
@@ -1001,6 +1005,9 @@ namespace MKV_Chapterizer
             cboxOverwrite.Enabled = false;
             btnAdd.Enabled = false;
             btnRemove.Enabled = false;
+            lboxFiles.Enabled = false;
+            btnAdd.Enabled = false;
+            btnRemove.Enabled = false;
 
             //Show progressbar
             float y = 228 * screenMultiplier;
@@ -1017,8 +1024,12 @@ namespace MKV_Chapterizer
             cboxOverwrite.Enabled = true;
             btnAdd.Enabled = true;
             btnRemove.Enabled = true;
+            lboxFiles.Enabled = true;
+            btnAdd.Enabled = true;
+            btnRemove.Enabled = true;
+            lboxFiles.Items.Clear();
 
-            //Show progressbar
+            //Hide progressbar
             float y = 196 * screenMultiplier;
             Size = new Size((int)this.Size.Width, (int)y);
 
@@ -1027,6 +1038,30 @@ namespace MKV_Chapterizer
         private void label9_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Copyright 2010-2011 © Fredrik Blomqvist");
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            if (openMKVdlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                foreach (string file in openMKVdlg.FileNames)
+                {
+                    lboxFiles.Items.Add(file);
+                }
+            }
+        }
+
+        private void queueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.queue = queueToolStripMenuItem.Checked;
+            if (queueToolStripMenuItem.Checked)
+            {
+                tabControl.HideTabs = false;
+            }
+            else
+            {
+                tabControl.HideTabs = true;
+            }
         }
     }
 
