@@ -133,50 +133,58 @@ namespace MKV_Chapterizer
 
             MI.Open(fi.FullName);
 
-            if (ChaptersExist(fi.FullName))
+            if (s.Count() == 1)
             {
-
-                ChaptersExist f = new ChaptersExist(this);
-
-                f.ShowDialog(this);
-                
-                switch (f.Result)
+                if (ChaptersExist(fi.FullName))
                 {
 
-                    case 0:
+                    ChaptersExist f = new ChaptersExist(this);
 
-                        //Cancel
-                        return;
+                    f.ShowDialog(this);
 
-                    case 1:
+                    switch (f.Result)
+                    {
 
-                        //Remove
+                        case 0:
 
-                        mode = "remove";
-                        sargs = new string[] { fi.FullName, "false" };
+                            //Cancel
+                            return;
 
-                        trackBar1.Enabled = false;
-                        btnMerge.Text = "De-Chapterize";
+                        case 1:
 
-                        break;
+                            //Remove
 
-                    case 2:
-                        
-                        //Remove and Insert New
+                            mode = "remove";
+                            sargs = new string[] { fi.FullName, "false" };
 
-                        mode = "replace";
-                        sargs = new string[] { fi.FullName, "true" };
+                            trackBar1.Enabled = false;
+                            btnMerge.Text = "De-Chapterize";
 
-                        trackBar1.Enabled = true;
-                        btnMerge.Text = "Re-Chapterize";
+                            break;
 
-                        break;
+                        case 2:
+
+                            //Remove and Insert New
+
+                            mode = "replace";
+                            sargs = new string[] { fi.FullName, "true" };
+
+                            trackBar1.Enabled = true;
+                            btnMerge.Text = "Re-Chapterize";
+
+                            break;
+                    }
+
                 }
-
+                else
+                {
+                    mode = "add";
+                    trackBar1.Enabled = true;
+                }
             }
             else
             {
-                mode = "add";
+                mode = "queue";
                 trackBar1.Enabled = true;
             }
 
@@ -237,7 +245,16 @@ namespace MKV_Chapterizer
         {
             /* this is used for queue processing
              * for now just pass the list forward to the add processing */
-            bwAddChapters.RunWorkerAsync(listOfMKV);
+            List<string> newList = new List<string>();
+            foreach (string s in listOfMKV)
+            {
+                if (ChaptersExist(s) == false)
+                {
+                    newList.Add(s);
+                }
+            }
+
+            bwAddChapters.RunWorkerAsync(newList);
             
         }
         private void button1_Click(object sender,EventArgs e)
@@ -249,22 +266,13 @@ namespace MKV_Chapterizer
 
                 PrepareForRun();
 
-                if (lboxFiles.Items.Count == 1)
-                {
-                    List<string> mkv = new List<string>();
-                    mkv.Add(lboxFiles.Items[0].ToString());
-
-                    bwAddChapters.RunWorkerAsync(mkv);
-                }
-                else
-                {
-                    List<string> mkvList = new List<string>();
+                List<string> mkvList = new List<string>();
                     foreach (string itm in lboxFiles.Items)
                     {
                         mkvList.Add(itm);
                     }
                     ProcessMKVQueue(mkvList);
-                }
+
             }
             else if (btnMerge.Text == "Re-Chapterize")
             {
@@ -538,10 +546,12 @@ namespace MKV_Chapterizer
 
         private void bwAddChapters_DoWork(object sender, DoWorkEventArgs e)
         {
+            List<string> nmbr = (List<string>)e.Argument;
+            int qnumber = nmbr.Count();
 
             foreach (string itm in (List<string>)e.Argument)
             {
-
+  
                 //Create chapter file
                 CreateChapterFile();
 
@@ -651,6 +661,8 @@ namespace MKV_Chapterizer
                     //Rename the -new-new file to the old files name
                     File.Move(info.DirectoryName + "\\" + newFileName, info.FullName);
                 }
+
+                qnumber -= 1;
             }
         }
 
@@ -666,8 +678,11 @@ namespace MKV_Chapterizer
 
             btnMerge.Text = "Chapterize";
 
-            //Reset the progressbar
-            progressBar.Value = 0;
+            if (mode != "queue")
+            {
+                //Reset the progressbar
+                progressBar.Value = 0;
+            }
 
             //Disable controls until new drop
 
@@ -736,7 +751,11 @@ namespace MKV_Chapterizer
             {
                 progressBar.Value = e.ProgressPercentage / 2 + 50;
             }
-            
+            else if (mode == "queue")
+            {
+                int number = lboxFiles.Items.Count;
+                progressBar.Value = e.ProgressPercentage / number;
+            }
         }
 
 

@@ -40,7 +40,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblMin = new System.Windows.Forms.Label();
             this.lblSettings = new System.Windows.Forms.Label();
-            this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
             this.lblTrackbarValue = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.btnMerge = new System.Windows.Forms.Button();
@@ -54,6 +53,7 @@
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.lboxFiles = new System.Windows.Forms.ListBox();
+            this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
             this.contextMenu.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
@@ -104,7 +104,6 @@
             // 
             this.tabControl.Controls.Add(this.tpSettings);
             this.tabControl.Controls.Add(this.tpFiles);
-            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
@@ -129,7 +128,6 @@
             this.panel1.BackColor = System.Drawing.Color.Transparent;
             this.panel1.Controls.Add(this.lblMin);
             this.panel1.Controls.Add(this.lblSettings);
-            this.panel1.Controls.Add(this.progressBar);
             this.panel1.Controls.Add(this.lblTrackbarValue);
             this.panel1.Controls.Add(this.trackBar1);
             this.panel1.Controls.Add(this.btnMerge);
@@ -165,15 +163,6 @@
             this.lblSettings.TabIndex = 26;
             this.lblSettings.Text = "Settings";
             this.lblSettings.Click += new System.EventHandler(this.lblSettings_Click);
-            // 
-            // progressBar
-            // 
-            this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.progressBar.Location = new System.Drawing.Point(3, 143);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(360, 23);
-            this.progressBar.TabIndex = 25;
-            this.progressBar.Text = "0%";
             // 
             // lblTrackbarValue
             // 
@@ -320,14 +309,25 @@
             this.lboxFiles.Size = new System.Drawing.Size(322, 134);
             this.lboxFiles.TabIndex = 0;
             // 
+            // progressBar
+            // 
+            this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.progressBar.Location = new System.Drawing.Point(7, 172);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(365, 23);
+            this.progressBar.TabIndex = 25;
+            this.progressBar.Text = "0%";
+            // 
             // MKVC
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(379, 168);
             this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.tabControl);
+            this.Controls.Add(this.progressBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
