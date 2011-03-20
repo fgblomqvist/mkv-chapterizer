@@ -403,7 +403,7 @@ namespace MKV_Chapterizer
 
             lblTrackbarValue.Text = trackBar1.Value.ToString();
 
-            label9.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion))) + " Alpha";
+            label9.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion))) + " Beta";
 
         }
 
