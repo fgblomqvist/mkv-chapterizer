@@ -34,9 +34,9 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.queueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bwRemoveChapters = new System.ComponentModel.BackgroundWorker();
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
-            this.queueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -61,6 +61,7 @@
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
+            this.bwFixChapters = new System.ComponentModel.BackgroundWorker();
             this.contextMenu.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
@@ -102,6 +103,14 @@
             this.contextMenu.Name = "contextMenu";
             this.contextMenu.Size = new System.Drawing.Size(172, 92);
             // 
+            // queueToolStripMenuItem
+            // 
+            this.queueToolStripMenuItem.CheckOnClick = true;
+            this.queueToolStripMenuItem.Name = "queueToolStripMenuItem";
+            this.queueToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.queueToolStripMenuItem.Text = "Queue";
+            this.queueToolStripMenuItem.Click += new System.EventHandler(this.queueToolStripMenuItem_Click);
+            // 
             // bwRemoveChapters
             // 
             this.bwRemoveChapters.WorkerReportsProgress = true;
@@ -116,20 +125,11 @@
             this.openMKVdlg.Multiselect = true;
             this.openMKVdlg.Title = "Choose MKVs to Chapterize";
             // 
-            // queueToolStripMenuItem
-            // 
-            this.queueToolStripMenuItem.CheckOnClick = true;
-            this.queueToolStripMenuItem.Name = "queueToolStripMenuItem";
-            this.queueToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.queueToolStripMenuItem.Text = "Queue";
-            this.queueToolStripMenuItem.Click += new System.EventHandler(this.queueToolStripMenuItem_Click);
-            // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tpSettings);
             this.tabControl.Controls.Add(this.tpFiles);
             this.tabControl.Controls.Add(this.tpQueueActions);
-            this.tabControl.HideTabs = true;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
@@ -140,10 +140,10 @@
             // tpSettings
             // 
             this.tpSettings.Controls.Add(this.panel1);
-            this.tpSettings.Location = new System.Drawing.Point(0, 0);
+            this.tpSettings.Location = new System.Drawing.Point(4, 23);
             this.tpSettings.Name = "tpSettings";
             this.tpSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSettings.Size = new System.Drawing.Size(379, 168);
+            this.tpSettings.Size = new System.Drawing.Size(371, 141);
             this.tpSettings.TabIndex = 0;
             this.tpSettings.Text = "Settings";
             this.tpSettings.UseVisualStyleBackColor = true;
@@ -166,7 +166,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(373, 162);
+            this.panel1.Size = new System.Drawing.Size(365, 135);
             this.panel1.TabIndex = 0;
             // 
             // lblMin
@@ -369,6 +369,7 @@
             this.rbtnDoNothing.TabStop = true;
             this.rbtnDoNothing.Text = "Skip the MKV";
             this.rbtnDoNothing.UseVisualStyleBackColor = true;
+            this.rbtnDoNothing.CheckedChanged += new System.EventHandler(this.rbtnDoNothing_CheckedChanged);
             // 
             // rbtnRemoveThem
             // 
@@ -380,6 +381,7 @@
             this.rbtnRemoveThem.TabStop = true;
             this.rbtnRemoveThem.Text = "Remove Them";
             this.rbtnRemoveThem.UseVisualStyleBackColor = true;
+            this.rbtnRemoveThem.CheckedChanged += new System.EventHandler(this.rbtnRemoveThem_CheckedChanged);
             // 
             // rbtnReplaceThem
             // 
@@ -391,6 +393,7 @@
             this.rbtnReplaceThem.TabStop = true;
             this.rbtnReplaceThem.Text = "Replace Them";
             this.rbtnReplaceThem.UseVisualStyleBackColor = true;
+            this.rbtnReplaceThem.CheckedChanged += new System.EventHandler(this.rbtnReplaceThem_CheckedChanged);
             // 
             // progressBar
             // 
@@ -400,6 +403,12 @@
             this.progressBar.Size = new System.Drawing.Size(365, 23);
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
+            // 
+            // bwFixChapters
+            // 
+            this.bwFixChapters.WorkerReportsProgress = true;
+            this.bwFixChapters.WorkerSupportsCancellation = true;
+            this.bwFixChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwFixChapters_DoWork);
             // 
             // MKVC
             // 
@@ -467,6 +476,7 @@
         private System.Windows.Forms.RadioButton rbtnRemoveThem;
         private System.Windows.Forms.RadioButton rbtnReplaceThem;
         private System.Windows.Forms.ToolStripMenuItem queueToolStripMenuItem;
+        private System.ComponentModel.BackgroundWorker bwFixChapters;
     }
 }
 

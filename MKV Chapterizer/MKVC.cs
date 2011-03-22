@@ -63,6 +63,7 @@ namespace MKV_Chapterizer
         public static string mode = "add";
         public static string[] sargs;
         public static int tbarVal = 5;
+        public int queueAction;
 
         public MKVC()
         {
@@ -1063,6 +1064,46 @@ namespace MKV_Chapterizer
                 tabControl.HideTabs = true;
             }
         }
+
+        private void bwFixChapters_DoWork(object sender, DoWorkEventArgs e)
+        {
+            List<string> mkvlist = (List<string>)e.Argument;
+
+            //for each mkv the user has added
+            foreach (string s in mkvlist)
+            {
+                //check if it already has chapters
+                if (ChaptersExist(s))
+                {
+                    //the file already has chapters, check what the user want's to do
+                }
+            }
+        }
+
+        private void rbtnReplaceThem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbtnReplaceThem.Checked)
+            {
+                queueAction = 1;
+            }
+        }
+
+        private void rbtnRemoveThem_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbtnReplaceThem.Checked)
+            {
+                queueAction = 2;
+            }
+        }
+
+        private void rbtnDoNothing_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbtnReplaceThem.Checked)
+            {
+                queueAction = 3;
+            }
+        }
+
     }
 
 }
