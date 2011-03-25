@@ -113,6 +113,7 @@
     <Compile Include="tabControl.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="TheChapterizer.cs" />
     <EmbeddedResource Include="ChaptersExist.resx">
       <DependentUpon>ChaptersExist.cs</DependentUpon>
     </EmbeddedResource>

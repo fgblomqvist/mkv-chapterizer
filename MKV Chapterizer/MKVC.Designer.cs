@@ -62,6 +62,7 @@
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
             this.bwFixChapters = new System.ComponentModel.BackgroundWorker();
+            this.tmrProgress = new System.Windows.Forms.Timer(this.components);
             this.contextMenu.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
@@ -409,6 +410,13 @@
             this.bwFixChapters.WorkerReportsProgress = true;
             this.bwFixChapters.WorkerSupportsCancellation = true;
             this.bwFixChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwFixChapters_DoWork);
+            this.bwFixChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwFixChapters_ProgressChanged);
+            this.bwFixChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwFixChapters_RunWorkerCompleted);
+            // 
+            // tmrProgress
+            // 
+            this.tmrProgress.Enabled = true;
+            this.tmrProgress.Tick += new System.EventHandler(this.tmrProgress_Tick);
             // 
             // MKVC
             // 
@@ -477,6 +485,7 @@
         private System.Windows.Forms.RadioButton rbtnReplaceThem;
         private System.Windows.Forms.ToolStripMenuItem queueToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker bwFixChapters;
+        private System.Windows.Forms.Timer tmrProgress;
     }
 }
 
