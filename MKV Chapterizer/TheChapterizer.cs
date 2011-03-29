@@ -26,9 +26,9 @@ namespace MKV_Chapterizer
         private static int pChaptersExistAction;
         private static bool pOverwrite;
         private static int pChapterInterval;
+        private static bool pFinished = false;
 
         private static BackgroundWorker worker = new BackgroundWorker();
-
 
         //------------------------------------------------------
         //   External used Properties
@@ -86,6 +86,19 @@ namespace MKV_Chapterizer
             }
         }
 
+        public static bool Finished
+        {
+            get
+            {
+                return pFinished;
+            }
+
+            set
+            {
+                pFinished = value;
+            }
+        }
+
         /// <summary>
         /// What to do if the file has chapters.
         /// 1 = Replace; 2 = Remove; 3 = Skip File
@@ -120,7 +133,7 @@ namespace MKV_Chapterizer
 
         private static void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            List<string> mkvlist = (List<string>)e.Argument;
+            List<string> mkvlist = Files;
 
             //for each mkv the user has added
             foreach (string s in mkvlist)
@@ -189,10 +202,44 @@ namespace MKV_Chapterizer
 
         private static void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            Progress = e.ProgressPercentage;
         }
 
         private static void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            Finished = true;
+
+                //Display a messagebox with success message or error info
+
+                if (e.Cancelled == false & e.Error == null)
+                {
+
+                    MessageBox.Show("DONE");
+
+                }
+                else if (e.Cancelled == true & e.Error == null)
+                {
+
+                    //Clean-up files
+
+                    //String newFile = theFile.DirectoryName + "\\" + Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(theFile.FullName)) + ".mkv";
+
+                    try
+                    {
+                        //File.Delete(newFile);
+                    }
+                    catch (IOException ex)
+                    {
+                        MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
+                    }
+
+                }
+                else if (e.Cancelled == false & e.Error != null)
+                {
+
+                    MessageBox.Show("Error Occured:" + Environment.NewLine + e.Error.Message);
+
+                }
         }
 
         public static void Cancel()
@@ -400,7 +447,8 @@ namespace MKV_Chapterizer
                     if (str.Contains("Progress"))
                     {
 
-                        worker.ReportProgress(Convert.ToInt32(parseProgress(str)));
+                        //worker.ReportProgress(Convert.ToInt32(parseProgress(str)));
+                        Progress = Convert.ToInt32(parseProgress(str));
                     }
                     else if (str.Contains("Error"))
                     { MessageBox.Show(null, str, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
@@ -463,8 +511,7 @@ namespace MKV_Chapterizer
                 {
                     if (str.Contains("Progress"))
                     {
-
-                        worker.ReportProgress(Convert.ToInt32(parseProgress(str)));
+                        Progress = Convert.ToInt32(parseProgress(str));
                     }
                     else if (str.Contains("Error"))
                     { MessageBox.Show(null, str, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }

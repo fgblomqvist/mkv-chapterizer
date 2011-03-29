@@ -30,12 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MKVC));
-            this.bwAddChapters = new System.ComponentModel.BackgroundWorker();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.queueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bwRemoveChapters = new System.ComponentModel.BackgroundWorker();
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
@@ -73,14 +71,6 @@
             this.grpboxMKVHasChapters.SuspendLayout();
             this.SuspendLayout();
             // 
-            // bwAddChapters
-            // 
-            this.bwAddChapters.WorkerReportsProgress = true;
-            this.bwAddChapters.WorkerSupportsCancellation = true;
-            this.bwAddChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwAddChapters_DoWork);
-            this.bwAddChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwAddChapters_ProgressChanged);
-            this.bwAddChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwAddChapters_RunWorkerCompleted);
-            // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
@@ -111,14 +101,6 @@
             this.queueToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.queueToolStripMenuItem.Text = "Queue";
             this.queueToolStripMenuItem.Click += new System.EventHandler(this.queueToolStripMenuItem_Click);
-            // 
-            // bwRemoveChapters
-            // 
-            this.bwRemoveChapters.WorkerReportsProgress = true;
-            this.bwRemoveChapters.WorkerSupportsCancellation = true;
-            this.bwRemoveChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwRemoveChapters_DoWork);
-            this.bwRemoveChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwRemoveChapters_ProgressChanged);
-            this.bwRemoveChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwRemoveChapters_RunWorkerCompleted);
             // 
             // openMKVdlg
             // 
@@ -405,14 +387,6 @@
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
             // 
-            // bwFixChapters
-            // 
-            this.bwFixChapters.WorkerReportsProgress = true;
-            this.bwFixChapters.WorkerSupportsCancellation = true;
-            this.bwFixChapters.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwFixChapters_DoWork);
-            this.bwFixChapters.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.bwFixChapters_ProgressChanged);
-            this.bwFixChapters.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwFixChapters_RunWorkerCompleted);
-            // 
             // tmrProgress
             // 
             this.tmrProgress.Enabled = true;
@@ -454,12 +428,10 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.ComponentModel.BackgroundWorker bwAddChapters;
         private WinForms.Controls.ProgressBarWithPercentage progressBar;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem websiteToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
-        private System.ComponentModel.BackgroundWorker bwRemoveChapters;
         private System.Windows.Forms.Label lblMin;
         private System.Windows.Forms.Label lblSettings;
         private System.Windows.Forms.Label lblTrackbarValue;

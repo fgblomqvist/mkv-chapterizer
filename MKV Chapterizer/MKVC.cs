@@ -265,28 +265,55 @@ namespace MKV_Chapterizer
                         mkvList.Add(itm);
                     }
 
-                    bwFixChapters.RunWorkerAsync(mkvList);
+                    //bwFixChapters.RunWorkerAsync(mkvList);
                     TheChapterizer.Files = mkvList;
                     TheChapterizer.ChaptersExistAction = queueAction;
+                    TheChapterizer.ChapterInterval = trackBar1.Value;
                     TheChapterizer.Overwrite = cboxOverwrite.Checked;
-                    PrepareForRun();
+
+                    tmrProgress.Start();
                     TheChapterizer.Start();
-                    DePrepareForRun();
+                    //tmrProgress.Stop();
+                    //DePrepareForRun();
                
             }
             else if (btnMerge.Text == "Re-Chapterize")
             {
                 PrepareForRun();
 
-                //Start the replacing process
-                bwRemoveChapters.RunWorkerAsync(sargs);
+                List<string> mkvList = new List<string>();
+                foreach (string itm in lboxFiles.Items)
+                {
+                    mkvList.Add(itm);
+                }
+
+                TheChapterizer.Files = mkvList;
+                TheChapterizer.ChaptersExistAction = 1;
+                TheChapterizer.ChapterInterval = trackBar1.Value;
+                TheChapterizer.Overwrite = cboxOverwrite.Checked;
+
+                tmrProgress.Start();
+                TheChapterizer.Start();
             }
             else if (btnMerge.Text == "De-Chapterize")
             {
                 PrepareForRun();
 
-                //Start the removing process
-                bwRemoveChapters.RunWorkerAsync(sargs);
+                List<string> mkvList = new List<string>();
+                foreach (string itm in lboxFiles.Items)
+                {
+                    mkvList.Add(itm);
+                }
+
+                //bwFixChapters.RunWorkerAsync(mkvList);
+                TheChapterizer.Files = mkvList;
+                TheChapterizer.ChaptersExistAction = 2;
+                TheChapterizer.ChapterInterval = trackBar1.Value;
+                TheChapterizer.Overwrite = cboxOverwrite.Checked;
+
+                tmrProgress.Start();
+                TheChapterizer.Start();
+
             }
             else if (btnMerge.Text == "Cancel")
             {
@@ -294,8 +321,7 @@ namespace MKV_Chapterizer
                 //Cancel the ongoing merge
 
                 btnMerge.Text = "Cancelling...";
-                bwAddChapters.CancelAsync();
-                bwRemoveChapters.CancelAsync();
+                TheChapterizer.Cancel();
 
             }
 
@@ -317,7 +343,14 @@ namespace MKV_Chapterizer
 
             screenMultiplier = GetScreenScaleMulitplier();
             trackBar1.Value = Properties.Settings.Default.defChapInterval;
-
+            if (Properties.Settings.Default.queue)
+            {
+                tabControl.HideTabs = false;
+            }
+            else
+            {
+                tabControl.HideTabs = true;
+            }
             lblTrackbarValue.Text = trackBar1.Value.ToString();
 
             label9.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion))) + " Beta";
@@ -326,20 +359,16 @@ namespace MKV_Chapterizer
 
         private void Form1_Closing(object sender, FormClosingEventArgs e)
         {
-
-            if (bwAddChapters.IsBusy)
+            if (!TheChapterizer.Finished)
             {
-
                 btnMerge.Text = "Cancelling...";
-                bwAddChapters.CancelAsync();
+                TheChapterizer.Cancel();
 
-                while (bwAddChapters.IsBusy == true)
+                while (!TheChapterizer.Finished)
                 {
                     Application.DoEvents();
                 }
-
             }
-
         }
 
         private object GetVersion(Version version)
@@ -465,219 +494,6 @@ namespace MKV_Chapterizer
 
         }
 
-        private void bwAddChapters_DoWork(object sender, DoWorkEventArgs e)
-        {
-            List<string> nmbr = (List<string>)e.Argument;
-            int qnumber = nmbr.Count();
-
-            foreach (string itm in (List<string>)e.Argument)
-            {
- 
-
-                FileInfo info = new FileInfo(itm);
-
-                MediaInfo MI = new MediaInfo();
-
-                MI.Open(info.FullName);
-
-                String cpath = "chapters.xml";
-                String newFileName = null;
-
-                newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
-
-
-                ProcessStartInfo prcinfo = new ProcessStartInfo();
-                Process prc = new Process();
-
-                Char q = Convert.ToChar(34);
-                String newpath = q + info.DirectoryName + "\\" + newFileName + q;
-                String oldpath = q + info.FullName + q;
-
-                String args = "-o " + newpath + " --chapters " + q + cpath + q + " --compression -1:none " + oldpath;
-
-                prcinfo.FileName = "mkvmerge.exe";
-                prcinfo.Arguments = args;
-                prcinfo.RedirectStandardOutput = true;
-                prcinfo.RedirectStandardError = true;
-                prcinfo.CreateNoWindow = true;
-                prcinfo.UseShellExecute = false;
-
-                prc.StartInfo = prcinfo;
-                prc.Start();
-
-                string str;
-
-                while ((str = prc.StandardOutput.ReadLine()) != null)
-                {
-
-                    //Check for Cancellation
-
-                    if (bwAddChapters.CancellationPending == true)
-                    {
-
-                        e.Cancel = true;
-                        e.Result = info;
-                        MI.Close();
-
-                        if (!prc.WaitForExit(500))
-                        {
-                            prc.Kill();
-                            Thread.Sleep(1000);
-                        }
-
-                        bwAddChapters.Dispose();
-                        return;
-
-                    }
-                    //End Check
-
-
-                    if (str != "")
-                    {
-                        if (str.Contains("Progress"))
-                        {
-
-                            bwAddChapters.ReportProgress(Convert.ToInt32(parseProgress(str)));
-                        }
-                        else if (str.Contains("Error"))
-                        { MessageBox.Show(null, str, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-                    }
-
-                }
-
-                File.Delete(cpath);
-
-                if (cboxOverwrite.Checked)
-                {
-
-                    //Delete the input file
-                    string input = info.FullName.Replace(Properties.Settings.Default.customOutputName.Replace("%O", ""), "");
-                    File.Delete(input);
-
-                    if (mode == "replace")
-                    {
-
-                        //Delete -new file
-                        File.Delete(info.FullName);
-
-                        //Rename the -new-new file to the old files name
-                        File.Move(info.DirectoryName + "\\" + newFileName, input);
- 
-                    }
-                    else if (mode == "add")
-                    {
-
-                        //Rename -new file to original name
-                        File.Move(Properties.Settings.Default.customOutputName.Replace("%O", info.FullName.Replace(".mkv", "")) + ".mkv", input);
-
-                    }
-                }
-                else if (cboxOverwrite.Checked == false && mode == "replace")
-                {
-                    //Delete -new file
-                    File.Delete(info.FullName);
-
-                    //Rename the -new-new file to the old files name
-                    File.Move(info.DirectoryName + "\\" + newFileName, info.FullName);
-                }
-
-                qnumber -= 1;
-            }
-        }
-
-
-        private void bwAddChapters_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            //temp fix
-            FileInfo theFile = new FileInfo(lboxFiles.Items[0].ToString());
-
-            //Set the form to its normal size
-
-            DePrepareForRun();
-
-            btnMerge.Text = "Chapterize";
-
-            if (mode != "queue")
-            {
-                //Reset the progressbar
-                progressBar.Value = 0;
-            }
-
-            //Disable controls until new drop
-
-            trackBar1.Enabled = false;
-            label2.Enabled = false;
-            lblTrackbarValue.Enabled = false;
-            btnMerge.Enabled = false;
-            cboxOverwrite.Enabled = false;
-            lblMin.Enabled = false;
-            label3.Enabled = false;
-
-            //Reset chapter count
-
-            lblChapterCount.Text = "";
-
-            //Enable tutorial message
-
-            lblTutorial.Visible = true;
-
-            //Set its message
-
-            lblTutorial.Text = "Start by dropping a MKV file on me";
-
-            //Display a messagebox with success message or error info
-
-            if (e.Cancelled == false & e.Error == null)
-            {
-
-                MessageBox.Show(this, "Done!" + Environment.NewLine + "Your new mkv will be located in the same" + Environment.NewLine + "directory as the old one.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-
-            }
-            else if (e.Cancelled == true & e.Error == null)
-            {
-
-                //Clean-up files
-                File.Delete("chapters.xml");
-
-                String newFile = theFile.DirectoryName + "\\" + Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(theFile.FullName)) + ".mkv";
-
-                try
-                {
-                    File.Delete(newFile);
-                }
-                catch (IOException ex)
-                {
-                    MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
-                }
-
-            }
-            else if (e.Cancelled == false & e.Error != null)
-            {
-
-                MessageBox.Show("Error Occured:" + Environment.NewLine + e.Error.Message);
-
-            }
-
-        }
-
-        private void bwAddChapters_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (mode == "add")
-            {
-                progressBar.Value = e.ProgressPercentage;
-            }
-            else if (mode == "replace")
-            {
-                progressBar.Value = e.ProgressPercentage / 2 + 50;
-            }
-            else if (mode == "queue")
-            {
-                int number = lboxFiles.Items.Count;
-                progressBar.Value = e.ProgressPercentage / number;
-            }
-        }
-
-
         private void lblSettings_Click(object sender, EventArgs e)
         {
 
@@ -686,13 +502,6 @@ namespace MKV_Chapterizer
             f.ShowDialog(this);
 
         }
-
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        
 
         float GetScreenScaleMulitplier()
         {
@@ -707,189 +516,6 @@ namespace MKV_Chapterizer
             float multiplier = (float)iDPI / (float)96;
             return multiplier;
             
-        }
-
-        private void bwRemoveChapters_DoWork(object sender, DoWorkEventArgs e)
-        {
-
-            string[] args = e.Argument as string[];
-            FileInfo info = new FileInfo(args[0]);
-
-            String newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
-
-            Char q = Convert.ToChar(34);
-            String newpath = q + info.DirectoryName + "\\" + newFileName + q;
-            String oldpath = q + info.FullName + q;
-
-            String pArgs = "-o " + newpath + " --no-chapters --compression -1:none " + oldpath;
-
-            ProcessStartInfo prcinfo = new ProcessStartInfo();
-            Process prc = new Process();
-
-            prcinfo.FileName = "mkvmerge.exe";
-            prcinfo.Arguments = pArgs;
-            prcinfo.RedirectStandardOutput = true;
-            prcinfo.RedirectStandardError = true;
-            prcinfo.CreateNoWindow = true;
-            prcinfo.UseShellExecute = false;
-
-            prc.StartInfo = prcinfo;
-            prc.Start();
-
-            string str;
-
-            while ((str = prc.StandardOutput.ReadLine()) != null)
-            {
-
-                //Check for Cancellation
-
-                if (bwRemoveChapters.CancellationPending == true)
-                {
-
-                    e.Cancel = true;
-                    e.Result = info;
-
-                    if (!prc.WaitForExit(500))
-                    {
-                        prc.Kill();
-                        Thread.Sleep(1000);
-                    }
-
-                    bwRemoveChapters.Dispose();
-                    return;
-
-                }
-                //End Check
-
-
-                if (str != "")
-                {
-                    if (str.Contains("Progress"))
-                    {
-
-                        bwRemoveChapters.ReportProgress(Convert.ToInt32(parseProgress(str)));
-                    }
-                    else if (str.Contains("Error"))
-                    { MessageBox.Show(null, str, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-                }
-
-            }
-
-            if (mode == "remove")
-            {
-
-                if (cboxOverwrite.Checked)
-                {
-                    File.Delete(info.FullName);
-                    File.Move(info.DirectoryName + "\\" + newFileName, info.FullName);
-                }
-            }
-            else if (mode == "replace")
-            {
-
-                //Don't overwrite any file, keep the new (choosable) tag
-                return;
-
-            }
-
-        }
-
-        private void bwRemoveChapters_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (mode == "replace")
-            {
-                progressBar.Value = e.ProgressPercentage / 2;
-            }
-            else
-            {
-                progressBar.Value = e.ProgressPercentage;
-            }
-
-        }
-
-        private void bwRemoveChapters_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-
-            //temp fix
-            FileInfo theFile = new FileInfo(lboxFiles.Items[0].ToString());
-
-            if (mode == "remove")
-            {
-
-                DePrepareForRun();
-
-                btnMerge.Text = "Chapterize";
-
-                //Reset the progressbar
-                progressBar.Value = 0;
-
-                //Disable controls until new drop
-
-                trackBar1.Enabled = false;
-                label2.Enabled = false;
-                lblTrackbarValue.Enabled = false;
-                btnMerge.Enabled = false;
-                cboxOverwrite.Enabled = false;
-                lblMin.Enabled = false;
-                label3.Enabled = false;
-
-                //Reset chapter count
-
-                lblChapterCount.Text = "";
-
-                //Enable tutorial message
-
-                lblTutorial.Visible = true;
-
-                //Set its message
-
-                lblTutorial.Text = "Start by dropping a MKV file on me";
-
-                //Display a messagebox with success message or error info
-
-                if (e.Cancelled == false & e.Error == null)
-                {
-
-                    MessageBox.Show(this, "Done!" + Environment.NewLine + "Your de-chapterized mkv will be located in the same" + Environment.NewLine + "directory as the old one.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-
-                }
-                else if (e.Cancelled == true & e.Error == null)
-                {
-
-                    //Clean-up files
-
-                    String newFile = theFile.DirectoryName + "\\" + Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(theFile.FullName)) + ".mkv";
-
-                    try
-                    {
-                        File.Delete(newFile);
-                    }
-                    catch (IOException ex)
-                    {
-                        MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
-                    }
-
-                }
-                else if (e.Cancelled == false & e.Error != null)
-                {
-
-                    MessageBox.Show("Error Occured:" + Environment.NewLine + e.Error.Message);
-
-                }
-
-            }
-            else if (mode == "replace")
-            {
-
-                String newFile = theFile.DirectoryName + "\\" + Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(theFile.FullName)) + ".mkv";
-
-                //Continue with the adding of new chapters
-                List<string> mkv = new List<string>();
-                mkv.Add(newFile);
-                bwAddChapters.RunWorkerAsync(mkv);
-
-            }
-
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
@@ -913,7 +539,7 @@ namespace MKV_Chapterizer
 
         private void PrepareForRun()
         {
-            /* Enable the controls on which you set the chapterproperties and disable the ability
+            /* Disable the controls on which you set the chapterproperties and disable the ability
              * to add new files to the queu and remove files from the queu.
              * TODO: The ability of adding files to the queue during run and deleting files from the queu aswell */
             trackBar1.Enabled = false;
@@ -933,16 +559,33 @@ namespace MKV_Chapterizer
 
         private void DePrepareForRun()
         {
-            /* Enable the controls on which you set the chapterproperties and disable the ability
-             * to add new files to the queu and remove files from the queu. */
-            trackBar1.Enabled = true;
-            cboxOverwrite.Enabled = true;
+            /* Prepare for new drop*/
+
+            trackBar1.Enabled = false;
+            cboxOverwrite.Enabled = false;
             btnAdd.Enabled = true;
             btnRemove.Enabled = true;
             lboxFiles.Enabled = true;
-            btnAdd.Enabled = true;
-            btnRemove.Enabled = true;
+            label2.Enabled = false;
+            lblTrackbarValue.Enabled = false;
+            btnMerge.Enabled = false;
+            lblMin.Enabled = false;
+            label3.Enabled = false;
+
+            //Reset chapter count
+            lblChapterCount.Text = "";
+
+            //Enable tutorial message
+            lblTutorial.Visible = true;
+
+            //Set its message
+
+            lblTutorial.Text = "Start by dropping a MKV file on me";
+
             lboxFiles.Items.Clear();
+
+            btnMerge.Text = "Chapterize";
+            progressBar.Value = 0;
 
             //Hide progressbar
             float y = 196 * screenMultiplier;
@@ -979,86 +622,6 @@ namespace MKV_Chapterizer
             }
         }
 
-        private void bwFixChapters_DoWork(object sender, DoWorkEventArgs e)
-        {
-
-        }
-
-        private void bwFixChapters_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-
-                progressBar.Value = e.ProgressPercentage;
-
-        }
-
-        private void bwFixChapters_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-
-            //temp fix
-            FileInfo theFile = new FileInfo(lboxFiles.Items[0].ToString());
-
-                DePrepareForRun();
-
-                btnMerge.Text = "Chapterize";
-
-                //Reset the progressbar
-                progressBar.Value = 0;
-
-                //Disable controls until new drop
-
-                trackBar1.Enabled = false;
-                label2.Enabled = false;
-                lblTrackbarValue.Enabled = false;
-                btnMerge.Enabled = false;
-                cboxOverwrite.Enabled = false;
-                lblMin.Enabled = false;
-                label3.Enabled = false;
-
-                //Reset chapter count
-
-                lblChapterCount.Text = "";
-
-                //Enable tutorial message
-
-                lblTutorial.Visible = true;
-
-                //Set its message
-
-                lblTutorial.Text = "Start by dropping a MKV file on me";
-
-                //Display a messagebox with success message or error info
-
-                if (e.Cancelled == false & e.Error == null)
-                {
-
-                    MessageBox.Show(this, "Done!" + Environment.NewLine + "Your queue has now been processed.", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-
-                }
-                else if (e.Cancelled == true & e.Error == null)
-                {
-
-                    //Clean-up files
-
-                    String newFile = theFile.DirectoryName + "\\" + Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(theFile.FullName)) + ".mkv";
-
-                    try
-                    {
-                        File.Delete(newFile);
-                    }
-                    catch (IOException ex)
-                    {
-                        MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
-                    }
-
-                }
-                else if (e.Cancelled == false & e.Error != null)
-                {
-
-                    MessageBox.Show("Error Occured:" + Environment.NewLine + e.Error.Message);
-
-                }
-        }
-
         private void rbtnReplaceThem_CheckedChanged(object sender, EventArgs e)
         {
             if (rbtnReplaceThem.Checked)
@@ -1085,10 +648,17 @@ namespace MKV_Chapterizer
 
         private void tmrProgress_Tick(object sender, EventArgs e)
         {
-
+            if (!TheChapterizer.Finished)
+            {
+                progressBar.Value = TheChapterizer.Progress;
+            }
+            else
+            {
+                DePrepareForRun();
+                tmrProgress.Stop();
+            }
         }
 
     }
 
 }
-
