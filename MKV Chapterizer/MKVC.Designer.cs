@@ -35,6 +35,8 @@
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.queueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
+            this.bwFixChapters = new System.ComponentModel.BackgroundWorker();
+            this.tmrProgress = new System.Windows.Forms.Timer(this.components);
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -59,8 +61,6 @@
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
-            this.bwFixChapters = new System.ComponentModel.BackgroundWorker();
-            this.tmrProgress = new System.Windows.Forms.Timer(this.components);
             this.contextMenu.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
@@ -92,7 +92,7 @@
             this.websiteToolStripMenuItem,
             this.queueToolStripMenuItem});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(172, 92);
+            this.contextMenu.Size = new System.Drawing.Size(172, 70);
             // 
             // queueToolStripMenuItem
             // 
@@ -107,6 +107,10 @@
             this.openMKVdlg.Filter = "MKV Video Files|*.mkv";
             this.openMKVdlg.Multiselect = true;
             this.openMKVdlg.Title = "Choose MKVs to Chapterize";
+            // 
+            // tmrProgress
+            // 
+            this.tmrProgress.Tick += new System.EventHandler(this.tmrProgress_Tick);
             // 
             // tabControl
             // 
@@ -349,7 +353,6 @@
             this.rbtnDoNothing.Name = "rbtnDoNothing";
             this.rbtnDoNothing.Size = new System.Drawing.Size(90, 17);
             this.rbtnDoNothing.TabIndex = 2;
-            this.rbtnDoNothing.TabStop = true;
             this.rbtnDoNothing.Text = "Skip the MKV";
             this.rbtnDoNothing.UseVisualStyleBackColor = true;
             this.rbtnDoNothing.CheckedChanged += new System.EventHandler(this.rbtnDoNothing_CheckedChanged);
@@ -361,7 +364,6 @@
             this.rbtnRemoveThem.Name = "rbtnRemoveThem";
             this.rbtnRemoveThem.Size = new System.Drawing.Size(95, 17);
             this.rbtnRemoveThem.TabIndex = 1;
-            this.rbtnRemoveThem.TabStop = true;
             this.rbtnRemoveThem.Text = "Remove Them";
             this.rbtnRemoveThem.UseVisualStyleBackColor = true;
             this.rbtnRemoveThem.CheckedChanged += new System.EventHandler(this.rbtnRemoveThem_CheckedChanged);
@@ -369,6 +371,7 @@
             // rbtnReplaceThem
             // 
             this.rbtnReplaceThem.AutoSize = true;
+            this.rbtnReplaceThem.Checked = true;
             this.rbtnReplaceThem.Location = new System.Drawing.Point(6, 28);
             this.rbtnReplaceThem.Name = "rbtnReplaceThem";
             this.rbtnReplaceThem.Size = new System.Drawing.Size(95, 17);
@@ -386,11 +389,6 @@
             this.progressBar.Size = new System.Drawing.Size(365, 23);
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
-            // 
-            // tmrProgress
-            // 
-            this.tmrProgress.Enabled = true;
-            this.tmrProgress.Tick += new System.EventHandler(this.tmrProgress_Tick);
             // 
             // MKVC
             // 

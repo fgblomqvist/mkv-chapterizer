@@ -60,20 +60,19 @@ namespace MKV_Chapterizer
         public static FileInfo[] theFiles;
         public static int chapterCount;
         public static float screenMultiplier = 1.0F;
-        public static string mode = "add";
+        public static bool pQueueMode;
         public static string[] sargs;
         public static int tbarVal = 5;
         public int queueAction;
         public int queueProgress;
+
+        Chapterizer thechapterizer = new Chapterizer();
 
         public MKVC()
         {
             InitializeComponent();
 
             AddDragHandlers(this);
-
-            TheChapterizer someForm;
-            someForm = new TheChapterizer();
 
             foreach (Control ctl in this.Controls)
             {
@@ -82,10 +81,56 @@ namespace MKV_Chapterizer
             
         }
 
+        public bool QueueMode
+        {
+            get
+            {
+                return Properties.Settings.Default.queue;
+            }
+
+            set
+            {
+                Properties.Settings.Default.queue = value;
+
+                if (value)
+                {
+                    //Empty files
+                    lboxFiles.Items.Clear();
+                    //Enable queueUI
+                    tabControl.HideTabs = false;
+                    tabControl.Size = new System.Drawing.Size(Convert.ToInt32(379 * screenMultiplier), Convert.ToInt32(168 * screenMultiplier));
+                    progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(172 * screenMultiplier));
+                    this.Show();
+                    this.Size = new System.Drawing.Size(Convert.ToInt32(385 * screenMultiplier), Convert.ToInt32(196 * screenMultiplier));
+                }
+                else
+                {
+                    //Empty files
+                    lboxFiles.Items.Clear();
+                    //Disable queueUI
+                    tabControl.HideTabs = true;
+                    tabControl.Size = new System.Drawing.Size(Convert.ToInt32(379 * screenMultiplier), Convert.ToInt32(145 * screenMultiplier));
+                    progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(149 * screenMultiplier));
+                    this.Show();
+                    this.Size = new System.Drawing.Size(Convert.ToInt32(385 * screenMultiplier), Convert.ToInt32(173 * screenMultiplier));
+                }
+            }
+        }    
+
         private void DragEnterHandler(object sender, System.Windows.Forms.DragEventArgs e)
         {
 
             string[] s = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            if (!QueueMode)
+            {
+                if (s.Count() != 1)
+                {
+                    e.Effect = DragDropEffects.None;
+                    return;
+                }
+            }
+
             FileInfo fi;
 
             foreach (string i in s)
@@ -142,7 +187,7 @@ namespace MKV_Chapterizer
 
             MI.Open(fi.FullName);
 
-            if (s.Count() == 1)
+            if (Properties.Settings.Default.queue == false)
             {
                 if (ChaptersExist(fi.FullName))
                 {
@@ -163,7 +208,6 @@ namespace MKV_Chapterizer
 
                             //Remove
 
-                            mode = "remove";
                             sargs = new string[] { fi.FullName, "false" };
 
                             trackBar1.Enabled = false;
@@ -175,7 +219,6 @@ namespace MKV_Chapterizer
 
                             //Remove and Insert New
 
-                            mode = "replace";
                             sargs = new string[] { fi.FullName, "true" };
 
                             trackBar1.Enabled = true;
@@ -187,13 +230,11 @@ namespace MKV_Chapterizer
                 }
                 else
                 {
-                    mode = "add";
                     trackBar1.Enabled = true;
                 }
             }
             else
             {
-                mode = "queue";
                 trackBar1.Enabled = true;
             }
 
@@ -238,7 +279,6 @@ namespace MKV_Chapterizer
                 {
                     return false;
                 }
-
         }
 
 
@@ -265,16 +305,10 @@ namespace MKV_Chapterizer
                         mkvList.Add(itm);
                     }
 
-                    //bwFixChapters.RunWorkerAsync(mkvList);
-                    TheChapterizer.Files = mkvList;
-                    TheChapterizer.ChaptersExistAction = queueAction;
-                    TheChapterizer.ChapterInterval = trackBar1.Value;
-                    TheChapterizer.Overwrite = cboxOverwrite.Checked;
-
-                    tmrProgress.Start();
-                    TheChapterizer.Start();
-                    //tmrProgress.Stop();
-                    //DePrepareForRun();
+                    thechapterizer.Files = mkvList;
+                    thechapterizer.ChaptersExistAction = queueAction;
+                    thechapterizer.ChapterInterval = trackBar1.Value;
+                    thechapterizer.Overwrite = cboxOverwrite.Checked;
                
             }
             else if (btnMerge.Text == "Re-Chapterize")
@@ -287,13 +321,11 @@ namespace MKV_Chapterizer
                     mkvList.Add(itm);
                 }
 
-                TheChapterizer.Files = mkvList;
-                TheChapterizer.ChaptersExistAction = 1;
-                TheChapterizer.ChapterInterval = trackBar1.Value;
-                TheChapterizer.Overwrite = cboxOverwrite.Checked;
+                thechapterizer.Files = mkvList;
+                thechapterizer.ChaptersExistAction = 1;
+                thechapterizer.ChapterInterval = trackBar1.Value;
+                thechapterizer.Overwrite = cboxOverwrite.Checked;
 
-                tmrProgress.Start();
-                TheChapterizer.Start();
             }
             else if (btnMerge.Text == "De-Chapterize")
             {
@@ -305,14 +337,10 @@ namespace MKV_Chapterizer
                     mkvList.Add(itm);
                 }
 
-                //bwFixChapters.RunWorkerAsync(mkvList);
-                TheChapterizer.Files = mkvList;
-                TheChapterizer.ChaptersExistAction = 2;
-                TheChapterizer.ChapterInterval = trackBar1.Value;
-                TheChapterizer.Overwrite = cboxOverwrite.Checked;
-
-                tmrProgress.Start();
-                TheChapterizer.Start();
+                thechapterizer.Files = mkvList;
+                thechapterizer.ChaptersExistAction = 2;
+                thechapterizer.ChapterInterval = trackBar1.Value;
+                thechapterizer.Overwrite = cboxOverwrite.Checked;
 
             }
             else if (btnMerge.Text == "Cancel")
@@ -321,13 +349,21 @@ namespace MKV_Chapterizer
                 //Cancel the ongoing merge
 
                 btnMerge.Text = "Cancelling...";
-                TheChapterizer.Cancel();
+                thechapterizer.Cancel();
+                return;
 
             }
 
+            thechapterizer.ProgressChanged += new Chapterizer.ChangingHandler(thechapterizer_ProgressChanged);
+            thechapterizer.Start();
+            //tmrProgress.Start();
+
         }
 
-
+        private void thechapterizer_ProgressChanged(object sender, ProgressArgs e)
+        {
+            progressBar.Value = e.Percentage();
+        }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
@@ -345,11 +381,11 @@ namespace MKV_Chapterizer
             trackBar1.Value = Properties.Settings.Default.defChapInterval;
             if (Properties.Settings.Default.queue)
             {
-                tabControl.HideTabs = false;
+                QueueMode = true;
             }
             else
             {
-                tabControl.HideTabs = true;
+                QueueMode = false;
             }
             lblTrackbarValue.Text = trackBar1.Value.ToString();
 
@@ -359,12 +395,12 @@ namespace MKV_Chapterizer
 
         private void Form1_Closing(object sender, FormClosingEventArgs e)
         {
-            if (!TheChapterizer.Finished)
+            if (!thechapterizer.Finished)
             {
                 btnMerge.Text = "Cancelling...";
-                TheChapterizer.Cancel();
+                thechapterizer.Cancel();
 
-                while (!TheChapterizer.Finished)
+                while (!thechapterizer.Finished)
                 {
                     Application.DoEvents();
                 }
@@ -551,7 +587,15 @@ namespace MKV_Chapterizer
             btnRemove.Enabled = false;
 
             //Show progressbar
-            float y = 228 * screenMultiplier;
+            float y;
+            if (QueueMode)
+            {
+                y = 228 * screenMultiplier;
+            }
+            else
+            {
+                y = 205 * screenMultiplier;
+            }
             Size = new Size((int)this.Size.Width, (int)y);
 
             btnMerge.Text = "Cancel";
@@ -588,9 +632,17 @@ namespace MKV_Chapterizer
             progressBar.Value = 0;
 
             //Hide progressbar
-            float y = 196 * screenMultiplier;
+            float y;
+            if (QueueMode)
+            {
+                y = 196 * screenMultiplier;
+                
+            }
+            else
+            {
+                y = 173 * screenMultiplier;
+            }
             Size = new Size((int)this.Size.Width, (int)y);
-
         }
 
         private void label9_Click(object sender, EventArgs e)
@@ -611,14 +663,14 @@ namespace MKV_Chapterizer
 
         private void queueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.queue = queueToolStripMenuItem.Checked;
+
             if (queueToolStripMenuItem.Checked)
             {
-                tabControl.HideTabs = false;
+                QueueMode = true;
             }
             else
             {
-                tabControl.HideTabs = true;
+                QueueMode = false;
             }
         }
 
@@ -632,7 +684,7 @@ namespace MKV_Chapterizer
 
         private void rbtnRemoveThem_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbtnReplaceThem.Checked)
+            if (rbtnRemoveThem.Checked)
             {
                 queueAction = 2;
             }
@@ -640,7 +692,7 @@ namespace MKV_Chapterizer
 
         private void rbtnDoNothing_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbtnReplaceThem.Checked)
+            if (rbtnDoNothing.Checked)
             {
                 queueAction = 3;
             }
@@ -648,9 +700,9 @@ namespace MKV_Chapterizer
 
         private void tmrProgress_Tick(object sender, EventArgs e)
         {
-            if (!TheChapterizer.Finished)
+            if (!thechapterizer.Finished)
             {
-                progressBar.Value = TheChapterizer.Progress;
+                progressBar.Value = thechapterizer.Progress;
             }
             else
             {
@@ -659,6 +711,10 @@ namespace MKV_Chapterizer
             }
         }
 
+        private void TheChapterizer_ProgressChanged(object sender, ProgressArgs e)
+        {
+            progressBar.Value = e.Percentage();
+        }
     }
 
 }

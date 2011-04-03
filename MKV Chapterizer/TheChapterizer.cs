@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 
 namespace MKV_Chapterizer
 {
-    public class TheChapterizer
+    public class Chapterizer
     {
         
         //Variables
@@ -26,7 +26,7 @@ namespace MKV_Chapterizer
         private static int pChaptersExistAction;
         private static bool pOverwrite;
         private static int pChapterInterval;
-        private static bool pFinished = false;
+        private static bool pFinished = true;
 
         private static BackgroundWorker worker = new BackgroundWorker();
 
@@ -34,20 +34,39 @@ namespace MKV_Chapterizer
         //   External used Properties
         //------------------------------------------------------
 
-        public static int Progress
+        // delegate declaration
+        public delegate void ChangingHandler(object sender, ProgressArgs pa);
+
+        // event declaration
+        public event ChangingHandler ProgressChanged;
+
+
+        public void SetProgress(int p)
+        {
+            pProgress = p;
+
+            ProgressArgs pa = new ProgressArgs(pProgress);
+            ProgressChanged(this, pa); 
+        }
+
+        //--------------------
+
+        public int Progress
         {
             get
             {
                 return pProgress;
             }
-
+ 
             set
             {
                 pProgress = value;
+                ProgressArgs pa = new ProgressArgs(pProgress);
+                ProgressChanged(this, pa); 
             }
         }
 
-        public static int ChapterInterval
+        public int ChapterInterval
         {
             get
             {
@@ -60,7 +79,7 @@ namespace MKV_Chapterizer
             }
         }
 
-        public static List<string> Files
+        public List<string> Files
         {
             get
             {
@@ -73,7 +92,7 @@ namespace MKV_Chapterizer
             }
         }
 
-        public static bool Overwrite
+        public bool Overwrite
         {
             get
             {
@@ -86,7 +105,7 @@ namespace MKV_Chapterizer
             }
         }
 
-        public static bool Finished
+        public bool Finished
         {
             get
             {
@@ -103,7 +122,7 @@ namespace MKV_Chapterizer
         /// What to do if the file has chapters.
         /// 1 = Replace; 2 = Remove; 3 = Skip File
         /// </summary>
-        public static int ChaptersExistAction
+        public int ChaptersExistAction
         {
             get
             {
@@ -120,18 +139,20 @@ namespace MKV_Chapterizer
         //   Accessable Functions
         //------------------------------------------------------
 
-        public static void Start()
+        public void Start()
         {
 
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
             worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            worker.WorkerSupportsCancellation = true;
 
+            Finished = false;
             worker.RunWorkerAsync();
             
         }
 
-        private static void worker_DoWork(object sender, DoWorkEventArgs e)
+        private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             List<string> mkvlist = Files;
 
@@ -182,6 +203,7 @@ namespace MKV_Chapterizer
                     if (file == "0")
                     {
                         e.Cancel = true;
+                        worker.Dispose();
                     }
                     else
                     {
@@ -200,12 +222,13 @@ namespace MKV_Chapterizer
             }
         }
 
-        private static void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             Progress = e.ProgressPercentage;
+            SetProgress(e.ProgressPercentage);
         }
 
-        private static void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Finished = true;
 
@@ -221,7 +244,6 @@ namespace MKV_Chapterizer
                 {
 
                     //Clean-up files
-
                     //String newFile = theFile.DirectoryName + "\\" + Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(theFile.FullName)) + ".mkv";
 
                     try
@@ -242,7 +264,7 @@ namespace MKV_Chapterizer
                 }
         }
 
-        public static void Cancel()
+        public void Cancel()
         {
             worker.CancelAsync();
         }
@@ -251,7 +273,7 @@ namespace MKV_Chapterizer
         //   Internal used methods
         //------------------------------------------------------
 
-        private static void CreateChapterFile(int runTime)
+        private void CreateChapterFile(int runTime)
         {
            decimal count = runTime / ChapterInterval;
 
@@ -350,7 +372,7 @@ namespace MKV_Chapterizer
 
         }
 
-        private static string parseProgress(String Text)
+        private string parseProgress(String Text)
         {
 
             String newText = Text.Replace("Progress: ", "").Replace("%", "");
@@ -359,7 +381,7 @@ namespace MKV_Chapterizer
 
         }
 
-        private static bool ChaptersExist(String file)
+        private bool ChaptersExist(String file)
         {
 
             MediaInfo info = new MediaInfo();
@@ -379,7 +401,7 @@ namespace MKV_Chapterizer
 
         }
 
-        private static string InsertChapters(string file)
+        private string InsertChapters(string file)
         {
 
             FileInfo info = new FileInfo(file);
@@ -435,7 +457,6 @@ namespace MKV_Chapterizer
                         Thread.Sleep(1000);
                     }
 
-                    worker.Dispose();
                     return "0";
 
                 }
@@ -447,7 +468,6 @@ namespace MKV_Chapterizer
                     if (str.Contains("Progress"))
                     {
 
-                        //worker.ReportProgress(Convert.ToInt32(parseProgress(str)));
                         Progress = Convert.ToInt32(parseProgress(str));
                     }
                     else if (str.Contains("Error"))
@@ -460,7 +480,7 @@ namespace MKV_Chapterizer
             return info.DirectoryName + "\\" + newFileName;
         }
 
-        private static string RemoveChapters(string file)
+        private string RemoveChapters(string file)
         {
             //Remove the chapters on the file and return the path to the new file
 
@@ -516,10 +536,24 @@ namespace MKV_Chapterizer
                     else if (str.Contains("Error"))
                     { MessageBox.Show(null, str, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
                 }
-
             }
 
             return file;
         }
     }
+
+    public class ProgressArgs : System.EventArgs
+    {
+        private int percentage;
+
+        public ProgressArgs(int m)
+        {
+            percentage = m;
+        }
+
+        public int Percentage()
+        {
+            return percentage;
+        }
+    } 
 }
