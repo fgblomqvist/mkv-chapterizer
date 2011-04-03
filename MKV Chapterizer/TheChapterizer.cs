@@ -27,6 +27,7 @@ namespace MKV_Chapterizer
         private static bool pOverwrite;
         private static int pChapterInterval;
         private static bool pFinished = true;
+        private static string pStatus;
 
         private static BackgroundWorker worker = new BackgroundWorker();
 
@@ -35,21 +36,27 @@ namespace MKV_Chapterizer
         //------------------------------------------------------
 
         // delegate declaration
-        public delegate void ChangingHandler(object sender, ProgressArgs pa);
-
+        public delegate void ChangingHandler(object sender, ProgressChangedEventArgs pa);
+        public delegate void ChangingHandler2(object sender, RunWorkerCompletedEventArgs ps);
         // event declaration
         public event ChangingHandler ProgressChanged;
+        public event ChangingHandler StatusChanged;
+        public event ChangingHandler2 Done;
 
-
-        public void SetProgress(int p)
+        public string Status
         {
-            pProgress = p;
+            get
+            {
+                return pStatus;
+            }
 
-            ProgressArgs pa = new ProgressArgs(pProgress);
-            ProgressChanged(this, pa); 
+            set
+            {
+                pStatus = value;
+                ProgressChangedEventArgs ps = new ProgressChangedEventArgs(0, pStatus);
+                StatusChanged(this, ps);
+            }
         }
-
-        //--------------------
 
         public int Progress
         {
@@ -61,8 +68,8 @@ namespace MKV_Chapterizer
             set
             {
                 pProgress = value;
-                ProgressArgs pa = new ProgressArgs(pProgress);
-                ProgressChanged(this, pa); 
+                ProgressChangedEventArgs ps = new ProgressChangedEventArgs(pProgress, null);
+                ProgressChanged(this, ps); 
             }
         }
 
@@ -115,6 +122,11 @@ namespace MKV_Chapterizer
             set
             {
                 pFinished = value;
+                if (value)
+                {
+                    RunWorkerCompletedEventArgs ps = new RunWorkerCompletedEventArgs(null, null, false);
+                    Done(this, ps);
+                }
             }
         }
 
@@ -143,7 +155,6 @@ namespace MKV_Chapterizer
         {
 
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
             worker.WorkerSupportsCancellation = true;
 
@@ -155,6 +166,9 @@ namespace MKV_Chapterizer
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             List<string> mkvlist = Files;
+            int doneMovies = 0;
+
+            Status = doneMovies.ToString() + "/" + Files.Count.ToString();
 
             //for each mkv the user has added
             foreach (string s in mkvlist)
@@ -219,13 +233,10 @@ namespace MKV_Chapterizer
                         }
                     }
                 }
-            }
-        }
 
-        private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            Progress = e.ProgressPercentage;
-            SetProgress(e.ProgressPercentage);
+                doneMovies += 1;
+                Status = doneMovies.ToString() + "/" + Files.Count.ToString();
+            }
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

@@ -36,10 +36,10 @@
             this.queueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
             this.bwFixChapters = new System.ComponentModel.BackgroundWorker();
-            this.tmrProgress = new System.Windows.Forms.Timer(this.components);
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblStatus = new System.Windows.Forms.Label();
             this.lblMin = new System.Windows.Forms.Label();
             this.lblSettings = new System.Windows.Forms.Label();
             this.lblTrackbarValue = new System.Windows.Forms.Label();
@@ -108,10 +108,6 @@
             this.openMKVdlg.Multiselect = true;
             this.openMKVdlg.Title = "Choose MKVs to Chapterize";
             // 
-            // tmrProgress
-            // 
-            this.tmrProgress.Tick += new System.EventHandler(this.tmrProgress_Tick);
-            // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tpSettings);
@@ -139,6 +135,7 @@
             // 
             this.panel1.AllowDrop = true;
             this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.lblStatus);
             this.panel1.Controls.Add(this.lblMin);
             this.panel1.Controls.Add(this.lblSettings);
             this.panel1.Controls.Add(this.lblTrackbarValue);
@@ -155,6 +152,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(365, 135);
             this.panel1.TabIndex = 0;
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(171, 120);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(24, 13);
+            this.lblStatus.TabIndex = 28;
+            this.lblStatus.Text = "0/0";
+            this.lblStatus.Visible = false;
             // 
             // lblMin
             // 
@@ -455,7 +462,7 @@
         private System.Windows.Forms.RadioButton rbtnReplaceThem;
         private System.Windows.Forms.ToolStripMenuItem queueToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker bwFixChapters;
-        private System.Windows.Forms.Timer tmrProgress;
+        private System.Windows.Forms.Label lblStatus;
     }
 }
 

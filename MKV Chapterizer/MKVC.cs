@@ -38,6 +38,8 @@ using System.Diagnostics;
 using MySql.Data.MySqlClient;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.Collections.ObjectModel;
+
 
 namespace MKV_Chapterizer
 {
@@ -65,6 +67,10 @@ namespace MKV_Chapterizer
         public static int tbarVal = 5;
         public int queueAction;
         public int queueProgress;
+
+        private delegate void ObjectDelegate(int percentage);
+        private delegate void ObjectDelegate2(string status);
+        private delegate void ObjectDelegate3();
 
         Chapterizer thechapterizer = new Chapterizer();
 
@@ -281,16 +287,6 @@ namespace MKV_Chapterizer
                 }
         }
 
-
-        private object parseProgress(String Text)
-        {
-
-            String newText = Text.Replace("Progress: ", "").Replace("%", "");
-
-            return newText as string;
-
-        }
-
         private void button1_Click(object sender,EventArgs e)
         {
 
@@ -320,7 +316,7 @@ namespace MKV_Chapterizer
                 {
                     mkvList.Add(itm);
                 }
-
+                
                 thechapterizer.Files = mkvList;
                 thechapterizer.ChaptersExistAction = 1;
                 thechapterizer.ChapterInterval = trackBar1.Value;
@@ -355,14 +351,62 @@ namespace MKV_Chapterizer
             }
 
             thechapterizer.ProgressChanged += new Chapterizer.ChangingHandler(thechapterizer_ProgressChanged);
+            thechapterizer.StatusChanged += new Chapterizer.ChangingHandler(thechapterizer_StatusChanged);
+            thechapterizer.Done +=new Chapterizer.ChangingHandler2(thechapterizer_Done);
             thechapterizer.Start();
             //tmrProgress.Start();
 
         }
 
-        private void thechapterizer_ProgressChanged(object sender, ProgressArgs e)
+        private void thechapterizer_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar.Value = e.Percentage();
+
+                UpdateProgressbar(e.ProgressPercentage);
+        }
+
+        private void UpdateProgressbar(int percentage)
+        {
+            if (InvokeRequired)
+            {
+                ObjectDelegate method = new ObjectDelegate(UpdateProgressbar);
+                Invoke(method, percentage);
+                return;
+            }
+
+            progressBar.Value = percentage;
+        }
+
+        private void thechapterizer_StatusChanged(object sender, ProgressChangedEventArgs e)
+        {
+            UpdateStatusLabel((string)e.UserState);
+        }
+
+        private void UpdateStatusLabel(string status)
+        {
+            if (InvokeRequired)
+            {
+                ObjectDelegate2 method = new ObjectDelegate2(UpdateStatusLabel);
+                Invoke(method, status);
+                return;
+            }
+            lblStatus.Text = status;
+        }
+
+        private void thechapterizer_Done(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Restore();
+        }
+
+        private void Restore()
+        {
+            if (InvokeRequired)
+            {
+                ObjectDelegate3 method = new ObjectDelegate3(Restore);
+                Invoke(method);
+                return;
+            }
+
+            DePrepareForRun();
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -389,7 +433,7 @@ namespace MKV_Chapterizer
             }
             lblTrackbarValue.Text = trackBar1.Value.ToString();
 
-            label9.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion))) + " Beta";
+            label9.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion))) + " Beta 2";
 
         }
 
@@ -591,6 +635,7 @@ namespace MKV_Chapterizer
             if (QueueMode)
             {
                 y = 228 * screenMultiplier;
+                lblStatus.Visible = true;
             }
             else
             {
@@ -636,6 +681,7 @@ namespace MKV_Chapterizer
             if (QueueMode)
             {
                 y = 196 * screenMultiplier;
+                lblStatus.Visible = false;
                 
             }
             else
@@ -696,24 +742,6 @@ namespace MKV_Chapterizer
             {
                 queueAction = 3;
             }
-        }
-
-        private void tmrProgress_Tick(object sender, EventArgs e)
-        {
-            if (!thechapterizer.Finished)
-            {
-                progressBar.Value = thechapterizer.Progress;
-            }
-            else
-            {
-                DePrepareForRun();
-                tmrProgress.Stop();
-            }
-        }
-
-        private void TheChapterizer_ProgressChanged(object sender, ProgressArgs e)
-        {
-            progressBar.Value = e.Percentage();
         }
     }
 
