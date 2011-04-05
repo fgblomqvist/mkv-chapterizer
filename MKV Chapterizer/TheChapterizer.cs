@@ -146,6 +146,17 @@ namespace MKV_Chapterizer
                 pChaptersExistAction = value;
             }
         }
+        
+        //------------------------------------------------------
+        //   Constructor
+        //------------------------------------------------------
+
+        public Chapterizer()
+        {
+            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
+            worker.WorkerSupportsCancellation = true;
+        }
 
         //------------------------------------------------------
         //   Accessable Functions
@@ -153,14 +164,8 @@ namespace MKV_Chapterizer
 
         public void Start()
         {
-
-            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-            worker.WorkerSupportsCancellation = true;
-
             Finished = false;
             worker.RunWorkerAsync();
-            
         }
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
@@ -237,6 +242,7 @@ namespace MKV_Chapterizer
                 doneMovies += 1;
                 Status = doneMovies.ToString() + "/" + Files.Count.ToString();
             }
+            Files = null;
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

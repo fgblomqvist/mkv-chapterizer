@@ -354,7 +354,6 @@ namespace MKV_Chapterizer
             thechapterizer.StatusChanged += new Chapterizer.ChangingHandler(thechapterizer_StatusChanged);
             thechapterizer.Done +=new Chapterizer.ChangingHandler2(thechapterizer_Done);
             thechapterizer.Start();
-            //tmrProgress.Start();
 
         }
 
