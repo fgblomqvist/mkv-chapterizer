@@ -517,62 +517,6 @@ namespace MKV_Chapterizer
 
         }
 
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-
-            String connString = "Database=dev;Data Source=minecraft.homeserver.com;User Id=xbmc;Password=xbmc;";
-            MySqlConnection con = new MySqlConnection();
-
-            con.ConnectionString = connString;
-
-        try
-        {
-            con.Open();
-        }
-        catch (MySqlException)
-            {
-
-            MessageBox.Show(this ,"Failed to check for updates:" + Environment.NewLine + "Unable to connect to updateserver!","Connection Failed", MessageBoxButtons.OK,MessageBoxIcon.Error );
-            return;
-            }
-        catch (Exception ex)
-        {
-
-            MessageBox.Show(this,"Failed to check for updates:" + Environment.NewLine + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error );
-            return;
-
-        }
-
-        String newVersion;
-        String query = "SELECT * FROM versions WHERE name = 'mkvc'";
-        MySqlCommand cmd = new MySqlCommand(query, con);
-        MySqlDataReader reader;
-
-        reader = cmd.ExecuteReader();
-
-        while (reader.Read())
-        {
-
-            newVersion = reader.GetString(1);
-
-            if (Version.Parse(reader.GetString(1)) > System.Reflection.Assembly.GetExecutingAssembly().GetName().Version)
-            {
-
-                MessageBox.Show("There's a new version available at http://cyb3rh4xter.wordpress.com/mkvcc!", "Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            }
-            else
-            {
-
-                MessageBox.Show(this,"There is no new version available at the moment.","Update Check", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            }
-
-        }
-        con.Close();
-
-        }
-
         private void lblSettings_Click(object sender, EventArgs e)
         {
 
