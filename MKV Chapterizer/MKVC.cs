@@ -350,16 +350,15 @@ namespace MKV_Chapterizer
 
             }
 
-            thechapterizer.ProgressChanged += new Chapterizer.ChangingHandler(thechapterizer_ProgressChanged);
-            thechapterizer.StatusChanged += new Chapterizer.ChangingHandler(thechapterizer_StatusChanged);
-            thechapterizer.Done +=new Chapterizer.ChangingHandler2(thechapterizer_Done);
+            thechapterizer.ProgressChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_ProgressChanged);
+            thechapterizer.StatusChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_StatusChanged);
+            thechapterizer.Finished +=new Chapterizer.FinishedEventHandler(thechapterizer_Finished);
             thechapterizer.Start();
 
         }
 
         private void thechapterizer_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-
                 UpdateProgressbar(e.ProgressPercentage);
         }
 
@@ -391,9 +390,10 @@ namespace MKV_Chapterizer
             lblStatus.Text = status;
         }
 
-        private void thechapterizer_Done(object sender, RunWorkerCompletedEventArgs e)
+        private void thechapterizer_Finished(object sender, RunWorkerCompletedEventArgs e)
         {
-            Restore();
+                Restore();
+                MessageBox.Show("DONE");
         }
 
         private void Restore()
@@ -438,12 +438,12 @@ namespace MKV_Chapterizer
 
         private void Form1_Closing(object sender, FormClosingEventArgs e)
         {
-            if (!thechapterizer.Finished)
+            if (thechapterizer.IsBusy)
             {
                 btnMerge.Text = "Cancelling...";
                 thechapterizer.Cancel();
 
-                while (!thechapterizer.Finished)
+                while (!thechapterizer.IsBusy)
                 {
                     Application.DoEvents();
                 }

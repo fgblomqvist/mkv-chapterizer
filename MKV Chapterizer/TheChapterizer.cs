@@ -26,8 +26,9 @@ namespace MKV_Chapterizer
         private static int pChaptersExistAction;
         private static bool pOverwrite;
         private static int pChapterInterval;
-        private static bool pFinished = true;
+        private static bool pIsBusy = false;
         private static string pStatus;
+        private static string pError;
 
         private static BackgroundWorker worker = new BackgroundWorker();
 
@@ -36,12 +37,12 @@ namespace MKV_Chapterizer
         //------------------------------------------------------
 
         // delegate declaration
-        public delegate void ChangingHandler(object sender, ProgressChangedEventArgs pa);
-        public delegate void ChangingHandler2(object sender, RunWorkerCompletedEventArgs ps);
+        public delegate void ProgressChangedEventHandler(object sender, ProgressChangedEventArgs pa);
+        public delegate void FinishedEventHandler(object sender, RunWorkerCompletedEventArgs ps);
         // event declaration
-        public event ChangingHandler ProgressChanged;
-        public event ChangingHandler StatusChanged;
-        public event ChangingHandler2 Done;
+        public event ProgressChangedEventHandler ProgressChanged;
+        public event ProgressChangedEventHandler StatusChanged;
+        public event FinishedEventHandler Finished;
 
         public string Status
         {
@@ -112,21 +113,16 @@ namespace MKV_Chapterizer
             }
         }
 
-        public bool Finished
+        public bool IsBusy
         {
             get
             {
-                return pFinished;
+                return pIsBusy;
             }
 
             set
             {
-                pFinished = value;
-                if (value)
-                {
-                    RunWorkerCompletedEventArgs ps = new RunWorkerCompletedEventArgs(null, null, false);
-                    Done(this, ps);
-                }
+                pIsBusy = value;
             }
         }
 
@@ -164,7 +160,7 @@ namespace MKV_Chapterizer
 
         public void Start()
         {
-            Finished = false;
+            IsBusy = true;
             worker.RunWorkerAsync();
         }
 
@@ -188,25 +184,29 @@ namespace MKV_Chapterizer
                     {
                         case 1:
                             //Replace Them
-                            InsertChapters(RemoveChapters(s));
+                            InsertChapters((string)RemoveChapters(s));
                             break;
                         case 2:
                             //Remove Them
-                            string file = RemoveChapters(s);
-                            if (file == "0")
+                            object file = RemoveChapters(s);
+
+                            if (file is string)
                             {
-                                //The task was cancelled
                                 e.Cancel = true;
                                 worker.Dispose();
+
+                                //Pass the new file to the complete event for cleaning
+                                pError = (string)file;
+                                return;
                             }
                             else
                             {
                                 //check if the user want to overwrite
                                 if (Overwrite)
                                 {
-                                    String newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(fi.FullName)) + ".mkv";
+                                    FileInfo nfile = (FileInfo)file;
                                     File.Delete(fi.FullName);
-                                    File.Move(fi.DirectoryName + "\\" + newFileName, fi.FullName);
+                                    File.Move(nfile.FullName, fi.FullName);
                                 }
                             }
                             break;
@@ -218,11 +218,15 @@ namespace MKV_Chapterizer
                 }
                 else
                 {
-                    string file = InsertChapters(s);
-                    if (file == "0")
+                    object file = InsertChapters(s);
+                    if (file is string)
                     {
                         e.Cancel = true;
                         worker.Dispose();
+
+                        //Pass the new file to the complete event for cleaning
+                        pError = (string)file;
+                        return;
                     }
                     else
                     {
@@ -233,7 +237,8 @@ namespace MKV_Chapterizer
                             File.Delete(s);
 
                             //Rename -new file to original name
-                            File.Move(file, s);
+                            FileInfo nfile = (FileInfo)file;
+                            File.Move(nfile.FullName, s);
 
                         }
                     }
@@ -242,30 +247,27 @@ namespace MKV_Chapterizer
                 doneMovies += 1;
                 Status = doneMovies.ToString() + "/" + Files.Count.ToString();
             }
-            Files = null;
         }
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Finished = true;
 
                 //Display a messagebox with success message or error info
 
                 if (e.Cancelled == false & e.Error == null)
                 {
 
-                    MessageBox.Show("DONE");
+                    //MessageBox.Show("DONE");
 
                 }
                 else if (e.Cancelled == true & e.Error == null)
                 {
 
                     //Clean-up files
-                    //String newFile = theFile.DirectoryName + "\\" + Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(theFile.FullName)) + ".mkv";
 
                     try
                     {
-                        //File.Delete(newFile);
+                        File.Delete(pError);
                     }
                     catch (IOException ex)
                     {
@@ -279,6 +281,10 @@ namespace MKV_Chapterizer
                     MessageBox.Show("Error Occured:" + Environment.NewLine + e.Error.Message);
 
                 }
+
+                IsBusy = false;
+                RunWorkerCompletedEventArgs ps = new RunWorkerCompletedEventArgs(null, null, false);
+                Finished(this, ps);
         }
 
         public void Cancel()
@@ -418,7 +424,7 @@ namespace MKV_Chapterizer
 
         }
 
-        private string InsertChapters(string file)
+        private object InsertChapters(string file)
         {
 
             FileInfo info = new FileInfo(file);
@@ -474,7 +480,8 @@ namespace MKV_Chapterizer
                         Thread.Sleep(1000);
                     }
 
-                    return "0";
+                    File.Delete(cpath);
+                    return info.DirectoryName + "\\" + newFileName;
 
                 }
                 //End Check
@@ -494,10 +501,10 @@ namespace MKV_Chapterizer
             }
 
             File.Delete(cpath);
-            return info.DirectoryName + "\\" + newFileName;
+            return new FileInfo(info.DirectoryName + "\\" + newFileName);
         }
 
-        private string RemoveChapters(string file)
+        private object RemoveChapters(string file)
         {
             //Remove the chapters on the file and return the path to the new file
 
@@ -539,7 +546,7 @@ namespace MKV_Chapterizer
                         prc.Kill();
                         Thread.Sleep(1000);
                     }
-                    return "0";
+                    return info.DirectoryName + "\\" + newFileName;
                 }
                 //End Check
 
@@ -555,22 +562,7 @@ namespace MKV_Chapterizer
                 }
             }
 
-            return file;
+            return new FileInfo(info.DirectoryName + "\\" + newFileName);
         }
     }
-
-    public class ProgressArgs : System.EventArgs
-    {
-        private int percentage;
-
-        public ProgressArgs(int m)
-        {
-            percentage = m;
-        }
-
-        public int Percentage()
-        {
-            return percentage;
-        }
-    } 
 }
