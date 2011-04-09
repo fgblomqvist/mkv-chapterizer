@@ -65,7 +65,7 @@ namespace MKV_Chapterizer
         public static bool pQueueMode;
         public static string[] sargs;
         public static int tbarVal = 5;
-        public int queueAction;
+        public int queueAction = 1;
         public int queueProgress;
 
         private delegate void ObjectDelegate(int percentage);
@@ -77,13 +77,16 @@ namespace MKV_Chapterizer
         public MKVC()
         {
             InitializeComponent();
-
             AddDragHandlers(this);
 
             foreach (Control ctl in this.Controls)
             {
                 ctl.AllowDrop = true;
-            } 
+            }
+
+            thechapterizer.ProgressChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_ProgressChanged);
+            thechapterizer.StatusChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_StatusChanged);
+            thechapterizer.Finished += new Chapterizer.FinishedEventHandler(thechapterizer_Finished);
             
         }
 
@@ -350,9 +353,6 @@ namespace MKV_Chapterizer
 
             }
 
-            thechapterizer.ProgressChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_ProgressChanged);
-            thechapterizer.StatusChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_StatusChanged);
-            thechapterizer.Finished +=new Chapterizer.FinishedEventHandler(thechapterizer_Finished);
             thechapterizer.Start();
 
         }
@@ -433,6 +433,7 @@ namespace MKV_Chapterizer
             lblTrackbarValue.Text = trackBar1.Value.ToString();
 
             label9.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion))) + " Beta 2";
+            
 
         }
 

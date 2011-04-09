@@ -174,6 +174,10 @@ namespace MKV_Chapterizer
             //for each mkv the user has added
             foreach (string s in mkvlist)
             {
+                //Update status
+                doneMovies += 1;
+                Status = doneMovies.ToString() + "/" + Files.Count.ToString();
+
                 FileInfo fi = new FileInfo(s);
 
                 //check if it already has chapters
@@ -184,11 +188,35 @@ namespace MKV_Chapterizer
                     {
                         case 1:
                             //Replace Them
-                            InsertChapters((string)RemoveChapters(s));
+                            object file;
+                            file = ReplaceChapters(s);
+
+                            if (file is string)
+                            {
+                                e.Cancel = true;
+                                worker.Dispose();
+
+                                //Pass the new file to the complete event for cleaning
+                                pError = (string)file;
+                                return;
+                            }
+                            else
+                            {   
+                                    FileInfo nfile = (FileInfo)file;
+
+                                    if (Overwrite)
+                                    {
+                                        //Delete the input file
+                                        File.Delete(s);
+                                        //Rename -new file to original name
+                                        File.Move(nfile.FullName, s);
+                                    }
+                                }
+
                             break;
                         case 2:
                             //Remove Them
-                            object file = RemoveChapters(s);
+                            file = RemoveChapters(s);
 
                             if (file is string)
                             {
@@ -243,9 +271,6 @@ namespace MKV_Chapterizer
                         }
                     }
                 }
-
-                doneMovies += 1;
-                Status = doneMovies.ToString() + "/" + Files.Count.ToString();
             }
         }
 
@@ -258,6 +283,18 @@ namespace MKV_Chapterizer
                 {
 
                     //MessageBox.Show("DONE");
+                    //Delete any file in the e.Result
+                    try
+                    {
+                        if (File.Exists((string)e.Result))
+                        {
+                        File.Delete((string)e.Result);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
+                    }
 
                 }
                 else if (e.Cancelled == true & e.Error == null)
@@ -269,7 +306,7 @@ namespace MKV_Chapterizer
                     {
                         File.Delete(pError);
                     }
-                    catch (IOException ex)
+                    catch (Exception ex)
                     {
                         MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
                     }
@@ -409,7 +446,6 @@ namespace MKV_Chapterizer
 
             MediaInfo info = new MediaInfo();
             info.Open(file);
-            int lol = info.Count_Get(StreamKind.Chapters);
 
             info.Option("Inform", "XML");
             info.Option("Complete");
@@ -561,6 +597,131 @@ namespace MKV_Chapterizer
                     { MessageBox.Show(null, str, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
                 }
             }
+
+            return new FileInfo(info.DirectoryName + "\\" + newFileName);
+        }
+        private object ReplaceChapters(string file)
+        {
+
+            //Remove the chapters
+
+            FileInfo info = new FileInfo(file);
+
+            String newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
+
+            Char q = Convert.ToChar(34);
+            String newpath = q + info.DirectoryName + "\\" + newFileName + q;
+            String oldpath = q + info.FullName + q;
+
+            String args = "-o " + newpath + " --no-chapters --compression -1:none " + oldpath;
+
+            ProcessStartInfo prcinfo = new ProcessStartInfo();
+            Process prc = new Process();
+
+            prcinfo.FileName = "mkvmerge.exe";
+            prcinfo.Arguments = args;
+            prcinfo.RedirectStandardOutput = true;
+            prcinfo.RedirectStandardError = true;
+            prcinfo.CreateNoWindow = true;
+            prcinfo.UseShellExecute = false;
+
+            prc.StartInfo = prcinfo;
+            prc.Start();
+
+            string str;
+
+            while ((str = prc.StandardOutput.ReadLine()) != null)
+            {
+
+                //Check for Cancellation
+
+                if (worker.CancellationPending == true)
+                {
+
+                    if (!prc.WaitForExit(500))
+                    {
+                        prc.Kill();
+                        Thread.Sleep(1000);
+                    }
+                    return info.DirectoryName + "\\" + newFileName;
+                }
+                //End Check
+
+
+                if (str != "")
+                {
+                    if (str.Contains("Progress"))
+                    {
+                        Progress = Convert.ToInt32(parseProgress(str)) / 2;
+                    }
+                    else if (str.Contains("Error"))
+                    { MessageBox.Show(null, str, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                }
+            }
+
+            FileInfo info2 = new FileInfo(info.DirectoryName + "\\" + newFileName);
+            MediaInfo MI = new MediaInfo();
+
+            MI.Open(info2.FullName);
+
+            decimal dd;
+            dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 60000);
+
+            //Create chapter file
+            CreateChapterFile(Convert.ToInt32(dd));
+
+            String cpath = "chapters.xml";
+            string newFileName2 = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info2.FullName)) + ".mkv";
+
+            newpath = q + info.DirectoryName + "\\" + newFileName2 + q;
+            oldpath = q + info2.FullName + q;
+
+            args = "-o " + newpath + " --chapters " + q + cpath + q + " --compression -1:none " + oldpath;
+
+            prcinfo.Arguments = args;
+
+            prc.StartInfo = prcinfo;
+            prc.Start();
+
+            while ((str = prc.StandardOutput.ReadLine()) != null)
+            {
+
+                //Check for Cancellation
+
+                if (worker.CancellationPending == true)
+                {
+
+                    MI.Close();
+
+                    if (!prc.WaitForExit(500))
+                    {
+                        prc.Kill();
+                        Thread.Sleep(1000);
+                    }
+
+                    File.Delete(cpath);
+                    return info.DirectoryName + "\\" + newFileName;
+
+                }
+                //End Check
+
+
+                if (str != "")
+                {
+                    if (str.Contains("Progress"))
+                    {
+
+                        Progress = 50 + Convert.ToInt32(parseProgress(str)) / 2;
+                    }
+                    else if (str.Contains("Error"))
+                    { MessageBox.Show(null, str, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                }
+
+            }
+
+            File.Delete(cpath);
+            File.Delete(info.DirectoryName + "\\" + newFileName);
+            File.Move(info.DirectoryName + "\\" + newFileName2, info.DirectoryName + "\\" + newFileName);
 
             return new FileInfo(info.DirectoryName + "\\" + newFileName);
         }
