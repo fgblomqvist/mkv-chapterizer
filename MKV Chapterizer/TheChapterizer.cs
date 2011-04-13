@@ -29,6 +29,7 @@ namespace MKV_Chapterizer
         private static bool pIsBusy = false;
         private static string pStatus;
         private static string pError;
+        private static string workDir;
 
         private static BackgroundWorker worker = new BackgroundWorker();
 
@@ -152,6 +153,9 @@ namespace MKV_Chapterizer
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
             worker.WorkerSupportsCancellation = true;
+
+            //Create the working dir
+            GenerateWorkingDir();
         }
 
         //------------------------------------------------------
@@ -163,6 +167,20 @@ namespace MKV_Chapterizer
             IsBusy = true;
             worker.RunWorkerAsync();
         }
+
+        public void Cancel()
+        {
+            worker.CancelAsync();
+        }
+
+        public void Clean()
+        {
+            Directory.Delete(workDir);
+        }
+
+        //------------------------------------------------------
+        //   Internal used methods
+        //------------------------------------------------------
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -201,17 +219,17 @@ namespace MKV_Chapterizer
                                 return;
                             }
                             else
-                            {   
-                                    FileInfo nfile = (FileInfo)file;
+                            {
+                                FileInfo nfile = (FileInfo)file;
 
-                                    if (Overwrite)
-                                    {
-                                        //Delete the input file
-                                        File.Delete(s);
-                                        //Rename -new file to original name
-                                        File.Move(nfile.FullName, s);
-                                    }
+                                if (Overwrite)
+                                {
+                                    //Delete the input file
+                                    File.Delete(s);
+                                    //Rename -new file to original name
+                                    File.Move(nfile.FullName, s);
                                 }
+                            }
 
                             break;
                         case 2:
@@ -277,63 +295,54 @@ namespace MKV_Chapterizer
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
 
-                //Display a messagebox with success message or error info
+            //Display a messagebox with success message or error info
 
-                if (e.Cancelled == false & e.Error == null)
+            if (e.Cancelled == false & e.Error == null)
+            {
+
+                //MessageBox.Show("DONE");
+                //Delete any file in the e.Result
+                try
                 {
-
-                    //MessageBox.Show("DONE");
-                    //Delete any file in the e.Result
-                    try
+                    if (File.Exists((string)e.Result))
                     {
-                        if (File.Exists((string)e.Result))
-                        {
                         File.Delete((string)e.Result);
-                        }
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
-                    }
-
                 }
-                else if (e.Cancelled == true & e.Error == null)
+                catch (Exception ex)
                 {
-
-                    //Clean-up files
-
-                    try
-                    {
-                        File.Delete(pError);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
-                    }
-
+                    MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
                 }
-                else if (e.Cancelled == false & e.Error != null)
+
+            }
+            else if (e.Cancelled == true & e.Error == null)
+            {
+
+                //Clean-up files
+
+                try
                 {
-
-                    MessageBox.Show("Error Occured:" + Environment.NewLine + e.Error.Message);
-
+                    File.Delete(pError);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
                 }
 
-                IsBusy = false;
-                RunWorkerCompletedEventArgs ps = new RunWorkerCompletedEventArgs(null, null, false);
-                Finished(this, ps);
+            }
+            else if (e.Cancelled == false & e.Error != null)
+            {
+
+                MessageBox.Show("Error Occured:" + Environment.NewLine + e.Error.Message);
+
+            }
+
+            IsBusy = false;
+            RunWorkerCompletedEventArgs ps = new RunWorkerCompletedEventArgs(null, null, false);
+            Finished(this, ps);
         }
 
-        public void Cancel()
-        {
-            worker.CancelAsync();
-        }
-
-        //------------------------------------------------------
-        //   Internal used methods
-        //------------------------------------------------------
-
-        private void CreateChapterFile(int runTime)
+        private string CreateChapterFile(int runTime)
         {
            decimal count = runTime / ChapterInterval;
 
@@ -355,7 +364,7 @@ namespace MKV_Chapterizer
 
             }
 
-            string path = "chapters.xml";
+            string path = workDir + "\\chapters.xml";
             int nmbr = Convert.ToInt32(count);
             int start;
             int extraval = 0;
@@ -430,6 +439,7 @@ namespace MKV_Chapterizer
 
             xwrite.Close();
 
+            return path;
         }
 
         private string parseProgress(String Text)
@@ -471,10 +481,7 @@ namespace MKV_Chapterizer
             decimal dd;
             dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 60000);
 
-            //Create chapter file
-            CreateChapterFile(Convert.ToInt32(dd));
-
-            String cpath = "chapters.xml";
+            String cpath = CreateChapterFile(Convert.ToInt32(dd));
             String newFileName = null;
 
             newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
@@ -483,7 +490,7 @@ namespace MKV_Chapterizer
             Process prc = new Process();
 
             Char q = Convert.ToChar(34);
-            String newpath = q + info.DirectoryName + "\\" + newFileName + q;
+            String newpath = q + workDir + "\\" + newFileName + q;
             String oldpath = q + info.FullName + q;
 
             String args = "-o " + newpath + " --chapters " + q + cpath + q + " --compression -1:none " + oldpath;
@@ -517,7 +524,7 @@ namespace MKV_Chapterizer
                     }
 
                     File.Delete(cpath);
-                    return info.DirectoryName + "\\" + newFileName;
+                    return workDir + "\\" + newFileName;
 
                 }
                 //End Check
@@ -537,7 +544,7 @@ namespace MKV_Chapterizer
             }
 
             File.Delete(cpath);
-            return new FileInfo(info.DirectoryName + "\\" + newFileName);
+            return new FileInfo(workDir + "\\" + newFileName);
         }
 
         private object RemoveChapters(string file)
@@ -549,7 +556,7 @@ namespace MKV_Chapterizer
             String newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
 
             Char q = Convert.ToChar(34);
-            String newpath = q + info.DirectoryName + "\\" + newFileName + q;
+            String newpath = q + workDir + "\\" + newFileName + q;
             String oldpath = q + info.FullName + q;
 
             String pArgs = "-o " + newpath + " --no-chapters --compression -1:none " + oldpath;
@@ -582,7 +589,7 @@ namespace MKV_Chapterizer
                         prc.Kill();
                         Thread.Sleep(1000);
                     }
-                    return info.DirectoryName + "\\" + newFileName;
+                    return workDir + "\\" + newFileName;
                 }
                 //End Check
 
@@ -598,8 +605,9 @@ namespace MKV_Chapterizer
                 }
             }
 
-            return new FileInfo(info.DirectoryName + "\\" + newFileName);
+            return new FileInfo(workDir + "\\" + newFileName);
         }
+
         private object ReplaceChapters(string file)
         {
 
@@ -610,7 +618,7 @@ namespace MKV_Chapterizer
             String newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
 
             Char q = Convert.ToChar(34);
-            String newpath = q + info.DirectoryName + "\\" + newFileName + q;
+            String newpath = q + workDir + "\\" + newFileName + q;
             String oldpath = q + info.FullName + q;
 
             String args = "-o " + newpath + " --no-chapters --compression -1:none " + oldpath;
@@ -643,7 +651,7 @@ namespace MKV_Chapterizer
                         prc.Kill();
                         Thread.Sleep(1000);
                     }
-                    return info.DirectoryName + "\\" + newFileName;
+                    return workDir + "\\" + newFileName;
                 }
                 //End Check
 
@@ -659,7 +667,7 @@ namespace MKV_Chapterizer
                 }
             }
 
-            FileInfo info2 = new FileInfo(info.DirectoryName + "\\" + newFileName);
+            FileInfo info2 = new FileInfo(workDir + "\\" + newFileName);
             MediaInfo MI = new MediaInfo();
 
             MI.Open(info2.FullName);
@@ -667,13 +675,10 @@ namespace MKV_Chapterizer
             decimal dd;
             dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 60000);
 
-            //Create chapter file
-            CreateChapterFile(Convert.ToInt32(dd));
-
-            String cpath = "chapters.xml";
+            String cpath = CreateChapterFile(Convert.ToInt32(dd));
             string newFileName2 = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info2.FullName)) + ".mkv";
 
-            newpath = q + info.DirectoryName + "\\" + newFileName2 + q;
+            newpath = q + workDir + "\\" + newFileName2 + q;
             oldpath = q + info2.FullName + q;
 
             args = "-o " + newpath + " --chapters " + q + cpath + q + " --compression -1:none " + oldpath;
@@ -700,7 +705,7 @@ namespace MKV_Chapterizer
                     }
 
                     File.Delete(cpath);
-                    return info.DirectoryName + "\\" + newFileName;
+                    return workDir + "\\" + newFileName;
 
                 }
                 //End Check
@@ -720,10 +725,20 @@ namespace MKV_Chapterizer
             }
 
             File.Delete(cpath);
-            File.Delete(info.DirectoryName + "\\" + newFileName);
-            File.Move(info.DirectoryName + "\\" + newFileName2, info.DirectoryName + "\\" + newFileName);
+            File.Delete(workDir + "\\" + newFileName);
+            File.Move(workDir + "\\" + newFileName2, workDir + "\\" + newFileName);
 
-            return new FileInfo(info.DirectoryName + "\\" + newFileName);
+            return new FileInfo(workDir + "\\" + newFileName);
+        }
+
+        private void GenerateWorkingDir()
+        {
+            string tempdir = Path.GetTempPath();
+            string randomString = Guid.NewGuid().ToString();
+            string workdir = tempdir + randomString;
+            Directory.CreateDirectory(workdir);
+
+            workDir = workdir;
         }
     }
 }

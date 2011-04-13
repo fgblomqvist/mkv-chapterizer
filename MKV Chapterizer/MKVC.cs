@@ -107,11 +107,12 @@ namespace MKV_Chapterizer
                     lboxFiles.Items.Clear();
                     //Enable queueUI
                     lblNumOfChapters.Visible = false;
+                    lblChapterCount.Visible = false;
                     tabControl.HideTabs = false;
-                    tabControl.Size = new System.Drawing.Size(Convert.ToInt32(379 * screenMultiplier), Convert.ToInt32(168 * screenMultiplier));
+                    //tabControl.Size = new System.Drawing.Size(Convert.ToInt32(379 * screenMultiplier), Convert.ToInt32(168 * screenMultiplier));
                     progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(172 * screenMultiplier));
                     this.Show();
-                    this.Size = new System.Drawing.Size(Convert.ToInt32(385 * screenMultiplier), Convert.ToInt32(196 * screenMultiplier));
+                    //this.Size = new System.Drawing.Size(Convert.ToInt32(385 * screenMultiplier), Convert.ToInt32(196 * screenMultiplier));
                 }
                 else
                 {
@@ -119,6 +120,7 @@ namespace MKV_Chapterizer
                     lboxFiles.Items.Clear();
                     //Disable queueUI
                     lblNumOfChapters.Visible = true;
+                    lblChapterCount.Visible = true;
                     tabControl.HideTabs = true;
                     tabControl.Size = new System.Drawing.Size(Convert.ToInt32(379 * screenMultiplier), Convert.ToInt32(145 * screenMultiplier));
                     progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(149 * screenMultiplier));
@@ -262,7 +264,7 @@ namespace MKV_Chapterizer
 
             //Enable the controls for the merging process
 
-            label2.Enabled = true;
+            lblChapterInterval.Enabled = true;
             lblTrackbarValue.Enabled = true;
             lblMin.Enabled = true;
             btnMerge.Enabled = true;
@@ -423,6 +425,7 @@ namespace MKV_Chapterizer
         {
 
             screenMultiplier = GetScreenScaleMulitplier();
+
             trackBar1.Value = Properties.Settings.Default.defChapInterval;
             if (Properties.Settings.Default.queue)
             {
@@ -434,7 +437,7 @@ namespace MKV_Chapterizer
             }
             lblTrackbarValue.Text = trackBar1.Value.ToString();
 
-            label9.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion))) + " Beta 3";
+            lblVersion.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion))) + " Beta 3";
             
 
         }
@@ -451,6 +454,9 @@ namespace MKV_Chapterizer
                     Application.DoEvents();
                 }
             }
+
+            //Clean up after the chapterizer
+            thechapterizer.Clean();
         }
 
         private object GetVersion(Version version)
@@ -601,7 +607,7 @@ namespace MKV_Chapterizer
             btnAdd.Enabled = true;
             btnRemove.Enabled = true;
             lboxFiles.Enabled = true;
-            label2.Enabled = false;
+            lblChapterInterval.Enabled = false;
             lblTrackbarValue.Enabled = false;
             btnMerge.Enabled = false;
             lblMin.Enabled = false;

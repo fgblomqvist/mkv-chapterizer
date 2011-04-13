@@ -45,8 +45,8 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.btnMerge = new System.Windows.Forms.Button();
             this.lblNumOfChapters = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.lblChapterInterval = new System.Windows.Forms.Label();
+            this.lblVersion = new System.Windows.Forms.Label();
             this.cboxOverwrite = new System.Windows.Forms.CheckBox();
             this.lblTutorial = new System.Windows.Forms.Label();
             this.lblChapterCount = new System.Windows.Forms.Label();
@@ -73,7 +73,7 @@
             // websiteToolStripMenuItem
             // 
             this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.websiteToolStripMenuItem.Text = "Website";
             this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
             // 
@@ -83,13 +83,13 @@
             this.websiteToolStripMenuItem,
             this.queueToolStripMenuItem});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(153, 70);
+            this.contextMenu.Size = new System.Drawing.Size(117, 48);
             // 
             // queueToolStripMenuItem
             // 
             this.queueToolStripMenuItem.CheckOnClick = true;
             this.queueToolStripMenuItem.Name = "queueToolStripMenuItem";
-            this.queueToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.queueToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.queueToolStripMenuItem.Text = "Queue";
             this.queueToolStripMenuItem.Click += new System.EventHandler(this.queueToolStripMenuItem_Click);
             // 
@@ -133,8 +133,8 @@
             this.panel1.Controls.Add(this.trackBar1);
             this.panel1.Controls.Add(this.btnMerge);
             this.panel1.Controls.Add(this.lblNumOfChapters);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.label9);
+            this.panel1.Controls.Add(this.lblChapterInterval);
+            this.panel1.Controls.Add(this.lblVersion);
             this.panel1.Controls.Add(this.cboxOverwrite);
             this.panel1.Controls.Add(this.lblTutorial);
             this.panel1.Controls.Add(this.lblChapterCount);
@@ -146,6 +146,7 @@
             // 
             // lblStatus
             // 
+            this.lblStatus.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblStatus.AutoSize = true;
             this.lblStatus.Location = new System.Drawing.Point(171, 120);
             this.lblStatus.Name = "lblStatus";
@@ -156,6 +157,7 @@
             // 
             // lblMin
             // 
+            this.lblMin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMin.AutoSize = true;
             this.lblMin.Enabled = false;
             this.lblMin.Location = new System.Drawing.Point(310, 9);
@@ -166,6 +168,7 @@
             // 
             // lblSettings
             // 
+            this.lblSettings.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblSettings.AutoSize = true;
             this.lblSettings.ForeColor = System.Drawing.SystemColors.ControlText;
             this.lblSettings.Location = new System.Drawing.Point(12, 117);
@@ -178,6 +181,7 @@
             // lblTrackbarValue
             // 
             this.lblTrackbarValue.AllowDrop = true;
+            this.lblTrackbarValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTrackbarValue.AutoSize = true;
             this.lblTrackbarValue.Enabled = false;
             this.lblTrackbarValue.Location = new System.Drawing.Point(292, 9);
@@ -189,6 +193,7 @@
             // trackBar1
             // 
             this.trackBar1.AllowDrop = true;
+            this.trackBar1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.trackBar1.BackColor = System.Drawing.Color.White;
             this.trackBar1.Enabled = false;
             this.trackBar1.Location = new System.Drawing.Point(103, 9);
@@ -203,6 +208,7 @@
             // btnMerge
             // 
             this.btnMerge.AllowDrop = true;
+            this.btnMerge.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnMerge.Enabled = false;
             this.btnMerge.Location = new System.Drawing.Point(141, 96);
             this.btnMerge.Name = "btnMerge";
@@ -215,6 +221,7 @@
             // lblNumOfChapters
             // 
             this.lblNumOfChapters.AllowDrop = true;
+            this.lblNumOfChapters.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblNumOfChapters.AutoSize = true;
             this.lblNumOfChapters.Enabled = false;
             this.lblNumOfChapters.Location = new System.Drawing.Point(12, 57);
@@ -223,32 +230,34 @@
             this.lblNumOfChapters.TabIndex = 13;
             this.lblNumOfChapters.Text = "Number of Chapters:";
             // 
-            // label2
+            // lblChapterInterval
             // 
-            this.label2.AllowDrop = true;
-            this.label2.AutoSize = true;
-            this.label2.Enabled = false;
-            this.label2.Location = new System.Drawing.Point(12, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 13);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "Chapter Interval:";
+            this.lblChapterInterval.AllowDrop = true;
+            this.lblChapterInterval.AutoSize = true;
+            this.lblChapterInterval.Enabled = false;
+            this.lblChapterInterval.Location = new System.Drawing.Point(12, 9);
+            this.lblChapterInterval.Name = "lblChapterInterval";
+            this.lblChapterInterval.Size = new System.Drawing.Size(85, 13);
+            this.lblChapterInterval.TabIndex = 12;
+            this.lblChapterInterval.Text = "Chapter Interval:";
             // 
-            // label9
+            // lblVersion
             // 
-            this.label9.AllowDrop = true;
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label9.Location = new System.Drawing.Point(311, 122);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(11, 12);
-            this.label9.TabIndex = 19;
-            this.label9.Text = "v";
-            this.label9.Click += new System.EventHandler(this.label9_Click);
+            this.lblVersion.AllowDrop = true;
+            this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVersion.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.lblVersion.Location = new System.Drawing.Point(311, 122);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(11, 12);
+            this.lblVersion.TabIndex = 19;
+            this.lblVersion.Text = "v";
+            this.lblVersion.Click += new System.EventHandler(this.label9_Click);
             // 
             // cboxOverwrite
             // 
+            this.cboxOverwrite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cboxOverwrite.AutoSize = true;
             this.cboxOverwrite.Checked = true;
             this.cboxOverwrite.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -262,6 +271,7 @@
             // 
             // lblTutorial
             // 
+            this.lblTutorial.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblTutorial.AutoSize = true;
             this.lblTutorial.Location = new System.Drawing.Point(100, 80);
             this.lblTutorial.Name = "lblTutorial";
@@ -293,6 +303,7 @@
             // 
             // btnRemove
             // 
+            this.btnRemove.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnRemove.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRemove.Location = new System.Drawing.Point(336, 70);
             this.btnRemove.Name = "btnRemove";
@@ -304,6 +315,7 @@
             // 
             // btnAdd
             // 
+            this.btnAdd.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAdd.Location = new System.Drawing.Point(336, 41);
             this.btnAdd.Name = "btnAdd";
@@ -315,6 +327,8 @@
             // 
             // lboxFiles
             // 
+            this.lboxFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
             this.lboxFiles.FormattingEnabled = true;
             this.lboxFiles.Location = new System.Drawing.Point(3, 6);
             this.lboxFiles.Name = "lboxFiles";
@@ -433,8 +447,8 @@
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Button btnMerge;
         private System.Windows.Forms.Label lblNumOfChapters;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lblChapterInterval;
+        private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.CheckBox cboxOverwrite;
         private System.Windows.Forms.Label lblTutorial;
         private System.Windows.Forms.Label lblChapterCount;
