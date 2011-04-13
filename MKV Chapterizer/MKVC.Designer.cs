@@ -402,6 +402,11 @@
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
             // 
+            // bwCheckUpdates
+            // 
+            this.bwCheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckUpdates_DoWork);
+            this.bwCheckUpdates.RunWorkerCompleted +=new System.ComponentModel.RunWorkerCompletedEventHandler(bwCheckUpdates_RunWorkerCompleted);
+            // 
             // MKVC
             // 
             this.AllowDrop = true;

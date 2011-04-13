@@ -419,7 +419,8 @@ namespace MKV_Chapterizer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            bwCheckUpdates.RunWorkerAsync();
+
             screenMultiplier = GetScreenScaleMulitplier();
 
             trackBar1.Value = Properties.Settings.Default.defChapInterval;
@@ -701,6 +702,29 @@ namespace MKV_Chapterizer
                 queueAction = 3;
             }
         }
-    }
 
+        private void bwCheckUpdates_DoWork(object sender, DoWorkEventArgs e)
+        {
+            WebClient client = new WebClient();
+            Version version = Version.Parse(client.DownloadString("http://flytandekvave.se/files/projects/mkvc/version.txt"));
+            Version curVersion = Version.Parse(Application.ProductVersion);
+
+            if (version > curVersion)
+            {
+                e.Result = true;
+            }
+            else
+            {
+                e.Result = false;
+            }
+        }
+
+        private void bwCheckUpdates_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if ((bool)e.Result == true)
+            {
+                MessageBox.Show("There is a new version available at http://code.google.com/p/mkv-chapterizer/!");
+            }
+        }
+    }
 }
