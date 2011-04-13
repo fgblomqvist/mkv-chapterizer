@@ -94,12 +94,12 @@ namespace MKV_Chapterizer
         {
             get
             {
-                return Properties.Settings.Default.queue;
+                return Properties.Settings.Default.queueMode;
             }
 
             set
             {
-                Properties.Settings.Default.queue = value;
+                Properties.Settings.Default.queueMode = value;
 
                 if (value)
                 {
@@ -109,10 +109,8 @@ namespace MKV_Chapterizer
                     lblNumOfChapters.Visible = false;
                     lblChapterCount.Visible = false;
                     tabControl.HideTabs = false;
-                    //tabControl.Size = new System.Drawing.Size(Convert.ToInt32(379 * screenMultiplier), Convert.ToInt32(168 * screenMultiplier));
-                    progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(172 * screenMultiplier));
+                    progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(149 * screenMultiplier));
                     this.Show();
-                    //this.Size = new System.Drawing.Size(Convert.ToInt32(385 * screenMultiplier), Convert.ToInt32(196 * screenMultiplier));
                 }
                 else
                 {
@@ -169,12 +167,10 @@ namespace MKV_Chapterizer
         {
 
             //temp: Clear the lboxFiles if no queue
-            if (Properties.Settings.Default.queue == false)
+            if (Properties.Settings.Default.queueMode == false)
             {
                 lboxFiles.Items.Clear();
             }
-
-            //Save the fileinfo in theFile
 
             string[] s = (string[])e.Data.GetData(DataFormats.FileDrop);
             bool exist = false;
@@ -200,7 +196,7 @@ namespace MKV_Chapterizer
 
             MI.Open(fi.FullName);
 
-            if (Properties.Settings.Default.queue == false)
+            if (Properties.Settings.Default.queueMode == false)
             {
                 if (ChaptersExist(fi.FullName))
                 {
@@ -423,11 +419,11 @@ namespace MKV_Chapterizer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
             screenMultiplier = GetScreenScaleMulitplier();
 
             trackBar1.Value = Properties.Settings.Default.defChapInterval;
-            if (Properties.Settings.Default.queue)
+            if (Properties.Settings.Default.queueMode)
             {
                 QueueMode = true;
             }
@@ -556,6 +552,11 @@ namespace MKV_Chapterizer
             {
                 lboxFiles.Items.RemoveAt(lboxFiles.SelectedIndex);
             }
+
+            if (lboxFiles.Items.Count == 0)
+            {
+                DePrepareForRun();
+            }
         }
         private void AddDragHandlers(Control parent)
         {
@@ -582,17 +583,14 @@ namespace MKV_Chapterizer
             btnAdd.Enabled = false;
             btnRemove.Enabled = false;
 
-            //Show progressbar
-            float y;
             if (QueueMode)
             {
-                y = 228 * screenMultiplier;
                 lblStatus.Visible = true;
             }
-            else
-            {
-                y = 205 * screenMultiplier;
-            }
+
+            //Show progressbar
+            float y;
+            y = 205 * screenMultiplier;
             Size = new Size((int)this.Size.Width, (int)y);
 
             btnMerge.Text = "Cancel";
@@ -632,14 +630,10 @@ namespace MKV_Chapterizer
             float y;
             if (QueueMode)
             {
-                y = 196 * screenMultiplier;
                 lblStatus.Visible = false;
-                
             }
-            else
-            {
-                y = 173 * screenMultiplier;
-            }
+
+            y = 173 * screenMultiplier;
             Size = new Size((int)this.Size.Width, (int)y);
         }
 
@@ -652,6 +646,18 @@ namespace MKV_Chapterizer
         {
             if (openMKVdlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                //Enable Chaterizing
+                lblChapterInterval.Enabled = true;
+                lblTrackbarValue.Enabled = true;
+                lblMin.Enabled = true;
+                btnMerge.Enabled = true;
+                cboxOverwrite.Enabled = true;
+                lblNumOfChapters.Enabled = true;
+                trackBar1.Enabled = true;
+
+                //Hide the tutorial message
+                lblTutorial.Visible = false;
+
                 foreach (string file in openMKVdlg.FileNames)
                 {
                     lboxFiles.Items.Add(file);

@@ -229,6 +229,11 @@ namespace MKV_Chapterizer
                                     //Rename -new file to original name
                                     File.Move(nfile.FullName, s);
                                 }
+                                else
+                                {
+                                    //Move the -new file from workdir to orginial dir
+                                    File.Move(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name);
+                                }
                             }
 
                             break;
@@ -247,12 +252,17 @@ namespace MKV_Chapterizer
                             }
                             else
                             {
+                                FileInfo nfile = (FileInfo)file;
                                 //check if the user want to overwrite
                                 if (Overwrite)
                                 {
-                                    FileInfo nfile = (FileInfo)file;
                                     File.Delete(fi.FullName);
                                     File.Move(nfile.FullName, fi.FullName);
+                                }
+                                else
+                                {
+                                    //Move the -new file from workdir to orginial dir
+                                    File.Move(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name);
                                 }
                             }
                             break;
@@ -276,16 +286,20 @@ namespace MKV_Chapterizer
                     }
                     else
                     {
+                        FileInfo nfile = (FileInfo)file;
+
                         if (Overwrite)
                         {
-
                             //Delete the input file
                             File.Delete(s);
 
                             //Rename -new file to original name
-                            FileInfo nfile = (FileInfo)file;
                             File.Move(nfile.FullName, s);
-
+                        }
+                        else
+                        {
+                            //Move the -new file from workdir to orginial dir
+                            File.Move(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name);
                         }
                     }
                 }

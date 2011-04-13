@@ -14,7 +14,7 @@
     <Setting Name="customOutputName" Type="System.String" Scope="User">
       <Value Profile="(Default)">%O-new</Value>
     </Setting>
-    <Setting Name="queue" Type="System.Boolean" Scope="User">
+    <Setting Name="queueMode" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

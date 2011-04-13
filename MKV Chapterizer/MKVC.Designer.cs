@@ -34,7 +34,6 @@
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.queueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
-            this.bwFixChapters = new System.ComponentModel.BackgroundWorker();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -60,6 +59,7 @@
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
+            this.bwCheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.contextMenu.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
@@ -108,7 +108,7 @@
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(379, 168);
+            this.tabControl.Size = new System.Drawing.Size(379, 145);
             this.tabControl.TabIndex = 1;
             // 
             // tpSettings
@@ -117,7 +117,7 @@
             this.tpSettings.Location = new System.Drawing.Point(4, 23);
             this.tpSettings.Name = "tpSettings";
             this.tpSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSettings.Size = new System.Drawing.Size(371, 141);
+            this.tpSettings.Size = new System.Drawing.Size(371, 118);
             this.tpSettings.TabIndex = 0;
             this.tpSettings.Text = "Settings";
             this.tpSettings.UseVisualStyleBackColor = true;
@@ -141,14 +141,14 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(365, 135);
+            this.panel1.Size = new System.Drawing.Size(365, 112);
             this.panel1.TabIndex = 0;
             // 
             // lblStatus
             // 
             this.lblStatus.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(171, 120);
+            this.lblStatus.Location = new System.Drawing.Point(171, 97);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(24, 13);
             this.lblStatus.TabIndex = 28;
@@ -171,7 +171,7 @@
             this.lblSettings.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblSettings.AutoSize = true;
             this.lblSettings.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblSettings.Location = new System.Drawing.Point(12, 117);
+            this.lblSettings.Location = new System.Drawing.Point(12, 94);
             this.lblSettings.Name = "lblSettings";
             this.lblSettings.Size = new System.Drawing.Size(45, 13);
             this.lblSettings.TabIndex = 26;
@@ -210,7 +210,7 @@
             this.btnMerge.AllowDrop = true;
             this.btnMerge.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnMerge.Enabled = false;
-            this.btnMerge.Location = new System.Drawing.Point(141, 96);
+            this.btnMerge.Location = new System.Drawing.Point(141, 73);
             this.btnMerge.Name = "btnMerge";
             this.btnMerge.Size = new System.Drawing.Size(85, 23);
             this.btnMerge.TabIndex = 18;
@@ -224,7 +224,7 @@
             this.lblNumOfChapters.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblNumOfChapters.AutoSize = true;
             this.lblNumOfChapters.Enabled = false;
-            this.lblNumOfChapters.Location = new System.Drawing.Point(12, 57);
+            this.lblNumOfChapters.Location = new System.Drawing.Point(12, 46);
             this.lblNumOfChapters.Name = "lblNumOfChapters";
             this.lblNumOfChapters.Size = new System.Drawing.Size(104, 13);
             this.lblNumOfChapters.TabIndex = 13;
@@ -248,7 +248,7 @@
             this.lblVersion.AutoSize = true;
             this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVersion.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lblVersion.Location = new System.Drawing.Point(311, 122);
+            this.lblVersion.Location = new System.Drawing.Point(311, 99);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(11, 12);
             this.lblVersion.TabIndex = 19;
@@ -262,7 +262,7 @@
             this.cboxOverwrite.Checked = true;
             this.cboxOverwrite.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cboxOverwrite.Enabled = false;
-            this.cboxOverwrite.Location = new System.Drawing.Point(255, 100);
+            this.cboxOverwrite.Location = new System.Drawing.Point(255, 77);
             this.cboxOverwrite.Name = "cboxOverwrite";
             this.cboxOverwrite.Size = new System.Drawing.Size(104, 17);
             this.cboxOverwrite.TabIndex = 22;
@@ -273,7 +273,7 @@
             // 
             this.lblTutorial.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblTutorial.AutoSize = true;
-            this.lblTutorial.Location = new System.Drawing.Point(100, 80);
+            this.lblTutorial.Location = new System.Drawing.Point(100, 57);
             this.lblTutorial.Name = "lblTutorial";
             this.lblTutorial.Size = new System.Drawing.Size(170, 13);
             this.lblTutorial.TabIndex = 24;
@@ -296,7 +296,7 @@
             this.tpFiles.Location = new System.Drawing.Point(4, 23);
             this.tpFiles.Name = "tpFiles";
             this.tpFiles.Padding = new System.Windows.Forms.Padding(3);
-            this.tpFiles.Size = new System.Drawing.Size(371, 141);
+            this.tpFiles.Size = new System.Drawing.Size(371, 118);
             this.tpFiles.TabIndex = 1;
             this.tpFiles.Text = "Files";
             this.tpFiles.UseVisualStyleBackColor = true;
@@ -305,7 +305,7 @@
             // 
             this.btnRemove.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnRemove.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRemove.Location = new System.Drawing.Point(336, 70);
+            this.btnRemove.Location = new System.Drawing.Point(336, 47);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(27, 23);
             this.btnRemove.TabIndex = 2;
@@ -317,7 +317,7 @@
             // 
             this.btnAdd.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdd.Location = new System.Drawing.Point(336, 41);
+            this.btnAdd.Location = new System.Drawing.Point(336, 18);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(27, 23);
             this.btnAdd.TabIndex = 1;
@@ -332,7 +332,7 @@
             this.lboxFiles.FormattingEnabled = true;
             this.lboxFiles.Location = new System.Drawing.Point(3, 6);
             this.lboxFiles.Name = "lboxFiles";
-            this.lboxFiles.Size = new System.Drawing.Size(322, 134);
+            this.lboxFiles.Size = new System.Drawing.Size(322, 108);
             this.lboxFiles.TabIndex = 0;
             // 
             // tpQueueActions
@@ -341,7 +341,7 @@
             this.tpQueueActions.Location = new System.Drawing.Point(4, 23);
             this.tpQueueActions.Name = "tpQueueActions";
             this.tpQueueActions.Padding = new System.Windows.Forms.Padding(3);
-            this.tpQueueActions.Size = new System.Drawing.Size(371, 141);
+            this.tpQueueActions.Size = new System.Drawing.Size(371, 118);
             this.tpQueueActions.TabIndex = 2;
             this.tpQueueActions.Text = "Queue Actions";
             this.tpQueueActions.UseVisualStyleBackColor = true;
@@ -408,7 +408,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(379, 168);
+            this.ClientSize = new System.Drawing.Size(379, 145);
             this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.progressBar);
@@ -465,8 +465,8 @@
         private System.Windows.Forms.RadioButton rbtnRemoveThem;
         private System.Windows.Forms.RadioButton rbtnReplaceThem;
         private System.Windows.Forms.ToolStripMenuItem queueToolStripMenuItem;
-        private System.ComponentModel.BackgroundWorker bwFixChapters;
         private System.Windows.Forms.Label lblStatus;
+        private System.ComponentModel.BackgroundWorker bwCheckUpdates;
     }
 }
 
