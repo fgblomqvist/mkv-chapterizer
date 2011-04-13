@@ -44,7 +44,7 @@
             this.lblTrackbarValue = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.btnMerge = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblNumOfChapters = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.cboxOverwrite = new System.Windows.Forms.CheckBox();
@@ -132,7 +132,7 @@
             this.panel1.Controls.Add(this.lblTrackbarValue);
             this.panel1.Controls.Add(this.trackBar1);
             this.panel1.Controls.Add(this.btnMerge);
-            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.lblNumOfChapters);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.cboxOverwrite);
@@ -212,16 +212,16 @@
             this.btnMerge.UseVisualStyleBackColor = true;
             this.btnMerge.Click += new System.EventHandler(this.button1_Click);
             // 
-            // label3
+            // lblNumOfChapters
             // 
-            this.label3.AllowDrop = true;
-            this.label3.AutoSize = true;
-            this.label3.Enabled = false;
-            this.label3.Location = new System.Drawing.Point(12, 57);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(104, 13);
-            this.label3.TabIndex = 13;
-            this.label3.Text = "Number of Chapters:";
+            this.lblNumOfChapters.AllowDrop = true;
+            this.lblNumOfChapters.AutoSize = true;
+            this.lblNumOfChapters.Enabled = false;
+            this.lblNumOfChapters.Location = new System.Drawing.Point(12, 57);
+            this.lblNumOfChapters.Name = "lblNumOfChapters";
+            this.lblNumOfChapters.Size = new System.Drawing.Size(104, 13);
+            this.lblNumOfChapters.TabIndex = 13;
+            this.lblNumOfChapters.Text = "Number of Chapters:";
             // 
             // label2
             // 
@@ -432,7 +432,7 @@
         private System.Windows.Forms.Label lblTrackbarValue;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Button btnMerge;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblNumOfChapters;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.CheckBox cboxOverwrite;

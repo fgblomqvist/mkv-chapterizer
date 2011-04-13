@@ -106,6 +106,7 @@ namespace MKV_Chapterizer
                     //Empty files
                     lboxFiles.Items.Clear();
                     //Enable queueUI
+                    lblNumOfChapters.Visible = false;
                     tabControl.HideTabs = false;
                     tabControl.Size = new System.Drawing.Size(Convert.ToInt32(379 * screenMultiplier), Convert.ToInt32(168 * screenMultiplier));
                     progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(172 * screenMultiplier));
@@ -117,6 +118,7 @@ namespace MKV_Chapterizer
                     //Empty files
                     lboxFiles.Items.Clear();
                     //Disable queueUI
+                    lblNumOfChapters.Visible = true;
                     tabControl.HideTabs = true;
                     tabControl.Size = new System.Drawing.Size(Convert.ToInt32(379 * screenMultiplier), Convert.ToInt32(145 * screenMultiplier));
                     progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(149 * screenMultiplier));
@@ -265,7 +267,7 @@ namespace MKV_Chapterizer
             lblMin.Enabled = true;
             btnMerge.Enabled = true;
             cboxOverwrite.Enabled = true;
-            label3.Enabled = true;
+            lblNumOfChapters.Enabled = true;
 
             //Hide the tutorial message
             lblTutorial.Visible = false;
@@ -603,7 +605,7 @@ namespace MKV_Chapterizer
             lblTrackbarValue.Enabled = false;
             btnMerge.Enabled = false;
             lblMin.Enabled = false;
-            label3.Enabled = false;
+            lblNumOfChapters.Enabled = false;
 
             //Reset chapter count
             lblChapterCount.Text = "";
