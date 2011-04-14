@@ -35,7 +35,6 @@ using System.IO;
 using MediaInfoLib;
 using System.Net;
 using System.Diagnostics;
-using MySql.Data.MySqlClient;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;

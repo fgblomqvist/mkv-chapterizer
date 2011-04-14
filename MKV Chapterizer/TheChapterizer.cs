@@ -12,7 +12,6 @@ using System.IO;
 using MediaInfoLib;
 using System.Net;
 using System.Diagnostics;
-using MySql.Data.MySqlClient;
 using System.Runtime.InteropServices;
 
 namespace MKV_Chapterizer
