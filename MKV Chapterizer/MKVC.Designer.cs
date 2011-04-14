@@ -34,6 +34,7 @@
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.queueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
+            this.bwCheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -59,7 +60,6 @@
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
-            this.bwCheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.contextMenu.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
@@ -73,7 +73,7 @@
             // websiteToolStripMenuItem
             // 
             this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.websiteToolStripMenuItem.Text = "Website";
             this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
             // 
@@ -83,14 +83,14 @@
             this.websiteToolStripMenuItem,
             this.queueToolStripMenuItem});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(117, 48);
+            this.contextMenu.Size = new System.Drawing.Size(144, 48);
             // 
             // queueToolStripMenuItem
             // 
             this.queueToolStripMenuItem.CheckOnClick = true;
             this.queueToolStripMenuItem.Name = "queueToolStripMenuItem";
-            this.queueToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.queueToolStripMenuItem.Text = "Queue";
+            this.queueToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.queueToolStripMenuItem.Text = "Queue Mode";
             this.queueToolStripMenuItem.Click += new System.EventHandler(this.queueToolStripMenuItem_Click);
             // 
             // openMKVdlg
@@ -98,6 +98,11 @@
             this.openMKVdlg.Filter = "MKV Video Files|*.mkv";
             this.openMKVdlg.Multiselect = true;
             this.openMKVdlg.Title = "Choose MKVs to Chapterize";
+            // 
+            // bwCheckUpdates
+            // 
+            this.bwCheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckUpdates_DoWork);
+            this.bwCheckUpdates.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCheckUpdates_RunWorkerCompleted);
             // 
             // tabControl
             // 
@@ -273,11 +278,11 @@
             // 
             this.lblTutorial.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblTutorial.AutoSize = true;
-            this.lblTutorial.Location = new System.Drawing.Point(100, 57);
+            this.lblTutorial.Location = new System.Drawing.Point(32, 57);
             this.lblTutorial.Name = "lblTutorial";
-            this.lblTutorial.Size = new System.Drawing.Size(170, 13);
+            this.lblTutorial.Size = new System.Drawing.Size(290, 13);
             this.lblTutorial.TabIndex = 24;
-            this.lblTutorial.Text = "Start by dropping a MKV file on me";
+            this.lblTutorial.Text = "Start by either dropping a MKV file on me or right-clicking me";
             // 
             // lblChapterCount
             // 
@@ -401,11 +406,6 @@
             this.progressBar.Size = new System.Drawing.Size(365, 23);
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
-            // 
-            // bwCheckUpdates
-            // 
-            this.bwCheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckUpdates_DoWork);
-            this.bwCheckUpdates.RunWorkerCompleted +=new System.ComponentModel.RunWorkerCompletedEventHandler(bwCheckUpdates_RunWorkerCompleted);
             // 
             // MKVC
             // 
