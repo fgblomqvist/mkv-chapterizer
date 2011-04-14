@@ -376,18 +376,22 @@ namespace MKV_Chapterizer
 
         private void thechapterizer_StatusChanged(object sender, ProgressChangedEventArgs e)
         {
-            UpdateStatusLabel((string)e.UserState);
+            UpdateStatus((string)e.UserState);
         }
 
-        private void UpdateStatusLabel(string status)
+        private void UpdateStatus(string status)
         {
             if (InvokeRequired)
             {
-                ObjectDelegate2 method = new ObjectDelegate2(UpdateStatusLabel);
+                ObjectDelegate2 method = new ObjectDelegate2(UpdateStatus);
                 Invoke(method, status);
                 return;
             }
-            lblStatus.Text = status;
+
+            string[] sStatus = status.Split(Convert.ToChar(";"));
+
+            lblStatus.Text = sStatus[0] + "    " + sStatus[1];
+
         }
 
         private void thechapterizer_Finished(object sender, RunWorkerCompletedEventArgs e)

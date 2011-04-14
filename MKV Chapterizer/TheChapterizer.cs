@@ -187,14 +187,14 @@ namespace MKV_Chapterizer
             List<string> mkvlist = Files;
             int doneMovies = 0;
 
-            Status = doneMovies.ToString() + "/" + Files.Count.ToString();
+            Status = doneMovies.ToString() + "/" + Files.Count.ToString() + ";";
 
             //for each mkv the user has added
             foreach (string s in mkvlist)
             {
                 //Update status
                 doneMovies += 1;
-                Status = doneMovies.ToString() + "/" + Files.Count.ToString();
+                Status = doneMovies.ToString() + "/" + Files.Count.ToString() + ";" + Path.GetFileName(s);
 
                 FileInfo fi = new FileInfo(s);
 
