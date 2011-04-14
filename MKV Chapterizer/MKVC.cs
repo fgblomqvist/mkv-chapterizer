@@ -396,7 +396,14 @@ namespace MKV_Chapterizer
         private void thechapterizer_Finished(object sender, RunWorkerCompletedEventArgs e)
         {
                 Restore();
-                MessageBox.Show("DONE");
+                if (e.Cancelled == false && e.Error == null)
+                {
+                    MessageBox.Show("Finished without errors", "Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if (e.Cancelled == false && e.Error != null)
+                {
+                    MessageBox.Show("Finished with this error:" + e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
         }
 
         private void Restore()
@@ -623,7 +630,7 @@ namespace MKV_Chapterizer
 
             //Set its message
 
-            lblTutorial.Text = "Start by dropping a MKV file on me";
+            lblTutorial.Text = "Start by either dropping a MKV file on me or right-clicking me";
 
             lboxFiles.Items.Clear();
 

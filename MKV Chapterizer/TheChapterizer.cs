@@ -307,13 +307,11 @@ namespace MKV_Chapterizer
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
-            //Display a messagebox with success message or error info
+            RunWorkerCompletedEventArgs ps;
 
             if (e.Cancelled == false & e.Error == null)
             {
 
-                //MessageBox.Show("DONE");
                 //Delete any file in the e.Result
                 try
                 {
@@ -327,6 +325,8 @@ namespace MKV_Chapterizer
                     MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
                 }
 
+                ps = new RunWorkerCompletedEventArgs(null, null, false);
+                Finished(this, ps);
             }
             else if (e.Cancelled == true & e.Error == null)
             {
@@ -342,17 +342,17 @@ namespace MKV_Chapterizer
                     MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
                 }
 
+                ps = new RunWorkerCompletedEventArgs(null, null, true);
+                Finished(this, ps);
+
             }
             else if (e.Cancelled == false & e.Error != null)
             {
-
-                MessageBox.Show("Error Occured:" + Environment.NewLine + e.Error.Message);
-
+                ps = new RunWorkerCompletedEventArgs(null, e.Error, false);
+                Finished(this, ps);
             }
 
             IsBusy = false;
-            RunWorkerCompletedEventArgs ps = new RunWorkerCompletedEventArgs(null, null, false);
-            Finished(this, ps);
         }
 
         private string CreateChapterFile(int runTime)
