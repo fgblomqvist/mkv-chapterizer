@@ -508,7 +508,7 @@ namespace MKV_Chapterizer
 
             String args = "-o " + newpath + " --chapters " + q + cpath + q + " --compression -1:none " + oldpath;
 
-            prcinfo.FileName = "mkvmerge.exe";
+            prcinfo.FileName = "mkvmerge\\mkvmerge.exe";
             prcinfo.Arguments = args;
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;
@@ -577,7 +577,7 @@ namespace MKV_Chapterizer
             ProcessStartInfo prcinfo = new ProcessStartInfo();
             Process prc = new Process();
 
-            prcinfo.FileName = "mkvmerge.exe";
+            prcinfo.FileName = "mkvmerge\\mkvmerge.exe";
             prcinfo.Arguments = pArgs;
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;
@@ -639,7 +639,7 @@ namespace MKV_Chapterizer
             ProcessStartInfo prcinfo = new ProcessStartInfo();
             Process prc = new Process();
 
-            prcinfo.FileName = "mkvmerge.exe";
+            prcinfo.FileName = "mkvmerge\\mkvmerge.exe";
             prcinfo.Arguments = args;
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;
