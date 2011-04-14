@@ -438,7 +438,7 @@ namespace MKV_Chapterizer
             }
             lblTrackbarValue.Text = trackBar1.Value.ToString();
 
-            lblVersion.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion))) + " Beta 3";
+            lblVersion.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion)));
             
 
         }
