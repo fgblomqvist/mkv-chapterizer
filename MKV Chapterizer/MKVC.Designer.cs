@@ -202,8 +202,8 @@
             this.trackBar1.BackColor = System.Drawing.Color.White;
             this.trackBar1.Enabled = false;
             this.trackBar1.Location = new System.Drawing.Point(103, 9);
-            this.trackBar1.Maximum = 30;
-            this.trackBar1.Minimum = 2;
+            this.trackBar1.Maximum = 60;
+            this.trackBar1.Minimum = 1;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(184, 45);
             this.trackBar1.TabIndex = 19;
