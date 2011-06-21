@@ -429,6 +429,7 @@ namespace MKV_Chapterizer
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
             bwCheckUpdates.RunWorkerAsync();
 
             screenMultiplier = GetScreenScaleMulitplier();
