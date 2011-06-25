@@ -11,7 +11,8 @@
     <RootNamespace>MKV_Chapterizer</RootNamespace>
     <AssemblyName>MKVChapterizer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
@@ -70,8 +71,12 @@
     <Reference Include="CustomControls">
       <HintPath>..\..\..\..\..\Desktop\CustomControls.dll</HintPath>
     </Reference>
+    <Reference Include="MKVChapterizer, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
+      <ExecutableExtension>.exe</ExecutableExtension>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />

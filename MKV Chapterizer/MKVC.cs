@@ -38,7 +38,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;
-
+using System.Windows.Forms.Design;
 
 namespace MKV_Chapterizer
 {
@@ -82,7 +82,7 @@ namespace MKV_Chapterizer
             {
                 ctl.AllowDrop = true;
             }
-
+            
             thechapterizer.ProgressChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_ProgressChanged);
             thechapterizer.StatusChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_StatusChanged);
             thechapterizer.Finished += new Chapterizer.FinishedEventHandler(thechapterizer_Finished);
@@ -119,13 +119,13 @@ namespace MKV_Chapterizer
                     lblNumOfChapters.Visible = true;
                     lblChapterCount.Visible = true;
                     tabControl.HideTabs = true;
-                    tabControl.Size = new System.Drawing.Size(Convert.ToInt32(379 * screenMultiplier), Convert.ToInt32(145 * screenMultiplier));
+                    tabControl.Size = new System.Drawing.Size(Convert.ToInt32(424 * screenMultiplier), Convert.ToInt32(209 * screenMultiplier));
                     progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(149 * screenMultiplier));
                     this.Show();
-                    this.Size = new System.Drawing.Size(Convert.ToInt32(385 * screenMultiplier), Convert.ToInt32(173 * screenMultiplier));
+                    this.Size = new System.Drawing.Size(Convert.ToInt32(430 * screenMultiplier), Convert.ToInt32(237 * screenMultiplier));
                 }
             }
-        }    
+        }
 
         private void DragEnterHandler(object sender, System.Windows.Forms.DragEventArgs e)
         {
@@ -259,6 +259,9 @@ namespace MKV_Chapterizer
 
             //Enable the controls for the merging process
 
+            lblMode.Enabled = true;
+            lblModeValue.Enabled = true;
+            btnSwitch.Enabled = true;
             lblChapterInterval.Enabled = true;
             lblTrackbarValue.Enabled = true;
             lblMin.Enabled = true;
@@ -735,6 +738,30 @@ namespace MKV_Chapterizer
             if ((bool)e.Result == true)
             {
                 MessageBox.Show("There is a new version available at http://code.google.com/p/mkv-chapterizer/!");
+            }
+        }
+
+        private void btnSwitch_Click(object sender, EventArgs e)
+        {
+            SwitchChapterMode(); 
+        }
+
+        private void SwitchChapterMode()
+        {
+            if (pnlChapterDB.Visible)
+            {
+                pnlInterval.Visible = true;
+                pnlInterval.BringToFront();
+                pnlChapterDB.Visible = false;
+                lblModeValue.Text = "Interval";
+
+            }
+            else
+            {
+                pnlChapterDB.Visible = true;
+                pnlChapterDB.BringToFront();
+                pnlInterval.Visible = false;
+                lblModeValue.Text = "ChapterDB";
             }
         }
     }

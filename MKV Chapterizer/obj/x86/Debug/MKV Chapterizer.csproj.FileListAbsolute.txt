@@ -1,7 +1,6 @@
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.exe.config
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.exe.manifest
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.application
-C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.exe
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.pdb
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\ResolveAssemblyReference.cache
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.ChaptersExist.resources
