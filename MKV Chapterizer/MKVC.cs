@@ -446,6 +446,7 @@ namespace MKV_Chapterizer
             {
                 QueueMode = false;
             }
+
             lblTrackbarValue.Text = trackBar1.Value.ToString();
 
             lblVersion.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion)));
@@ -763,6 +764,11 @@ namespace MKV_Chapterizer
                 pnlInterval.Visible = false;
                 lblModeValue.Text = "ChapterDB";
             }
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

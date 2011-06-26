@@ -37,6 +37,7 @@
             this.bwCheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
+            this.pnlChapterDB = new System.Windows.Forms.Panel();
             this.pnlInterval = new System.Windows.Forms.Panel();
             this.lblChapterInterval = new System.Windows.Forms.Label();
             this.lblChapterCount = new System.Windows.Forms.Label();
@@ -45,7 +46,6 @@
             this.lblTrackbarValue = new System.Windows.Forms.Label();
             this.lblMin = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
-            this.pnlChapterDB = new System.Windows.Forms.Panel();
             this.btnSwitch = new System.Windows.Forms.Button();
             this.lblModeValue = new System.Windows.Forms.Label();
             this.lblMode = new System.Windows.Forms.Label();
@@ -65,9 +65,12 @@
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.btnSearch = new System.Windows.Forms.Button();
             this.contextMenu.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
+            this.pnlChapterDB.SuspendLayout();
             this.pnlInterval.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.pnlMain.SuspendLayout();
@@ -124,7 +127,6 @@
             // 
             // tpSettings
             // 
-            this.tpSettings.Controls.Add(this.pnlInterval);
             this.tpSettings.Controls.Add(this.pnlMain);
             this.tpSettings.Location = new System.Drawing.Point(4, 23);
             this.tpSettings.Name = "tpSettings";
@@ -134,6 +136,17 @@
             this.tpSettings.Text = "Settings";
             this.tpSettings.UseVisualStyleBackColor = true;
             // 
+            // pnlChapterDB
+            // 
+            this.pnlChapterDB.Controls.Add(this.btnSearch);
+            this.pnlChapterDB.Controls.Add(this.txtSearch);
+            this.pnlChapterDB.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlChapterDB.Location = new System.Drawing.Point(0, 0);
+            this.pnlChapterDB.Name = "pnlChapterDB";
+            this.pnlChapterDB.Size = new System.Drawing.Size(410, 71);
+            this.pnlChapterDB.TabIndex = 28;
+            this.pnlChapterDB.Visible = false;
+            // 
             // pnlInterval
             // 
             this.pnlInterval.Controls.Add(this.lblChapterInterval);
@@ -142,8 +155,7 @@
             this.pnlInterval.Controls.Add(this.trackBar1);
             this.pnlInterval.Controls.Add(this.lblTrackbarValue);
             this.pnlInterval.Controls.Add(this.lblMin);
-            this.pnlInterval.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlInterval.Location = new System.Drawing.Point(3, 3);
+            this.pnlInterval.Location = new System.Drawing.Point(0, 0);
             this.pnlInterval.Name = "pnlInterval";
             this.pnlInterval.Size = new System.Drawing.Size(410, 74);
             this.pnlInterval.TabIndex = 32;
@@ -224,6 +236,7 @@
             // 
             this.pnlMain.AllowDrop = true;
             this.pnlMain.BackColor = System.Drawing.Color.Transparent;
+            this.pnlMain.Controls.Add(this.pnlInterval);
             this.pnlMain.Controls.Add(this.pnlChapterDB);
             this.pnlMain.Controls.Add(this.btnSwitch);
             this.pnlMain.Controls.Add(this.lblModeValue);
@@ -239,15 +252,6 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(410, 176);
             this.pnlMain.TabIndex = 0;
-            // 
-            // pnlChapterDB
-            // 
-            this.pnlChapterDB.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlChapterDB.Location = new System.Drawing.Point(0, 0);
-            this.pnlChapterDB.Name = "pnlChapterDB";
-            this.pnlChapterDB.Size = new System.Drawing.Size(410, 71);
-            this.pnlChapterDB.TabIndex = 28;
-            this.pnlChapterDB.Visible = false;
             // 
             // btnSwitch
             // 
@@ -481,6 +485,23 @@
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
             // 
+            // txtSearch
+            // 
+            this.txtSearch.Location = new System.Drawing.Point(105, 13);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(191, 20);
+            this.txtSearch.TabIndex = 0;
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Location = new System.Drawing.Point(164, 39);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(85, 23);
+            this.btnSearch.TabIndex = 1;
+            this.btnSearch.Text = "Search...";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
             // MKVC
             // 
             this.AllowDrop = true;
@@ -503,6 +524,8 @@
             this.contextMenu.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
             this.tpSettings.ResumeLayout(false);
+            this.pnlChapterDB.ResumeLayout(false);
+            this.pnlChapterDB.PerformLayout();
             this.pnlInterval.ResumeLayout(false);
             this.pnlInterval.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
@@ -553,6 +576,8 @@
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Label lblTrackbarValue;
         private System.Windows.Forms.Label lblMin;
+        private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.TextBox txtSearch;
     }
 }
 

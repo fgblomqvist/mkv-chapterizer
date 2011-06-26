@@ -71,9 +71,6 @@
     <Reference Include="CustomControls">
       <HintPath>..\..\..\..\..\Desktop\CustomControls.dll</HintPath>
     </Reference>
-    <Reference Include="MKVChapterizer, Version=2.1.0.0, Culture=neutral, processorArchitecture=x86">
-      <ExecutableExtension>.exe</ExecutableExtension>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />

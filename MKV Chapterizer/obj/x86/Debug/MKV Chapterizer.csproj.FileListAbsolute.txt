@@ -13,3 +13,5 @@ C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapter
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.application
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.exe
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.pdb
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.bin.ChapterDB.resources
+C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.exe

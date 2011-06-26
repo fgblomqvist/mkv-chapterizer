@@ -15,5 +15,16 @@ namespace MKV_Chapterizer.bin
         {
             InitializeComponent();
         }
+
+        private void ChapterDB_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        public void SearchChapters(string movieName)
+        {
+            txtboxSearchName.Text = movieName;
+            
+        }
     }
 }
