@@ -90,6 +90,7 @@
     <Compile Include="ChapterDB.Designer.cs">
       <DependentUpon>ChapterDB.cs</DependentUpon>
     </Compile>
+    <Compile Include="ChapterDBAccess.cs" />
     <Compile Include="ChaptersExist.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -72,6 +72,7 @@ namespace MKV_Chapterizer
         private delegate void ObjectDelegate3();
 
         Chapterizer thechapterizer = new Chapterizer();
+        ChapterDB chapterDB = new ChapterDB();
 
         public MKVC()
         {
@@ -768,7 +769,7 @@ namespace MKV_Chapterizer
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            
+            chapterDB.SearchChapters(txtSearch.Text);
         }
     }
 }

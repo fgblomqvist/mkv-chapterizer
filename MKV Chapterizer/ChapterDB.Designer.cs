@@ -1,4 +1,4 @@
-﻿namespace MKV_Chapterizer.bin
+﻿namespace MKV_Chapterizer
 {
     partial class ChapterDB
     {
@@ -57,14 +57,14 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSearch.Location = new System.Drawing.Point(329, 19);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 23);
             this.btnSearch.TabIndex = 1;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // txtboxSearchName
             // 
@@ -74,12 +74,12 @@
             this.txtboxSearchName.Name = "txtboxSearchName";
             this.txtboxSearchName.Size = new System.Drawing.Size(273, 20);
             this.txtboxSearchName.TabIndex = 2;
+            this.txtboxSearchName.KeyDown += new System.Windows.Forms.KeyEventHandler(txtboxSearchName_KeyDown);
             // 
             // grpboxResults
             // 
-            this.grpboxResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpboxResults.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
             this.grpboxResults.Controls.Add(this.lboxResults);
             this.grpboxResults.Location = new System.Drawing.Point(12, 77);
             this.grpboxResults.Name = "grpboxResults";
@@ -90,16 +90,17 @@
             // 
             // lboxResults
             // 
+            this.lboxResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lboxResults.FormattingEnabled = true;
-            this.lboxResults.Location = new System.Drawing.Point(7, 19);
+            this.lboxResults.Location = new System.Drawing.Point(3, 16);
             this.lboxResults.Name = "lboxResults";
-            this.lboxResults.Size = new System.Drawing.Size(190, 329);
+            this.lboxResults.Size = new System.Drawing.Size(197, 336);
             this.lboxResults.TabIndex = 0;
+            this.lboxResults.SelectedIndexChanged += new System.EventHandler(this.lboxResults_SelectedIndexChanged);
             // 
             // grpboxChapters
             // 
-            this.grpboxChapters.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
+            this.grpboxChapters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.grpboxChapters.Controls.Add(this.lviewChapters);
             this.grpboxChapters.Location = new System.Drawing.Point(221, 77);
@@ -114,9 +115,10 @@
             this.lviewChapters.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName,
             this.columnHeaderTime});
-            this.lviewChapters.Location = new System.Drawing.Point(7, 19);
+            this.lviewChapters.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lviewChapters.Location = new System.Drawing.Point(3, 16);
             this.lviewChapters.Name = "lviewChapters";
-            this.lviewChapters.Size = new System.Drawing.Size(188, 329);
+            this.lviewChapters.Size = new System.Drawing.Size(197, 336);
             this.lviewChapters.TabIndex = 0;
             this.lviewChapters.UseCompatibleStateImageBehavior = false;
             this.lviewChapters.View = System.Windows.Forms.View.Details;
@@ -165,6 +167,7 @@
             this.Controls.Add(this.grpboxChapters);
             this.Controls.Add(this.grpboxResults);
             this.Name = "ChapterDB";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ChapterDB";
             this.Load += new System.EventHandler(this.ChapterDB_Load);
             this.grpboxResults.ResumeLayout(false);
