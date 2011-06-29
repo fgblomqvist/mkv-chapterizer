@@ -22,40 +22,93 @@ namespace MKV_Chapterizer
 
         private void ChapterDB_Load(object sender, EventArgs e)
         {
-            
+            lblStatus.TextAlign = ContentAlignment.MiddleCenter;
         }
 
         public void SearchChapters(string movieName)
         {
             txtboxSearchName.Text = movieName;
             this.Show();
-            ArrayList result = chapterDBAccess.GrabChapters(movieName);
+            List<ChapterDBAccess.ChapterSet> result;
+
+
+            try
+            {
+                result = chapterDBAccess.GrabChapters(movieName);
+            }
+            catch (ChapterDBAccess.NoResultsException)
+            {
+                lblStatus.Text = "0 sets of chapters found";
+                return;
+            }
+
+            result = Filter(result);
+
+            lblStatus.Text = string.Format("{0} sets of chapters found", result.Count.ToString());
 
             DataTable table = new DataTable();
             table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Quality", typeof(string));
             table.Columns.Add("ChapterSet", typeof(ChapterDBAccess.ChapterSet));
 
-            lboxResults.DataSource = table;
-            lboxResults.DisplayMember = "Name";
-            lboxResults.ValueMember = "ChapterSet";
-
+            dgViewResults.DataSource = table;
+            dgViewResults.Columns["ChapterSet"].Visible = false;
+            
             foreach (ChapterDBAccess.ChapterSet chapterSet in result)
             {
-                table.Rows.Add(chapterSet.Name, chapterSet);
+                table.Rows.Add(chapterSet.Name, chapterSet.Quality, chapterSet);
             }
 
-            ChapterDBAccess.ChapterSet selected = (ChapterDBAccess.ChapterSet)lboxResults.SelectedValue;
-            LoadChapters(selected);
+            ApplyColors();
+        }
+
+        private void ApplyColors()
+        {
+            foreach (DataGridViewRow dgRow in dgViewResults.Rows)
+            {
+                DataGridViewCellStyle styleRed = new DataGridViewCellStyle();
+                styleRed.ForeColor = Color.Red;
+
+                DataGridViewCellStyle styleGreen = new DataGridViewCellStyle();
+                styleGreen.ForeColor = Color.Green;
+
+                DataGridViewCellStyle styleYellow = new DataGridViewCellStyle();
+                styleYellow.ForeColor = Color.Orange;
+
+                if (Convert.ToInt32(dgRow.Cells[1].Value) <= 3)
+                {
+                    dgRow.DefaultCellStyle = styleRed;
+                }
+                else if (Convert.ToInt32(dgRow.Cells[1].Value) == 5)
+                {
+                    dgRow.DefaultCellStyle = styleGreen;
+                }
+                else
+                {
+                    dgRow.DefaultCellStyle = styleYellow;
+                }
+            }
+        }
+
+        private void dgViewResults_Sorted(object sender, EventArgs e)
+        {
+            ApplyColors();
         }
 
         private void LoadChapters(ChapterDBAccess.ChapterSet chapterSet)
         {
             lviewChapters.Items.Clear();
+            string time = null;
 
             foreach (ChapterDBAccess.Chapter chapter in chapterSet)
             {
 
-                string time = chapter.Time.ToString().Remove(12);
+                time = chapter.Time.ToString();
+
+                if (chapter.Time.ToString().Length >= 12)
+                {
+                    time = time.Remove(12);
+                }
 
                 lviewChapters.Items.Add(new ListViewItem(new string[]{chapter.Name, time}));
             }
@@ -65,15 +118,9 @@ namespace MKV_Chapterizer
         {
             if (txtboxSearchName.Text != null)
             {
+                lblStatus.Text = "Searching...";
                 SearchChapters(txtboxSearchName.Text);
             }
-        }
-
-        private void lboxResults_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            
-            ChapterDBAccess.ChapterSet selected = (ChapterDBAccess.ChapterSet)lboxResults.SelectedValue;
-            LoadChapters(selected);
         }
 
         private void txtboxSearchName_KeyDown(object sender, KeyEventArgs e)
@@ -84,6 +131,53 @@ namespace MKV_Chapterizer
                 {
                     SearchChapters(txtboxSearchName.Text);
                 }
+            }
+        }
+
+        private void CenterLabel(Label label)
+        {
+            int formMiddle = this.Width;
+            label.Location = new Point(formMiddle - label.Width / 2, label.Location.Y);
+        }
+
+        private List<ChapterDBAccess.ChapterSet> Filter(List<ChapterDBAccess.ChapterSet> list)
+        {
+            int totalsum;
+            double goodsum;
+
+            foreach (ChapterDBAccess.ChapterSet chapterSet in list)
+            {
+                totalsum = chapterSet.Chapters.Count * 2;
+                goodsum = totalsum;
+
+                foreach (ChapterDBAccess.Chapter chapter in chapterSet)
+                {
+                    //for each chapter that misses the time and/or name decrement goodsum
+                    if (string.IsNullOrEmpty(chapter.Name))
+                    {
+                        goodsum--;
+                    }
+                    else if (chapter.Name.Contains("Chapter"))
+                    {
+                        goodsum -= 0.5; //Not that bad, but still bad
+                    }
+                    if (chapter.Time == null || chapter.Time.ToString() == "00:00:00")
+                    {
+                        goodsum--;
+                    }
+                }
+
+                chapterSet.Quality = (int)Math.Round(((decimal)goodsum / (decimal)totalsum) * 5, 0, MidpointRounding.ToEven); 
+            }
+            return list;
+        }
+
+        private void dgViewResults_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgViewResults.SelectedRows.Count >= 1)
+            {
+                ChapterDBAccess.ChapterSet selected = (ChapterDBAccess.ChapterSet)dgViewResults.SelectedRows[0].Cells[2].Value;
+                LoadChapters(selected);
             }
         }
     }

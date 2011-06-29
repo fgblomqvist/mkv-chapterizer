@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MKVChapterizer.exe" size="201216">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MKVChapterizer.exe" size="205312">
       <assemblyIdentity name="MKVChapterizer" version="2.1.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>zgLlBQtgQh1PNATid8S06l3k7cQ=</dsig:DigestValue>
+        <dsig:DigestValue>lc/bua6pucnyExffvn5uhV+O5/A=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
