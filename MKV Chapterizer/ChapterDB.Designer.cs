@@ -143,7 +143,7 @@
             // columnHeaderName
             // 
             this.columnHeaderName.Text = "Name";
-            this.columnHeaderName.Width = 123;
+            this.columnHeaderName.Width = 136;
             // 
             // columnHeaderTime
             // 
@@ -184,6 +184,7 @@
             this.btnUse.TabIndex = 6;
             this.btnUse.Text = "Use";
             this.btnUse.UseVisualStyleBackColor = true;
+            this.btnUse.Click += new System.EventHandler(this.btnUse_Click);
             // 
             // splitContainer1
             // 

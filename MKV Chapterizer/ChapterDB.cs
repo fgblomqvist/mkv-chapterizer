@@ -8,12 +8,14 @@ using System.Text;
 using System.Windows.Forms;
 using System.Collections;
 using System.Xml;
+using System.Threading;
 
 namespace MKV_Chapterizer
 {
     public partial class ChapterDB : Form
     {
         ChapterDBAccess chapterDBAccess = new ChapterDBAccess();
+        BackgroundWorker bwSearch = new BackgroundWorker();
 
         public ChapterDB()
         {
@@ -23,43 +25,15 @@ namespace MKV_Chapterizer
         private void ChapterDB_Load(object sender, EventArgs e)
         {
             lblStatus.TextAlign = ContentAlignment.MiddleCenter;
+            bwSearch.DoWork +=new DoWorkEventHandler(bwSearch_DoWork);
+            bwSearch.RunWorkerCompleted +=new RunWorkerCompletedEventHandler(bwSearch_RunWorkerCompleted);
         }
 
         public void SearchChapters(string movieName)
         {
             txtboxSearchName.Text = movieName;
             this.Show();
-            List<ChapterDBAccess.ChapterSet> result;
-
-
-            try
-            {
-                result = chapterDBAccess.GrabChapters(movieName);
-            }
-            catch (ChapterDBAccess.NoResultsException)
-            {
-                lblStatus.Text = "0 sets of chapters found";
-                return;
-            }
-
-            result = Filter(result);
-
-            lblStatus.Text = string.Format("{0} sets of chapters found", result.Count.ToString());
-
-            DataTable table = new DataTable();
-            table.Columns.Add("Name", typeof(string));
-            table.Columns.Add("Quality", typeof(string));
-            table.Columns.Add("ChapterSet", typeof(ChapterDBAccess.ChapterSet));
-
-            dgViewResults.DataSource = table;
-            dgViewResults.Columns["ChapterSet"].Visible = false;
-            
-            foreach (ChapterDBAccess.ChapterSet chapterSet in result)
-            {
-                table.Rows.Add(chapterSet.Name, chapterSet.Quality, chapterSet);
-            }
-
-            ApplyColors();
+            bwSearch.RunWorkerAsync(movieName);
         }
 
         private void ApplyColors()
@@ -119,9 +93,10 @@ namespace MKV_Chapterizer
             if (txtboxSearchName.Text != null)
             {
                 lblStatus.Text = "Searching...";
-                SearchChapters(txtboxSearchName.Text);
+                bwSearch.RunWorkerAsync(txtboxSearchName.Text);
             }
         }
+
 
         private void txtboxSearchName_KeyDown(object sender, KeyEventArgs e)
         {
@@ -129,7 +104,8 @@ namespace MKV_Chapterizer
             {
                 if (txtboxSearchName.Text != null)
                 {
-                    SearchChapters(txtboxSearchName.Text);
+                    lblStatus.Text = "Searching...";
+                    bwSearch.RunWorkerAsync(txtboxSearchName.Text);
                 }
             }
         }
@@ -178,6 +154,59 @@ namespace MKV_Chapterizer
             {
                 ChapterDBAccess.ChapterSet selected = (ChapterDBAccess.ChapterSet)dgViewResults.SelectedRows[0].Cells[2].Value;
                 LoadChapters(selected);
+            }
+        }
+
+        private void btnUse_Click(object sender, EventArgs e)
+        {
+            MKVC.chapterSet = (ChapterDBAccess.ChapterSet)dgViewResults.SelectedRows[0].Cells[2].Value;
+            this.Close();
+        }
+
+        private void bwSearch_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+            List<ChapterDBAccess.ChapterSet> result;
+
+            try
+            {
+                result = chapterDBAccess.GrabChapters((string)e.Argument);
+            }
+            catch (ChapterDBAccess.NoResultsException)
+            {
+                result = new List<ChapterDBAccess.ChapterSet>();
+            }
+
+            e.Result = Filter(result);
+
+        }
+
+        private void bwSearch_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error == null && e.Cancelled == false)
+            {
+                List<ChapterDBAccess.ChapterSet> result = (List<ChapterDBAccess.ChapterSet>)e.Result;
+
+                lblStatus.Text = string.Format("{0} sets of chapters found", result.Count.ToString());
+
+                DataTable table = new DataTable();
+                table.Columns.Add("Name", typeof(string));
+                table.Columns.Add("Quality", typeof(string));
+                table.Columns.Add("ChapterSet", typeof(ChapterDBAccess.ChapterSet));
+
+                dgViewResults.DataSource = table;
+                dgViewResults.Columns["ChapterSet"].Visible = false;
+
+                foreach (ChapterDBAccess.ChapterSet chapterSet in result)
+                {
+                    table.Rows.Add(chapterSet.Name, chapterSet.Quality, chapterSet);
+                }
+
+                ApplyColors();
+            }
+            else if (e.Error != null)
+            {
+                lblStatus.Text = e.Error.Message;
             }
         }
     }

@@ -66,6 +66,7 @@ namespace MKV_Chapterizer
         public static int tbarVal = 5;
         public int queueAction = 1;
         public int queueProgress;
+        public static ChapterDBAccess.ChapterSet chapterSet;
 
         private delegate void ObjectDelegate(int percentage);
         private delegate void ObjectDelegate2(string status);
@@ -87,7 +88,6 @@ namespace MKV_Chapterizer
             thechapterizer.ProgressChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_ProgressChanged);
             thechapterizer.StatusChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_StatusChanged);
             thechapterizer.Finished += new Chapterizer.FinishedEventHandler(thechapterizer_Finished);
-            
         }
 
         public bool QueueMode
@@ -770,6 +770,14 @@ namespace MKV_Chapterizer
         private void btnSearch_Click(object sender, EventArgs e)
         {
             chapterDB.SearchChapters(txtSearch.Text);
+        }
+
+        private void txtSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                chapterDB.SearchChapters(txtSearch.Text);
+            }
         }
     }
 }

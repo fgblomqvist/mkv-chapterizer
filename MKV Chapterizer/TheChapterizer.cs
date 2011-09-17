@@ -28,6 +28,7 @@ namespace MKV_Chapterizer
         private static bool pIsBusy = false;
         private static string pStatus;
         private static string pError;
+        private static ChapterDBAccess.ChapterSet pChapterSet;
         private static string workDir;
 
         private static BackgroundWorker worker = new BackgroundWorker();
@@ -84,6 +85,19 @@ namespace MKV_Chapterizer
             set
             {
                 pChapterInterval = value;
+            }
+        }
+
+        public ChapterDBAccess.ChapterSet ChapterFile
+        {
+            get
+            {
+                return pChapterSet;
+            }
+
+            set
+            {
+                pChapterSet = value;
             }
         }
 

@@ -491,6 +491,7 @@
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(191, 20);
             this.txtSearch.TabIndex = 0;
+            this.txtSearch.KeyDown +=new System.Windows.Forms.KeyEventHandler(txtSearch_KeyDown);
             // 
             // btnSearch
             // 
