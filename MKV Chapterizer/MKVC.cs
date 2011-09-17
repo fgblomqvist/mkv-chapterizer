@@ -665,7 +665,7 @@ namespace MKV_Chapterizer
 
         private void label9_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Copyright 2010-2011 © Fredrik Blomqvist");
+            MessageBox.Show("Copyright 2010-2011 © Fredrik Blomqvist" + Environment.NewLine + Environment.NewLine + "Thanks to Jarret Vance (ChapterDB)" + Environment.NewLine + "www.jvance.com");
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
