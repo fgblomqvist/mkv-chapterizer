@@ -93,7 +93,10 @@ namespace MKV_Chapterizer
             if (txtboxSearchName.Text != null)
             {
                 lblStatus.Text = "Searching...";
-                bwSearch.RunWorkerAsync(txtboxSearchName.Text);
+                if (bwSearch.IsBusy == false)
+                {
+                    bwSearch.RunWorkerAsync(txtboxSearchName.Text);
+                }
             }
         }
 
@@ -105,7 +108,10 @@ namespace MKV_Chapterizer
                 if (txtboxSearchName.Text != null)
                 {
                     lblStatus.Text = "Searching...";
-                    bwSearch.RunWorkerAsync(txtboxSearchName.Text);
+                    if (bwSearch.IsBusy == false)
+                    {
+                        bwSearch.RunWorkerAsync(txtboxSearchName.Text);
+                    }
                 }
             }
         }

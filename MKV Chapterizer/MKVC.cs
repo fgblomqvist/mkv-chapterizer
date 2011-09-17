@@ -309,7 +309,16 @@ namespace MKV_Chapterizer
 
                     thechapterizer.Files = mkvList;
                     thechapterizer.ChaptersExistAction = queueAction;
-                    thechapterizer.ChapterInterval = trackBar1.Value;
+
+                    if (chapterSet != null)
+                    {
+                        thechapterizer.ChapterSet = chapterSet;
+                    }
+                    else
+                    {
+                        thechapterizer.ChapterInterval = trackBar1.Value;
+                    }
+
                     thechapterizer.Overwrite = cboxOverwrite.Checked;
                
             }

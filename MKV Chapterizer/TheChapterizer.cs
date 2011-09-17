@@ -88,7 +88,7 @@ namespace MKV_Chapterizer
             }
         }
 
-        public ChapterDBAccess.ChapterSet ChapterFile
+        public ChapterDBAccess.ChapterSet ChapterSet
         {
             get
             {
@@ -369,77 +369,57 @@ namespace MKV_Chapterizer
             IsBusy = false;
         }
 
-        private string CreateChapterFile(int runTime)
+        private ChapterDBAccess.ChapterSet CreateChapterSet(int runTime)
         {
-           decimal count = runTime / ChapterInterval;
+            ChapterDBAccess.ChapterSet chapterSet = new ChapterDBAccess.ChapterSet();
+            ChapterDBAccess.Chapter chapter;
 
-            if (count < 0)
-            {
+            decimal count = runTime / ChapterInterval;
 
-                MessageBox.Show("Too high interval!");
-
-            }
-            else
-            {
-
-                count = Math.Floor(count);
-                
-                if (Properties.Settings.Default.firstChap00)
-                {
-                    count += 1;
-                }
-
-            }
-
-            string path = workDir + "\\chapters.xml";
             int nmbr = Convert.ToInt32(count);
             int start;
             int extraval = 0;
             int[] time = { 00, 00 };
             int interval = ChapterInterval; // trackBar1.Value;
 
-            XmlTextWriter xwrite = new XmlTextWriter(path, System.Text.Encoding.UTF8);
+            if (count < 0)
+            {
+                MessageBox.Show("Too high interval!");
+            }
+            else
+            {
+                count = Math.Floor(count);
 
-            xwrite.WriteStartDocument();
-            xwrite.Formatting = Formatting.Indented;
-            xwrite.Indentation = 2;
-            xwrite.WriteDocType("Tags", null, "matroskatags.dtd", null);
-            xwrite.WriteStartElement("Chapters");
-            xwrite.WriteStartElement("EditionEntry");
+                if (Properties.Settings.Default.firstChap00)
+                {
+                    count += 1;
+                }
+            }
 
             if (Properties.Settings.Default.firstChap00)
             {
-                xwrite.WriteStartElement("ChapterAtom");
-                xwrite.WriteElementString("ChapterTimeStart", string.Format("{0:00}:{1:00}", time[0], time[1]) + ":00.000000000");
-                xwrite.WriteStartElement("ChapterDisplay");
-                xwrite.WriteElementString("ChapterString", "Chapter " + Convert.ToString(1));
-                xwrite.WriteEndElement();
-                xwrite.WriteEndElement();
-
+                chapter = new ChapterDBAccess.Chapter();
+                chapter.Time = TimeSpan.Parse(time[0] + ":" + time[1]);
+                chapter.Name = "Chapter 1";
                 extraval = 1;
             }
 
             for (start = 0 + extraval; start < nmbr; start++)
             {
-
                 time[1] += interval;
 
                 if (time[1] >= 60)
                 {
                     time[0] += 1;
                     time[1] -= 60;
-
                 }
 
+                chapter = new ChapterDBAccess.Chapter();
+                chapter.Time = TimeSpan.Parse(time[0] + ":" + time[1]);
+                chapter.Name = "Chapter " + Convert.ToString(start + 1);
 
-                xwrite.WriteStartElement("ChapterAtom");
-                xwrite.WriteElementString("ChapterTimeStart", string.Format("{0:00}:{1:00}", time[0], time[1]) + ":00.000000000");
-                xwrite.WriteStartElement("ChapterDisplay");
-                xwrite.WriteElementString("ChapterString", "Chapter " + Convert.ToString(start + 1));
-                xwrite.WriteEndElement();
-                xwrite.WriteEndElement();
-
-            }
+                chapterSet.Chapters.Add(chapter);
+           }
 
             if (Properties.Settings.Default.extraChapEnd)
             {
@@ -453,17 +433,40 @@ namespace MKV_Chapterizer
                     hours += 1;
                 }
 
+                chapter = new ChapterDBAccess.Chapter();
+                chapter.Time = TimeSpan.Parse(hours.ToString() + ":" + minutes.ToString());
+                chapter.Name = Convert.ToString(start + 1);
+            }
+
+            return chapterSet;
+        }
+
+        private string CreateChapterFile(ChapterDBAccess.ChapterSet chapterSet)
+        {
+
+            string path = workDir + "\\chapters.xml";
+
+            XmlTextWriter xwrite = new XmlTextWriter(path, System.Text.Encoding.UTF8);
+
+            xwrite.WriteStartDocument();
+            xwrite.Formatting = Formatting.Indented;
+            xwrite.Indentation = 2;
+            xwrite.WriteDocType("Tags", null, "matroskatags.dtd", null);
+            xwrite.WriteStartElement("Chapters");
+            xwrite.WriteStartElement("EditionEntry");
+
+            foreach(ChapterDBAccess.Chapter chapter in chapterSet.Chapters)
+            {
                 xwrite.WriteStartElement("ChapterAtom");
-                xwrite.WriteElementString("ChapterTimeStart", string.Format("{0:00}:{1:00}", hours.ToString(), minutes.ToString()) + ":00.000000000");
+                xwrite.WriteElementString("ChapterTimeStart", string.Format("{0:00}:{1:00}", chapter.Time.Hours, chapter.Time.Seconds) + ":00.000000000");
                 xwrite.WriteStartElement("ChapterDisplay");
-                xwrite.WriteElementString("ChapterString", "Chapter " + Convert.ToString(start + 1));
+                xwrite.WriteElementString("ChapterString", chapter.Name);
                 xwrite.WriteEndElement();
                 xwrite.WriteEndElement();
             }
 
             xwrite.WriteEndElement();
             xwrite.WriteEndElement();
-
             xwrite.Close();
 
             return path;
@@ -508,7 +511,17 @@ namespace MKV_Chapterizer
             decimal dd;
             dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 60000);
 
-            String cpath = CreateChapterFile(Convert.ToInt32(dd));
+            String cpath;
+
+            if (ChapterSet == null)
+            {
+                cpath = CreateChapterFile(CreateChapterSet(Convert.ToInt32(dd)));
+            }
+            else
+            {
+                cpath = CreateChapterFile(ChapterSet);
+            }
+
             String newFileName = null;
 
             newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
@@ -702,7 +715,16 @@ namespace MKV_Chapterizer
             decimal dd;
             dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 60000);
 
-            String cpath = CreateChapterFile(Convert.ToInt32(dd));
+            string cpath;
+            if (ChapterSet == null)
+            {
+                cpath = CreateChapterFile(CreateChapterSet(Convert.ToInt32(dd)));
+            }
+            else
+            {
+                cpath = CreateChapterFile(ChapterSet);
+            }
+
             string newFileName2 = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info2.FullName)) + ".mkv";
 
             newpath = q + workDir + "\\" + newFileName2 + q;
