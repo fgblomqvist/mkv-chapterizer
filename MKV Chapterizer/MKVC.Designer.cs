@@ -37,7 +37,7 @@
             this.bwCheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
-            this.pnlChapterDB = new System.Windows.Forms.Panel();
+            this.pnlMain = new System.Windows.Forms.Panel();
             this.pnlInterval = new System.Windows.Forms.Panel();
             this.lblChapterInterval = new System.Windows.Forms.Label();
             this.lblChapterCount = new System.Windows.Forms.Label();
@@ -45,7 +45,9 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.lblTrackbarValue = new System.Windows.Forms.Label();
             this.lblMin = new System.Windows.Forms.Label();
-            this.pnlMain = new System.Windows.Forms.Panel();
+            this.pnlChapterDB = new System.Windows.Forms.Panel();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSwitch = new System.Windows.Forms.Button();
             this.lblModeValue = new System.Windows.Forms.Label();
             this.lblMode = new System.Windows.Forms.Label();
@@ -65,15 +67,13 @@
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
-            this.txtSearch = new System.Windows.Forms.TextBox();
-            this.btnSearch = new System.Windows.Forms.Button();
             this.contextMenu.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
-            this.pnlChapterDB.SuspendLayout();
+            this.pnlMain.SuspendLayout();
             this.pnlInterval.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            this.pnlMain.SuspendLayout();
+            this.pnlChapterDB.SuspendLayout();
             this.tpQueue.SuspendLayout();
             this.tpAdvSettings.SuspendLayout();
             this.grpboxMKVHasChapters.SuspendLayout();
@@ -136,16 +136,26 @@
             this.tpSettings.Text = "Settings";
             this.tpSettings.UseVisualStyleBackColor = true;
             // 
-            // pnlChapterDB
+            // pnlMain
             // 
-            this.pnlChapterDB.Controls.Add(this.btnSearch);
-            this.pnlChapterDB.Controls.Add(this.txtSearch);
-            this.pnlChapterDB.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlChapterDB.Location = new System.Drawing.Point(0, 0);
-            this.pnlChapterDB.Name = "pnlChapterDB";
-            this.pnlChapterDB.Size = new System.Drawing.Size(410, 71);
-            this.pnlChapterDB.TabIndex = 28;
-            this.pnlChapterDB.Visible = false;
+            this.pnlMain.AllowDrop = true;
+            this.pnlMain.BackColor = System.Drawing.Color.Transparent;
+            this.pnlMain.Controls.Add(this.pnlInterval);
+            this.pnlMain.Controls.Add(this.pnlChapterDB);
+            this.pnlMain.Controls.Add(this.btnSwitch);
+            this.pnlMain.Controls.Add(this.lblModeValue);
+            this.pnlMain.Controls.Add(this.lblMode);
+            this.pnlMain.Controls.Add(this.lblStatus);
+            this.pnlMain.Controls.Add(this.lblSettings);
+            this.pnlMain.Controls.Add(this.btnMerge);
+            this.pnlMain.Controls.Add(this.lblVersion);
+            this.pnlMain.Controls.Add(this.cboxOverwrite);
+            this.pnlMain.Controls.Add(this.lblTutorial);
+            this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlMain.Location = new System.Drawing.Point(3, 3);
+            this.pnlMain.Name = "pnlMain";
+            this.pnlMain.Size = new System.Drawing.Size(410, 176);
+            this.pnlMain.TabIndex = 0;
             // 
             // pnlInterval
             // 
@@ -232,26 +242,34 @@
             this.lblMin.TabIndex = 27;
             this.lblMin.Text = "minutes";
             // 
-            // pnlMain
+            // pnlChapterDB
             // 
-            this.pnlMain.AllowDrop = true;
-            this.pnlMain.BackColor = System.Drawing.Color.Transparent;
-            this.pnlMain.Controls.Add(this.pnlInterval);
-            this.pnlMain.Controls.Add(this.pnlChapterDB);
-            this.pnlMain.Controls.Add(this.btnSwitch);
-            this.pnlMain.Controls.Add(this.lblModeValue);
-            this.pnlMain.Controls.Add(this.lblMode);
-            this.pnlMain.Controls.Add(this.lblStatus);
-            this.pnlMain.Controls.Add(this.lblSettings);
-            this.pnlMain.Controls.Add(this.btnMerge);
-            this.pnlMain.Controls.Add(this.lblVersion);
-            this.pnlMain.Controls.Add(this.cboxOverwrite);
-            this.pnlMain.Controls.Add(this.lblTutorial);
-            this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMain.Location = new System.Drawing.Point(3, 3);
-            this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(410, 176);
-            this.pnlMain.TabIndex = 0;
+            this.pnlChapterDB.Controls.Add(this.btnSearch);
+            this.pnlChapterDB.Controls.Add(this.txtSearch);
+            this.pnlChapterDB.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlChapterDB.Location = new System.Drawing.Point(0, 0);
+            this.pnlChapterDB.Name = "pnlChapterDB";
+            this.pnlChapterDB.Size = new System.Drawing.Size(410, 71);
+            this.pnlChapterDB.TabIndex = 28;
+            this.pnlChapterDB.Visible = false;
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Location = new System.Drawing.Point(164, 39);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(85, 23);
+            this.btnSearch.TabIndex = 1;
+            this.btnSearch.Text = "Search...";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Location = new System.Drawing.Point(105, 13);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(191, 20);
+            this.txtSearch.TabIndex = 0;
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
             // 
             // btnSwitch
             // 
@@ -479,29 +497,11 @@
             // progressBar
             // 
             this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.progressBar.Location = new System.Drawing.Point(7, 172);
+            this.progressBar.Location = new System.Drawing.Point(7, 211);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(365, 23);
+            this.progressBar.Size = new System.Drawing.Size(410, 23);
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Location = new System.Drawing.Point(105, 13);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(191, 20);
-            this.txtSearch.TabIndex = 0;
-            this.txtSearch.KeyDown +=new System.Windows.Forms.KeyEventHandler(txtSearch_KeyDown);
-            // 
-            // btnSearch
-            // 
-            this.btnSearch.Location = new System.Drawing.Point(164, 39);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(85, 23);
-            this.btnSearch.TabIndex = 1;
-            this.btnSearch.Text = "Search...";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // MKVC
             // 
@@ -509,7 +509,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(424, 209);
+            this.ClientSize = new System.Drawing.Size(424, 238);
             this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.progressBar);
@@ -525,13 +525,13 @@
             this.contextMenu.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
             this.tpSettings.ResumeLayout(false);
-            this.pnlChapterDB.ResumeLayout(false);
-            this.pnlChapterDB.PerformLayout();
+            this.pnlMain.ResumeLayout(false);
+            this.pnlMain.PerformLayout();
             this.pnlInterval.ResumeLayout(false);
             this.pnlInterval.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            this.pnlMain.ResumeLayout(false);
-            this.pnlMain.PerformLayout();
+            this.pnlChapterDB.ResumeLayout(false);
+            this.pnlChapterDB.PerformLayout();
             this.tpQueue.ResumeLayout(false);
             this.tpAdvSettings.ResumeLayout(false);
             this.grpboxMKVHasChapters.ResumeLayout(false);

@@ -109,7 +109,7 @@ namespace MKV_Chapterizer
                     lblNumOfChapters.Visible = false;
                     lblChapterCount.Visible = false;
                     tabControl.HideTabs = false;
-                    progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(149 * screenMultiplier));
+                    progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(211 * screenMultiplier));
                     this.Show();
                 }
                 else
@@ -121,7 +121,7 @@ namespace MKV_Chapterizer
                     lblChapterCount.Visible = true;
                     tabControl.HideTabs = true;
                     tabControl.Size = new System.Drawing.Size(Convert.ToInt32(424 * screenMultiplier), Convert.ToInt32(209 * screenMultiplier));
-                    progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(149 * screenMultiplier));
+                    progressBar.Location = new System.Drawing.Point(Convert.ToInt32(7 * screenMultiplier), Convert.ToInt32(211 * screenMultiplier));
                     this.Show();
                     this.Size = new System.Drawing.Size(Convert.ToInt32(430 * screenMultiplier), Convert.ToInt32(237 * screenMultiplier));
                 }
@@ -616,7 +616,7 @@ namespace MKV_Chapterizer
 
             //Show progressbar
             float y;
-            y = 205 * screenMultiplier;
+            y = 266 * screenMultiplier;
             Size = new Size((int)this.Size.Width, (int)y);
 
             btnMerge.Text = "Cancel";
@@ -659,7 +659,7 @@ namespace MKV_Chapterizer
                 lblStatus.Visible = false;
             }
 
-            y = 173 * screenMultiplier;
+            y = 237 * screenMultiplier;
             Size = new Size((int)this.Size.Width, (int)y);
         }
 
