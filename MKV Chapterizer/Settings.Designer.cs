@@ -41,12 +41,15 @@
             this.lblCustomName = new System.Windows.Forms.Label();
             this.lblMkv = new System.Windows.Forms.Label();
             this.infoTip = new System.Windows.Forms.ToolTip(this.components);
+            this.txtChapterName = new System.Windows.Forms.TextBox();
+            this.lblChapterName = new System.Windows.Forms.Label();
+            this.lblChapterVariables = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(30, 180);
+            this.btnOK.Location = new System.Drawing.Point(30, 266);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 2;
@@ -57,7 +60,7 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(111, 180);
+            this.btnCancel.Location = new System.Drawing.Point(111, 266);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -121,6 +124,7 @@
             this.txtboxCustomName.Name = "txtboxCustomName";
             this.txtboxCustomName.Size = new System.Drawing.Size(130, 20);
             this.txtboxCustomName.TabIndex = 12;
+            this.infoTip.SetToolTip(this.txtboxCustomName, "Example:\r\n%O-new\r\nAvatar-new.mkv");
             // 
             // lblCustomName2
             // 
@@ -152,15 +156,43 @@
             // infoTip
             // 
             this.infoTip.AutoPopDelay = 8000;
-            this.infoTip.InitialDelay = 1000;
+            this.infoTip.InitialDelay = 500;
             this.infoTip.ReshowDelay = 100;
-            this.infoTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            // 
+            // txtChapterName
+            // 
+            this.txtChapterName.Location = new System.Drawing.Point(15, 229);
+            this.txtChapterName.Name = "txtChapterName";
+            this.txtChapterName.Size = new System.Drawing.Size(166, 20);
+            this.txtChapterName.TabIndex = 17;
+            this.infoTip.SetToolTip(this.txtChapterName, "Example:\r\nChapter %N - %T\r\nChapter 3 - 05:00");
+            // 
+            // lblChapterName
+            // 
+            this.lblChapterName.AutoSize = true;
+            this.lblChapterName.Location = new System.Drawing.Point(12, 174);
+            this.lblChapterName.Name = "lblChapterName";
+            this.lblChapterName.Size = new System.Drawing.Size(133, 13);
+            this.lblChapterName.TabIndex = 16;
+            this.lblChapterName.Text = "Custom name for chapters:";
+            // 
+            // lblChapterVariables
+            // 
+            this.lblChapterVariables.AutoSize = true;
+            this.lblChapterVariables.Location = new System.Drawing.Point(12, 200);
+            this.lblChapterVariables.Name = "lblChapterVariables";
+            this.lblChapterVariables.Size = new System.Drawing.Size(124, 26);
+            this.lblChapterVariables.TabIndex = 18;
+            this.lblChapterVariables.Text = "%N = Chapter Number\r\n%T =  Chapter Timecode";
             // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(216, 215);
+            this.ClientSize = new System.Drawing.Size(216, 301);
+            this.Controls.Add(this.lblChapterVariables);
+            this.Controls.Add(this.txtChapterName);
+            this.Controls.Add(this.lblChapterName);
             this.Controls.Add(this.lblMkv);
             this.Controls.Add(this.lblCustomName);
             this.Controls.Add(this.lblCustomName2);
@@ -199,5 +231,8 @@
         private System.Windows.Forms.Label lblCustomName;
         private System.Windows.Forms.Label lblMkv;
         private System.Windows.Forms.ToolTip infoTip;
+        private System.Windows.Forms.Label lblChapterName;
+        private System.Windows.Forms.TextBox txtChapterName;
+        private System.Windows.Forms.Label lblChapterVariables;
     }
 }

@@ -15,3 +15,16 @@ C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapter
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.pdb
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.exe
 C:\Users\Admin\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.ChapterDB.resources
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.ChapterDB.resources
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.ChaptersExist.resources
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.MKVC.resources
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.Properties.Resources.resources
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.Settings.resources
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.exe
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.pdb
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.exe.config
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.exe
+C:\Users\fredrik.blomqvist\Documents\Visual Studio 2010\Projects\MKV Chapterizer\MKV Chapterizer\bin\Debug\MKVChapterizer.pdb
