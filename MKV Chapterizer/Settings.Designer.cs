@@ -44,12 +44,15 @@
             this.txtChapterName = new System.Windows.Forms.TextBox();
             this.lblChapterName = new System.Windows.Forms.Label();
             this.lblChapterVariables = new System.Windows.Forms.Label();
+            this.chkUseLocalMKVMerge = new System.Windows.Forms.CheckBox();
+            this.lblPath = new System.Windows.Forms.Label();
+            this.txtMKVPath = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(30, 266);
+            this.btnOK.Location = new System.Drawing.Point(245, 182);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 2;
@@ -60,7 +63,7 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(111, 266);
+            this.btnCancel.Location = new System.Drawing.Point(326, 182);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -120,7 +123,7 @@
             // txtboxCustomName
             // 
             this.txtboxCustomName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtboxCustomName.Location = new System.Drawing.Point(15, 140);
+            this.txtboxCustomName.Location = new System.Drawing.Point(229, 143);
             this.txtboxCustomName.Name = "txtboxCustomName";
             this.txtboxCustomName.Size = new System.Drawing.Size(130, 20);
             this.txtboxCustomName.TabIndex = 12;
@@ -129,7 +132,7 @@
             // lblCustomName2
             // 
             this.lblCustomName2.AutoSize = true;
-            this.lblCustomName2.Location = new System.Drawing.Point(12, 124);
+            this.lblCustomName2.Location = new System.Drawing.Point(226, 127);
             this.lblCustomName2.Name = "lblCustomName2";
             this.lblCustomName2.Size = new System.Drawing.Size(93, 13);
             this.lblCustomName2.TabIndex = 13;
@@ -138,7 +141,7 @@
             // lblCustomName
             // 
             this.lblCustomName.AutoSize = true;
-            this.lblCustomName.Location = new System.Drawing.Point(12, 102);
+            this.lblCustomName.Location = new System.Drawing.Point(226, 105);
             this.lblCustomName.Name = "lblCustomName";
             this.lblCustomName.Size = new System.Drawing.Size(133, 13);
             this.lblCustomName.TabIndex = 14;
@@ -147,7 +150,7 @@
             // lblMkv
             // 
             this.lblMkv.AutoSize = true;
-            this.lblMkv.Location = new System.Drawing.Point(148, 143);
+            this.lblMkv.Location = new System.Drawing.Point(362, 146);
             this.lblMkv.Name = "lblMkv";
             this.lblMkv.Size = new System.Drawing.Size(33, 13);
             this.lblMkv.TabIndex = 15;
@@ -161,7 +164,7 @@
             // 
             // txtChapterName
             // 
-            this.txtChapterName.Location = new System.Drawing.Point(15, 229);
+            this.txtChapterName.Location = new System.Drawing.Point(15, 160);
             this.txtChapterName.Name = "txtChapterName";
             this.txtChapterName.Size = new System.Drawing.Size(166, 20);
             this.txtChapterName.TabIndex = 17;
@@ -170,7 +173,7 @@
             // lblChapterName
             // 
             this.lblChapterName.AutoSize = true;
-            this.lblChapterName.Location = new System.Drawing.Point(12, 174);
+            this.lblChapterName.Location = new System.Drawing.Point(12, 105);
             this.lblChapterName.Name = "lblChapterName";
             this.lblChapterName.Size = new System.Drawing.Size(133, 13);
             this.lblChapterName.TabIndex = 16;
@@ -179,17 +182,46 @@
             // lblChapterVariables
             // 
             this.lblChapterVariables.AutoSize = true;
-            this.lblChapterVariables.Location = new System.Drawing.Point(12, 200);
+            this.lblChapterVariables.Location = new System.Drawing.Point(12, 131);
             this.lblChapterVariables.Name = "lblChapterVariables";
             this.lblChapterVariables.Size = new System.Drawing.Size(124, 26);
             this.lblChapterVariables.TabIndex = 18;
             this.lblChapterVariables.Text = "%N = Chapter Number\r\n%T =  Chapter Timecode";
             // 
+            // chkUseLocalMKVMerge
+            // 
+            this.chkUseLocalMKVMerge.AutoSize = true;
+            this.chkUseLocalMKVMerge.Location = new System.Drawing.Point(229, 12);
+            this.chkUseLocalMKVMerge.Name = "chkUseLocalMKVMerge";
+            this.chkUseLocalMKVMerge.Size = new System.Drawing.Size(135, 30);
+            this.chkUseLocalMKVMerge.TabIndex = 19;
+            this.chkUseLocalMKVMerge.Text = "Try to use MKV Merge \r\n from local mkvtoolnix";
+            this.chkUseLocalMKVMerge.UseVisualStyleBackColor = true;
+            // 
+            // lblPath
+            // 
+            this.lblPath.AutoSize = true;
+            this.lblPath.Location = new System.Drawing.Point(226, 54);
+            this.lblPath.Name = "lblPath";
+            this.lblPath.Size = new System.Drawing.Size(32, 13);
+            this.lblPath.TabIndex = 20;
+            this.lblPath.Text = "Path:";
+            // 
+            // txtMKVPath
+            // 
+            this.txtMKVPath.Location = new System.Drawing.Point(229, 70);
+            this.txtMKVPath.Name = "txtMKVPath";
+            this.txtMKVPath.Size = new System.Drawing.Size(172, 20);
+            this.txtMKVPath.TabIndex = 21;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(216, 301);
+            this.ClientSize = new System.Drawing.Size(431, 217);
+            this.Controls.Add(this.txtMKVPath);
+            this.Controls.Add(this.lblPath);
+            this.Controls.Add(this.chkUseLocalMKVMerge);
             this.Controls.Add(this.lblChapterVariables);
             this.Controls.Add(this.txtChapterName);
             this.Controls.Add(this.lblChapterName);
@@ -234,5 +266,8 @@
         private System.Windows.Forms.Label lblChapterName;
         private System.Windows.Forms.TextBox txtChapterName;
         private System.Windows.Forms.Label lblChapterVariables;
+        private System.Windows.Forms.CheckBox chkUseLocalMKVMerge;
+        private System.Windows.Forms.Label lblPath;
+        private System.Windows.Forms.TextBox txtMKVPath;
     }
 }
