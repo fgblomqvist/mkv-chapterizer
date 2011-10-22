@@ -29,6 +29,8 @@ namespace MKV_Chapterizer
         private static string pStatus;
         private static string pError;
         private static ChapterDBAccess.ChapterSet pChapterSet;
+        private static string pMKVMergePath;
+        private static string pCustomChapterName;
         private static string workDir;
 
         private static BackgroundWorker worker = new BackgroundWorker();
@@ -154,6 +156,32 @@ namespace MKV_Chapterizer
             set
             {
                 pChaptersExistAction = value;
+            }
+        }
+
+        public string MKVMergePath
+        {
+            get
+            {
+                return pMKVMergePath;
+            }
+
+            set
+            {
+                pMKVMergePath = value;
+            }
+        }
+
+        public string CustomChapterName
+        {
+            get
+            {
+                return pCustomChapterName;
+            }
+
+            set
+            {
+                pCustomChapterName = value;
             }
         }
         
@@ -400,11 +428,12 @@ namespace MKV_Chapterizer
             {
                 chapter = new ChapterDBAccess.Chapter();
                 chapter.Time = TimeSpan.Parse(time[0] + ":" + time[1]);
-                chapter.Name = "Chapter 1";
+                chapter.Name = CustomChapterName.Replace("%N", "1").Replace("%T", string.Format("{0:00}:{1:00}:{2:00}", (int)chapter.Time.TotalHours, chapter.Time.Minutes, chapter.Time.Seconds));
+                chapterSet.Chapters.Add(chapter);
                 extraval = 1;
             }
 
-            for (start = 0 + extraval; start < nmbr; start++)
+            for (start = 0 + extraval; start <= nmbr; start++)
             {
                 time[1] += interval;
 
@@ -416,7 +445,7 @@ namespace MKV_Chapterizer
 
                 chapter = new ChapterDBAccess.Chapter();
                 chapter.Time = TimeSpan.Parse(time[0] + ":" + time[1]);
-                chapter.Name = "Chapter " + Convert.ToString(start + 1);
+                chapter.Name = CustomChapterName.Replace("%N", Convert.ToString(start + 1)).Replace("%T", string.Format("{0:00}:{1:00}:{2:00}", (int)chapter.Time.TotalHours, chapter.Time.Minutes, chapter.Time.Seconds));
 
                 chapterSet.Chapters.Add(chapter);
            }
@@ -435,7 +464,7 @@ namespace MKV_Chapterizer
 
                 chapter = new ChapterDBAccess.Chapter();
                 chapter.Time = TimeSpan.Parse(hours.ToString() + ":" + minutes.ToString());
-                chapter.Name = Convert.ToString(start + 1);
+                chapter.Name = CustomChapterName.Replace("%N", Convert.ToString(start + 1)).Replace("%T", string.Format("{0:00}:{1:00}:{2:00}", (int)chapter.Time.TotalHours, chapter.Time.Minutes, chapter.Time.Seconds));
             }
 
             return chapterSet;
@@ -458,7 +487,7 @@ namespace MKV_Chapterizer
             foreach(ChapterDBAccess.Chapter chapter in chapterSet.Chapters)
             {
                 xwrite.WriteStartElement("ChapterAtom");
-                xwrite.WriteElementString("ChapterTimeStart", string.Format("{0:00}:{1:00}", chapter.Time.Hours, chapter.Time.Seconds) + ":00.000000000");
+                xwrite.WriteElementString("ChapterTimeStart", string.Format("{0:00}:{1:00}:{2:00}.000000000", (int)chapter.Time.Hours, chapter.Time.Minutes, chapter.Time.Seconds));
                 xwrite.WriteStartElement("ChapterDisplay");
                 xwrite.WriteElementString("ChapterString", chapter.Name);
                 xwrite.WriteEndElement();
@@ -535,7 +564,7 @@ namespace MKV_Chapterizer
 
             String args = "-o " + newpath + " --chapters " + q + cpath + q + " --compression -1:none " + oldpath;
 
-            prcinfo.FileName = "mkvmerge\\mkvmerge.exe";
+            prcinfo.FileName = MKVMergePath;
             prcinfo.Arguments = args;
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;
@@ -604,7 +633,7 @@ namespace MKV_Chapterizer
             ProcessStartInfo prcinfo = new ProcessStartInfo();
             Process prc = new Process();
 
-            prcinfo.FileName = "mkvmerge\\mkvmerge.exe";
+            prcinfo.FileName = MKVMergePath;
             prcinfo.Arguments = pArgs;
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;
@@ -666,7 +695,7 @@ namespace MKV_Chapterizer
             ProcessStartInfo prcinfo = new ProcessStartInfo();
             Process prc = new Process();
 
-            prcinfo.FileName = "mkvmerge\\mkvmerge.exe";
+            prcinfo.FileName = MKVMergePath;
             prcinfo.Arguments = args;
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;

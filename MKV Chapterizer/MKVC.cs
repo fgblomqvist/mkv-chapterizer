@@ -295,6 +295,16 @@ namespace MKV_Chapterizer
 
         private void button1_Click(object sender,EventArgs e)
         {
+            if (Properties.Settings.Default.customMKVMerge)
+            {
+                thechapterizer.MKVMergePath = Properties.Settings.Default.customMKVMergePath;
+            }
+            else
+            {
+                thechapterizer.MKVMergePath = "mkvmerge\\mkvmerge.exe";
+            }
+
+            thechapterizer.CustomChapterName = Properties.Settings.Default.customChapterName;
 
             if (btnMerge.Text == "Chapterize")
             {
@@ -310,7 +320,7 @@ namespace MKV_Chapterizer
                     thechapterizer.Files = mkvList;
                     thechapterizer.ChaptersExistAction = queueAction;
 
-                    if (chapterSet != null)
+                    if (pnlChapterDB.Visible && chapterSet != null)
                     {
                         thechapterizer.ChapterSet = chapterSet;
                     }
@@ -334,7 +344,16 @@ namespace MKV_Chapterizer
                 
                 thechapterizer.Files = mkvList;
                 thechapterizer.ChaptersExistAction = 1;
-                thechapterizer.ChapterInterval = trackBar1.Value;
+
+                if (pnlChapterDB.Visible && chapterSet != null)
+                {
+                    thechapterizer.ChapterSet = chapterSet;
+                }
+                else
+                {
+                    thechapterizer.ChapterInterval = trackBar1.Value;
+                }
+
                 thechapterizer.Overwrite = cboxOverwrite.Checked;
 
             }
@@ -552,8 +571,8 @@ namespace MKV_Chapterizer
         {
 
             // passing the original instance of Form1 to Form2 Constructor 
-            Settings f = new Settings(this);
-            f.ShowDialog(this);
+            Settings f = new Settings();
+            f.ShowDialog();
 
         }
 
@@ -665,7 +684,18 @@ namespace MKV_Chapterizer
 
         private void label9_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Copyright 2010-2011 © Fredrik Blomqvist" + Environment.NewLine + Environment.NewLine + "Thanks to Jarret Vance (ChapterDB)" + Environment.NewLine + "www.jvance.com");
+            MessageBox.Show(
+                "Copyright 2010-2011 © Fredrik Blomqvist" + 
+                Environment.NewLine + 
+                Environment.NewLine + 
+                "Thanks to Jarret Vance (ChapterDB)" + 
+                Environment.NewLine + 
+                "http://www.jvance.com" +
+                Environment.NewLine +
+                Environment.NewLine +
+                "MKVMerge Copyright © Moritz Bunkus" +
+                Environment.NewLine +
+                "http://www.bunkus.org/videotools/mkvtoolnix/");
         }
 
         private void btnAdd_Click(object sender, EventArgs e)

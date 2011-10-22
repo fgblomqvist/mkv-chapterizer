@@ -169,6 +169,7 @@
             this.pnlInterval.Name = "pnlInterval";
             this.pnlInterval.Size = new System.Drawing.Size(410, 74);
             this.pnlInterval.TabIndex = 32;
+            this.pnlInterval.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlInterval_Paint);
             // 
             // lblChapterInterval
             // 

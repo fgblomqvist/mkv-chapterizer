@@ -47,12 +47,14 @@
             this.chkUseLocalMKVMerge = new System.Windows.Forms.CheckBox();
             this.lblPath = new System.Windows.Forms.Label();
             this.txtMKVPath = new System.Windows.Forms.TextBox();
+            this.btnBrowse = new System.Windows.Forms.Button();
+            this.btnRestoreWarnings = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(245, 182);
+            this.btnOK.Location = new System.Drawing.Point(245, 194);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 2;
@@ -63,7 +65,7 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(326, 182);
+            this.btnCancel.Location = new System.Drawing.Point(326, 194);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -74,7 +76,7 @@
             // lblMinute
             // 
             this.lblMinute.AutoSize = true;
-            this.lblMinute.Location = new System.Drawing.Point(177, 16);
+            this.lblMinute.Location = new System.Drawing.Point(177, 20);
             this.lblMinute.Name = "lblMinute";
             this.lblMinute.Size = new System.Drawing.Size(23, 13);
             this.lblMinute.TabIndex = 6;
@@ -85,13 +87,13 @@
             this.lblDefaultInterval.AutoSize = true;
             this.lblDefaultInterval.Location = new System.Drawing.Point(9, 16);
             this.lblDefaultInterval.Name = "lblDefaultInterval";
-            this.lblDefaultInterval.Size = new System.Drawing.Size(122, 13);
+            this.lblDefaultInterval.Size = new System.Drawing.Size(122, 26);
             this.lblDefaultInterval.TabIndex = 7;
-            this.lblDefaultInterval.Text = "Default Chapter Interval:";
+            this.lblDefaultInterval.Text = "Default Chapter Interval:\r\n(Restart required)";
             // 
             // txtboxDefaultInterval
             // 
-            this.txtboxDefaultInterval.Location = new System.Drawing.Point(137, 13);
+            this.txtboxDefaultInterval.Location = new System.Drawing.Point(137, 17);
             this.txtboxDefaultInterval.MaxLength = 2;
             this.txtboxDefaultInterval.Name = "txtboxDefaultInterval";
             this.txtboxDefaultInterval.Size = new System.Drawing.Size(34, 20);
@@ -101,7 +103,7 @@
             // chkboxFirstChapter00
             // 
             this.chkboxFirstChapter00.AutoSize = true;
-            this.chkboxFirstChapter00.Location = new System.Drawing.Point(12, 50);
+            this.chkboxFirstChapter00.Location = new System.Drawing.Point(12, 60);
             this.chkboxFirstChapter00.Name = "chkboxFirstChapter00";
             this.chkboxFirstChapter00.Size = new System.Drawing.Size(157, 17);
             this.chkboxFirstChapter00.TabIndex = 9;
@@ -111,7 +113,7 @@
             // chkboxExtraChapter
             // 
             this.chkboxExtraChapter.AutoSize = true;
-            this.chkboxExtraChapter.Location = new System.Drawing.Point(12, 73);
+            this.chkboxExtraChapter.Location = new System.Drawing.Point(12, 83);
             this.chkboxExtraChapter.Name = "chkboxExtraChapter";
             this.chkboxExtraChapter.Size = new System.Drawing.Size(122, 17);
             this.chkboxExtraChapter.TabIndex = 10;
@@ -125,7 +127,7 @@
             this.txtboxCustomName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtboxCustomName.Location = new System.Drawing.Point(229, 143);
             this.txtboxCustomName.Name = "txtboxCustomName";
-            this.txtboxCustomName.Size = new System.Drawing.Size(130, 20);
+            this.txtboxCustomName.Size = new System.Drawing.Size(150, 20);
             this.txtboxCustomName.TabIndex = 12;
             this.infoTip.SetToolTip(this.txtboxCustomName, "Example:\r\n%O-new\r\nAvatar-new.mkv");
             // 
@@ -150,7 +152,7 @@
             // lblMkv
             // 
             this.lblMkv.AutoSize = true;
-            this.lblMkv.Location = new System.Drawing.Point(362, 146);
+            this.lblMkv.Location = new System.Drawing.Point(385, 146);
             this.lblMkv.Name = "lblMkv";
             this.lblMkv.Size = new System.Drawing.Size(33, 13);
             this.lblMkv.TabIndex = 15;
@@ -164,7 +166,7 @@
             // 
             // txtChapterName
             // 
-            this.txtChapterName.Location = new System.Drawing.Point(15, 160);
+            this.txtChapterName.Location = new System.Drawing.Point(12, 156);
             this.txtChapterName.Name = "txtChapterName";
             this.txtChapterName.Size = new System.Drawing.Size(166, 20);
             this.txtChapterName.TabIndex = 17;
@@ -173,7 +175,7 @@
             // lblChapterName
             // 
             this.lblChapterName.AutoSize = true;
-            this.lblChapterName.Location = new System.Drawing.Point(12, 105);
+            this.lblChapterName.Location = new System.Drawing.Point(12, 111);
             this.lblChapterName.Name = "lblChapterName";
             this.lblChapterName.Size = new System.Drawing.Size(133, 13);
             this.lblChapterName.TabIndex = 16;
@@ -182,7 +184,7 @@
             // lblChapterVariables
             // 
             this.lblChapterVariables.AutoSize = true;
-            this.lblChapterVariables.Location = new System.Drawing.Point(12, 131);
+            this.lblChapterVariables.Location = new System.Drawing.Point(12, 127);
             this.lblChapterVariables.Name = "lblChapterVariables";
             this.lblChapterVariables.Size = new System.Drawing.Size(124, 26);
             this.lblChapterVariables.TabIndex = 18;
@@ -197,6 +199,7 @@
             this.chkUseLocalMKVMerge.TabIndex = 19;
             this.chkUseLocalMKVMerge.Text = "Try to use MKV Merge \r\n from local mkvtoolnix";
             this.chkUseLocalMKVMerge.UseVisualStyleBackColor = true;
+            this.chkUseLocalMKVMerge.CheckedChanged += new System.EventHandler(this.chkUseLocalMKVMerge_CheckedChanged);
             // 
             // lblPath
             // 
@@ -211,14 +214,37 @@
             // 
             this.txtMKVPath.Location = new System.Drawing.Point(229, 70);
             this.txtMKVPath.Name = "txtMKVPath";
-            this.txtMKVPath.Size = new System.Drawing.Size(172, 20);
+            this.txtMKVPath.Size = new System.Drawing.Size(159, 20);
             this.txtMKVPath.TabIndex = 21;
+            // 
+            // btnBrowse
+            // 
+            this.btnBrowse.Location = new System.Drawing.Point(394, 68);
+            this.btnBrowse.Name = "btnBrowse";
+            this.btnBrowse.Size = new System.Drawing.Size(24, 23);
+            this.btnBrowse.TabIndex = 22;
+            this.btnBrowse.Text = "...";
+            this.btnBrowse.UseVisualStyleBackColor = true;
+            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
+            // 
+            // btnRestoreWarnings
+            // 
+            this.btnRestoreWarnings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRestoreWarnings.Location = new System.Drawing.Point(12, 194);
+            this.btnRestoreWarnings.Name = "btnRestoreWarnings";
+            this.btnRestoreWarnings.Size = new System.Drawing.Size(106, 23);
+            this.btnRestoreWarnings.TabIndex = 23;
+            this.btnRestoreWarnings.Text = "Restore Warnings";
+            this.btnRestoreWarnings.UseVisualStyleBackColor = true;
+            this.btnRestoreWarnings.Click += new System.EventHandler(this.btnRestoreWarnings_Click);
             // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(431, 217);
+            this.ClientSize = new System.Drawing.Size(431, 229);
+            this.Controls.Add(this.btnRestoreWarnings);
+            this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.txtMKVPath);
             this.Controls.Add(this.lblPath);
             this.Controls.Add(this.chkUseLocalMKVMerge);
@@ -269,5 +295,7 @@
         private System.Windows.Forms.CheckBox chkUseLocalMKVMerge;
         private System.Windows.Forms.Label lblPath;
         private System.Windows.Forms.TextBox txtMKVPath;
+        private System.Windows.Forms.Button btnBrowse;
+        private System.Windows.Forms.Button btnRestoreWarnings;
     }
 }

@@ -20,5 +20,14 @@
     <Setting Name="customChapterName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Chapter %N</Value>
     </Setting>
+    <Setting Name="customMKVMerge" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="customMKVMergePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="showMKVMergeWarning" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
