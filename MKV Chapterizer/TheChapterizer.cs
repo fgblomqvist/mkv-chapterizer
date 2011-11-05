@@ -32,9 +32,11 @@ namespace MKV_Chapterizer
         private static string pMKVMergePath;
         private static string pCustomChapterName;
         private static string workDir;
+        private static TextWriter pLogWriter;
+        private static TextWriter pErrorWriter;
 
         private static BackgroundWorker worker = new BackgroundWorker();
-
+        
         //------------------------------------------------------
         //   External used Properties
         //------------------------------------------------------
@@ -184,6 +186,38 @@ namespace MKV_Chapterizer
                 pCustomChapterName = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the TextWriter that the chapterizer should write log entries to.
+        /// </summary>
+        public TextWriter LogWriter
+        {
+            get
+            {
+                return pLogWriter;
+            }
+
+            set
+            {
+                pLogWriter = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the TextWriter that the chapterizer should write errorlog entries to.
+        /// </summary>
+        public TextWriter ErrorWriter
+        {
+            get
+            {
+                return pErrorWriter;
+            }
+
+            set
+            {
+                pErrorWriter = value;
+            }
+        }
         
         //------------------------------------------------------
         //   Constructor
@@ -194,9 +228,6 @@ namespace MKV_Chapterizer
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
             worker.WorkerSupportsCancellation = true;
-
-            //Create the working dir
-            GenerateWorkingDir();
         }
 
         //------------------------------------------------------
@@ -205,6 +236,9 @@ namespace MKV_Chapterizer
 
         public void Start()
         {
+            //Create the working dir
+            GenerateWorkingDir();
+
             IsBusy = true;
             worker.RunWorkerAsync();
         }
@@ -216,7 +250,17 @@ namespace MKV_Chapterizer
 
         public void Clean()
         {
-            Directory.Delete(workDir);
+            if (Directory.Exists(workDir))
+            {
+                try
+                {
+                    Directory.Delete(workDir);
+                }
+                catch (Exception ex)
+                {
+                    WriteError("Failed to delete working directory: " + ex.ToString());
+                }
+            }
         }
 
         //------------------------------------------------------
@@ -353,7 +397,7 @@ namespace MKV_Chapterizer
 
             if (e.Cancelled == false & e.Error == null)
             {
-
+                
                 //Delete any file in the e.Result
                 try
                 {
@@ -470,10 +514,8 @@ namespace MKV_Chapterizer
             return chapterSet;
         }
 
-        private string CreateChapterFile(ChapterDBAccess.ChapterSet chapterSet)
+        private string CreateChapterFile(ChapterDBAccess.ChapterSet chapterSet, string path)
         {
-
-            string path = workDir + "\\chapters.xml";
 
             XmlTextWriter xwrite = new XmlTextWriter(path, System.Text.Encoding.UTF8);
 
@@ -544,11 +586,13 @@ namespace MKV_Chapterizer
 
             if (ChapterSet == null)
             {
-                cpath = CreateChapterFile(CreateChapterSet(Convert.ToInt32(dd)));
+                WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CreateChapterSet(Convert.ToInt32(dd)), workDir + "\\chapters.xml");
             }
             else
             {
-                cpath = CreateChapterFile(ChapterSet);
+                WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(ChapterSet, workDir + "\\chapters.xml");
             }
 
             String newFileName = null;
@@ -572,7 +616,18 @@ namespace MKV_Chapterizer
             prcinfo.UseShellExecute = false;
 
             prc.StartInfo = prcinfo;
-            prc.Start();
+
+            WriteLog("Starting mkvmerge.exe");
+            WriteLog("Arguments: " + args);
+
+            try
+            {
+                prc.Start();
+            }
+            catch (Exception ex)
+            {
+                WriteError(string.Format("Failed to start mkvmerge.exe process: {0}", ex.ToString()));
+            }
 
             string str;
 
@@ -747,11 +802,13 @@ namespace MKV_Chapterizer
             string cpath;
             if (ChapterSet == null)
             {
-                cpath = CreateChapterFile(CreateChapterSet(Convert.ToInt32(dd)));
+                WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CreateChapterSet(Convert.ToInt32(dd)), workDir + "\\chapters.xml");
             }
             else
             {
-                cpath = CreateChapterFile(ChapterSet);
+                WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(ChapterSet, workDir + "\\chapters.xml");
             }
 
             string newFileName2 = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info2.FullName)) + ".mkv";
@@ -814,9 +871,34 @@ namespace MKV_Chapterizer
             string tempdir = Path.GetTempPath();
             string randomString = Guid.NewGuid().ToString();
             string workdir = tempdir + randomString;
-            Directory.CreateDirectory(workdir);
 
-            workDir = workdir;
+            WriteLog("Creating working directory: " + workDir);
+
+            try
+            {
+                Directory.CreateDirectory(workdir);
+                workDir = workdir;
+            }
+            catch (Exception ex)
+            {
+                WriteError(string.Format("Failed to create working directory: {0}", ex.ToString()));
+            }
+        }
+
+        private void WriteLog(string message)
+        {
+            if (LogWriter != null)
+            {
+                LogWriter.Write(message);
+            }
+        }
+
+        private void WriteError(string message)
+        {
+            if (ErrorWriter != null)
+            {
+                ErrorWriter.Write(message);
+            }
         }
     }
 }

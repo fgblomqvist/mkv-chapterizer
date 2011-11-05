@@ -37,8 +37,8 @@ C:\Users\Fredrik\Dropbox\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapt
 C:\Users\Fredrik\Dropbox\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.MKVC.resources
 C:\Users\Fredrik\Dropbox\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.Properties.Resources.resources
 C:\Users\Fredrik\Dropbox\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.Settings.resources
+C:\Users\Fredrik\Dropbox\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.Warning.resources
 C:\Users\Fredrik\Dropbox\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\Fredrik\Dropbox\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\Fredrik\Dropbox\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.exe
 C:\Users\Fredrik\Dropbox\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKVChapterizer.pdb
-C:\Users\Fredrik\Dropbox\MKV Chapterizer\MKV Chapterizer\obj\x86\Debug\MKV_Chapterizer.Warning.resources

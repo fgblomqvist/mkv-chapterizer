@@ -39,6 +39,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;
 using System.Windows.Forms.Design;
+using Logger;
 
 namespace MKV_Chapterizer
 {
@@ -74,6 +75,10 @@ namespace MKV_Chapterizer
 
         Chapterizer thechapterizer = new Chapterizer();
         ChapterDB chapterDB = new ChapterDB();
+        private StringWriterExt logWriter = new StringWriterExt(true);
+        private StringWriterExt errorWriter = new StringWriterExt(true);
+
+        private Log log = new Log("mkvc.log");
 
         public MKVC()
         {
@@ -85,9 +90,13 @@ namespace MKV_Chapterizer
                 ctl.AllowDrop = true;
             }
             
+            logWriter.Flushed +=new StringWriterExt.FlushedEventHandler(logWriter_Flushed);
+            errorWriter.Flushed +=new StringWriterExt.FlushedEventHandler(errorWriter_Flushed);
+
             thechapterizer.ProgressChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_ProgressChanged);
             thechapterizer.StatusChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_StatusChanged);
             thechapterizer.Finished += new Chapterizer.FinishedEventHandler(thechapterizer_Finished);
+
         }
 
         public bool QueueMode
@@ -103,6 +112,7 @@ namespace MKV_Chapterizer
 
                 if (value)
                 {
+                    WriteLog("Setting UI to Queue mode");
                     //Empty files
                     lboxFiles.Items.Clear();
                     //Enable queueUI
@@ -114,6 +124,7 @@ namespace MKV_Chapterizer
                 }
                 else
                 {
+                    WriteLog("Setting UI to single file mode");
                     //Empty files
                     lboxFiles.Items.Clear();
                     //Disable queueUI
@@ -146,25 +157,23 @@ namespace MKV_Chapterizer
 
             foreach (string i in s)
             {
-            
-            fi = new FileInfo(i);
+                fi = new FileInfo(i);
 
-            if (fi.Extension == ".mkv")
-            {
-          
-            e.Effect = DragDropEffects.All;
-
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-                break;
-            }
+                if (fi.Extension == ".mkv")
+                {
+                    e.Effect = DragDropEffects.All;
+                }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                    break;
+                }
             }
         }
 
         private void DragDropHandler(object sender, System.Windows.Forms.DragEventArgs e)
         {
+            WriteLog("User dropped mkv(s) on the UI");
 
             //temp: Clear the lboxFiles if no queue
             if (Properties.Settings.Default.queueMode == false)
@@ -191,7 +200,7 @@ namespace MKV_Chapterizer
             FileInfo fi = new FileInfo(s[0]);
 
             //Get runtime of movie with MediaInfo
-
+            WriteLog("Retrieving movie runtime");
             MediaInfo MI = new MediaInfo();
 
             MI.Open(fi.FullName);
@@ -200,7 +209,7 @@ namespace MKV_Chapterizer
             {
                 if (ChaptersExist(fi.FullName))
                 {
-
+                    WriteLog("The mkv had chapters");
                     ChaptersExist f = new ChaptersExist(this);
 
                     f.ShowDialog(this);
@@ -211,11 +220,13 @@ namespace MKV_Chapterizer
                         case 0:
 
                             //Cancel
+                            WriteLog("User chose to cancel mkv drop");
                             return;
 
                         case 1:
 
                             //Remove
+                            WriteLog("User chose to de-chapterize the mkv");
 
                             sargs = new string[] { fi.FullName, "false" };
 
@@ -227,6 +238,7 @@ namespace MKV_Chapterizer
                         case 2:
 
                             //Remove and Insert New
+                            WriteLog("User chose to re-chapterize the mkv");
 
                             sargs = new string[] { fi.FullName, "true" };
 
@@ -297,14 +309,18 @@ namespace MKV_Chapterizer
         {
             if (Properties.Settings.Default.customMKVMerge)
             {
+                WriteLog(string.Format("Setting mkvmerge path: {0}", Properties.Settings.Default.customMKVMergePath));
                 thechapterizer.MKVMergePath = Properties.Settings.Default.customMKVMergePath;
             }
             else
             {
+                WriteLog(@"Setting mkvmerge path: mkvmerge\mkvmerge.exe");
                 thechapterizer.MKVMergePath = "mkvmerge\\mkvmerge.exe";
             }
 
             thechapterizer.CustomChapterName = Properties.Settings.Default.customChapterName;
+            thechapterizer.LogWriter = logWriter;
+            thechapterizer.ErrorWriter = errorWriter;
 
             if (btnMerge.Text == "Chapterize")
             {
@@ -377,6 +393,7 @@ namespace MKV_Chapterizer
             {
 
                 //Cancel the ongoing merge
+                WriteLog("User chose to cancel current operation");
 
                 btnMerge.Text = "Cancelling...";
                 thechapterizer.Cancel();
@@ -384,8 +401,28 @@ namespace MKV_Chapterizer
 
             }
 
+            WriteLog("Starting chapterizer");
             thechapterizer.Start();
 
+        }
+
+        private void logWriter_Flushed(object sender, EventArgs e)
+        {
+            log.Write(sender.ToString());
+
+            //Clean the stringwriter
+            StringBuilder sb = logWriter.GetStringBuilder();
+            sb.Remove(0, sb.Length);
+        }
+
+        private void errorWriter_Flushed(object sender, EventArgs e)
+        {
+            log.Write(sender.ToString(), Log.Type.Error);
+            MessageBox.Show(this, sender.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            //Clean the stringwriter
+            StringBuilder sb = logWriter.GetStringBuilder();
+            sb.Remove(0, sb.Length);
         }
 
         private void thechapterizer_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -462,9 +499,15 @@ namespace MKV_Chapterizer
         private void Form1_Load(object sender, EventArgs e)
         {
 
+            WriteLog(string.Format("Starting MKV Chapterizer {0}", Application.ProductVersion));
+
             bwCheckUpdates.RunWorkerAsync();
 
+            WriteLog("Getting screen scale multiplier");
+
             screenMultiplier = GetScreenScaleMulitplier();
+
+            WriteLog(string.Format("Screen scale multiplier = {0}", screenMultiplier));
 
             trackBar1.Value = Properties.Settings.Default.defChapInterval;
             if (Properties.Settings.Default.queueMode)
@@ -477,10 +520,8 @@ namespace MKV_Chapterizer
             }
 
             lblTrackbarValue.Text = trackBar1.Value.ToString();
-
             lblVersion.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion)));
             
-
         }
 
         private void Form1_Closing(object sender, FormClosingEventArgs e)
@@ -760,16 +801,20 @@ namespace MKV_Chapterizer
 
         private void bwCheckUpdates_DoWork(object sender, DoWorkEventArgs e)
         {
+            WriteLog("Checking for updates");
+
             WebClient client = new WebClient();
             Version version = Version.Parse(client.DownloadString("http://flytandekvave.se/files/projects/mkvc/version.txt"));
             Version curVersion = Version.Parse(Application.ProductVersion);
 
             if (version > curVersion)
             {
+                WriteLog("Found update");
                 e.Result = true;
             }
             else
             {
+                WriteLog("The current version is the latest");
                 e.Result = false;
             }
         }
@@ -818,5 +863,67 @@ namespace MKV_Chapterizer
                 chapterDB.SearchChapters(txtSearch.Text);
             }
         }
+
+        private void WriteLog(string message)
+        {
+            if (logWriter != null)
+            {
+                logWriter.Write(message);
+            }
+        }
+
+        private void WriteError(string message)
+        {
+            if (errorWriter != null)
+            {
+                errorWriter.Write(message);
+            }
+        }
     }
+
+    public class StringWriterExt : StringWriter
+    {
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public delegate void FlushedEventHandler(object sender, EventArgs args);
+        public event FlushedEventHandler Flushed;
+        public virtual bool AutoFlush { get; set; }
+
+        public StringWriterExt()
+            : base() { }
+
+        public StringWriterExt(bool autoFlush)
+            : base() { this.AutoFlush = autoFlush; }
+
+        protected void OnFlush()
+        {
+            var eh = Flushed;
+            if (eh != null)
+                eh(this, EventArgs.Empty);
+        }
+
+        public override void Flush()
+        {
+            base.Flush();
+            OnFlush();
+        }
+
+        public override void Write(char value)
+        {
+            base.Write(value);
+            if (AutoFlush) Flush();
+        }
+
+        public override void Write(string value)
+        {
+            base.Write(value);
+            if (AutoFlush) Flush();
+        }
+
+        public override void Write(char[] buffer, int index, int count)
+        {
+            base.Write(buffer, index, count);
+            if (AutoFlush) Flush();
+        }
+    }
+
 }
