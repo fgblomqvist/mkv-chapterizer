@@ -32,6 +32,7 @@ namespace MKV_Chapterizer
         public void SearchChapters(string movieName)
         {
             txtboxSearchName.Text = movieName;
+            lblStatus.Text = "Searching...";
             this.Show();
             bwSearch.RunWorkerAsync(movieName);
         }
