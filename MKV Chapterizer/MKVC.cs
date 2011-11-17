@@ -170,7 +170,7 @@ namespace MKV_Chapterizer
                 {
                     WriteLog("Setting UI to Queue mode");
 
-                    EnableControls();
+                    EnableControls(false);
 
                     //Disable ability to change mode
                     ShowModeChange = false;
@@ -286,7 +286,6 @@ namespace MKV_Chapterizer
             {
                 if (ChaptersExist(fi.FullName))
                 {
-                    WriteLog("The mkv had chapters");
                     ChaptersExist f = new ChaptersExist(this);
 
                     f.ShowDialog(this);
@@ -306,9 +305,10 @@ namespace MKV_Chapterizer
                             WriteLog("User chose to de-chapterize the mkv");
 
                             sargs = new string[] { fi.FullName, "false" };
-
-                            tbarInterval.Enabled = false;
                             btnMerge.Text = "De-Chapterize";
+
+                            EnableControls(true);
+                            ShowModeChange = false;
 
                             break;
 
@@ -322,6 +322,11 @@ namespace MKV_Chapterizer
                             tbarInterval.Enabled = true;
                             btnMerge.Text = "Re-Chapterize";
 
+                            //Enable the controls for the merging process
+                            EnableControls(false);
+                            ShowModeChange = true;
+                            //Calculate the number of chapters with default chapter interval
+                            CalcChapNumber(duration);
                             break;
                     }
 
@@ -329,6 +334,11 @@ namespace MKV_Chapterizer
                 else
                 {
                     tbarInterval.Enabled = true;
+                    //Enable the controls for the merging process
+                    EnableControls(false);
+                    ShowModeChange = true;
+                    //Calculate the number of chapters with default chapter interval
+                    CalcChapNumber(duration);
                 }
             }
             else
@@ -354,35 +364,34 @@ namespace MKV_Chapterizer
             //Save the runtime in minutes as integer in duration variable
             duration = Convert.ToInt32(dd);
 
-            //Calculate the number of chapters with default chapter interval 5 minutes
-
-            CalcChapNumber(duration);
-
-            //Enable the controls for the merging process
-            EnableControls();
-
-            if (QueueMode == true)
-            {
-                ShowModeChange = false;
-            }
-            else
-            {
-                ShowModeChange = true;
-            }
-
             //Hide the tutorial message
             ShowTutorialMessage = false;
         }
 
-        private void EnableControls()
+        private void EnableControls(bool RemoveMode)
         {
-            tbarInterval.Enabled = true;
-            lblChapterInterval.Enabled = true;
-            lblTrackbarValue.Enabled = true;
-            lblMin.Enabled = true;
+            if (RemoveMode)
+            {
+                tbarInterval.Enabled = false;
+                tbarInterval.Enabled = false;
+                lblChapterInterval.Enabled = false;
+                lblTrackbarValue.Enabled = false;
+                lblMin.Enabled = false;
+                lblNumOfChapters.Enabled = false;
+                lblChapterCount.Enabled = false;
+            }
+            else
+            {
+                tbarInterval.Enabled = true;
+                lblChapterInterval.Enabled = true;
+                lblTrackbarValue.Enabled = true;
+                lblMin.Enabled = true;
+                lblNumOfChapters.Enabled = true;
+                lblChapterCount.Enabled = true;
+            }
+
             btnMerge.Enabled = true;
             cboxOverwrite.Enabled = true;
-            lblNumOfChapters.Enabled = true;
         }
 
         private void DisableControls()
@@ -869,7 +878,7 @@ namespace MKV_Chapterizer
             if (openMKVdlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 //Enable Chaterizing
-                EnableControls();
+                EnableControls(false);
 
                 foreach (string file in openMKVdlg.FileNames)
                 {

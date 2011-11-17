@@ -27,6 +27,7 @@ namespace MKV_Chapterizer
             lblStatus.TextAlign = ContentAlignment.MiddleCenter;
             bwSearch.DoWork +=new DoWorkEventHandler(bwSearch_DoWork);
             bwSearch.RunWorkerCompleted +=new RunWorkerCompletedEventHandler(bwSearch_RunWorkerCompleted);
+            bwSearch.WorkerSupportsCancellation = true;
         }
 
         public void SearchChapters(string movieName)
@@ -172,12 +173,17 @@ namespace MKV_Chapterizer
 
         private void bwSearch_DoWork(object sender, DoWorkEventArgs e)
         {
-
-            List<ChapterDBAccess.ChapterSet> result;
-
+            List<ChapterDBAccess.ChapterSet> result = null;
             try
             {
                 result = chapterDBAccess.GrabChapters((string)e.Argument);
+
+                if (bwSearch.CancellationPending == true)
+                {
+                    //Just set the e.Cancel to true
+                    e.Cancel = true;
+                    return;
+                }
             }
             catch (ChapterDBAccess.NoResultsException)
             {
@@ -209,12 +215,23 @@ namespace MKV_Chapterizer
                     table.Rows.Add(chapterSet.Name, chapterSet.Quality, chapterSet);
                 }
 
+                //Sort and apply colors
+                dgViewResults.Sort(dgViewResults.Columns["Quality"], ListSortDirection.Descending);
                 ApplyColors();
             }
             else if (e.Error != null)
             {
                 lblStatus.Text = e.Error.Message;
             }
+            else if (e.Cancelled == true)
+            {
+                //It got cancelled
+            }
+        }
+
+        private void ChapterDB_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            bwSearch.CancelAsync();
         }
     }
 }

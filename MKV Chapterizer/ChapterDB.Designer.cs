@@ -228,6 +228,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.FormClosing +=new System.Windows.Forms.FormClosingEventHandler(ChapterDB_FormClosing);
 
         }
 
