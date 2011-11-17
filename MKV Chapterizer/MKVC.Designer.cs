@@ -50,6 +50,7 @@
             this.lblTrackbarValue = new System.Windows.Forms.Label();
             this.lblMin = new System.Windows.Forms.Label();
             this.pnlChapterDB = new System.Windows.Forms.Panel();
+            this.lblMovieName = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.lblStatus = new System.Windows.Forms.Label();
@@ -68,6 +69,7 @@
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
+            this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenu.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
@@ -124,7 +126,7 @@
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(424, 209);
+            this.tabControl.Size = new System.Drawing.Size(424, 197);
             this.tabControl.TabIndex = 1;
             // 
             // tpSettings
@@ -133,7 +135,7 @@
             this.tpSettings.Location = new System.Drawing.Point(4, 23);
             this.tpSettings.Name = "tpSettings";
             this.tpSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSettings.Size = new System.Drawing.Size(416, 182);
+            this.tpSettings.Size = new System.Drawing.Size(416, 170);
             this.tpSettings.TabIndex = 0;
             this.tpSettings.Text = "Settings";
             this.tpSettings.UseVisualStyleBackColor = true;
@@ -154,7 +156,7 @@
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMain.Location = new System.Drawing.Point(3, 3);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(410, 176);
+            this.pnlMain.Size = new System.Drawing.Size(410, 164);
             this.pnlMain.TabIndex = 0;
             // 
             // pnlModeChange
@@ -162,7 +164,7 @@
             this.pnlModeChange.Controls.Add(this.btnSwitch);
             this.pnlModeChange.Controls.Add(this.lblMode);
             this.pnlModeChange.Controls.Add(this.lblModeValue);
-            this.pnlModeChange.Location = new System.Drawing.Point(142, 77);
+            this.pnlModeChange.Location = new System.Drawing.Point(133, 84);
             this.pnlModeChange.Name = "pnlModeChange";
             this.pnlModeChange.Size = new System.Drawing.Size(130, 23);
             this.pnlModeChange.TabIndex = 33;
@@ -171,7 +173,7 @@
             // 
             this.btnSwitch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSwitch.Enabled = false;
+            this.btnSwitch.BackColor = System.Drawing.Color.Transparent;
             this.btnSwitch.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.btnSwitch.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White;
             this.btnSwitch.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
@@ -181,7 +183,7 @@
             this.btnSwitch.Name = "btnSwitch";
             this.btnSwitch.Size = new System.Drawing.Size(17, 24);
             this.btnSwitch.TabIndex = 31;
-            this.btnSwitch.UseVisualStyleBackColor = true;
+            this.btnSwitch.UseVisualStyleBackColor = false;
             this.btnSwitch.Click += new System.EventHandler(this.btnSwitch_Click);
             // 
             // lblMode
@@ -189,7 +191,6 @@
             this.lblMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMode.AutoSize = true;
-            this.lblMode.Enabled = false;
             this.lblMode.Location = new System.Drawing.Point(9, 6);
             this.lblMode.Name = "lblMode";
             this.lblMode.Size = new System.Drawing.Size(37, 13);
@@ -201,7 +202,6 @@
             this.lblModeValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblModeValue.AutoSize = true;
-            this.lblModeValue.Enabled = false;
             this.lblModeValue.Location = new System.Drawing.Point(52, 6);
             this.lblModeValue.Name = "lblModeValue";
             this.lblModeValue.Size = new System.Drawing.Size(42, 13);
@@ -295,18 +295,27 @@
             // 
             // pnlChapterDB
             // 
+            this.pnlChapterDB.Controls.Add(this.lblMovieName);
             this.pnlChapterDB.Controls.Add(this.btnSearch);
             this.pnlChapterDB.Controls.Add(this.txtSearch);
-            this.pnlChapterDB.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlChapterDB.Location = new System.Drawing.Point(0, 0);
             this.pnlChapterDB.Name = "pnlChapterDB";
             this.pnlChapterDB.Size = new System.Drawing.Size(410, 71);
             this.pnlChapterDB.TabIndex = 28;
             this.pnlChapterDB.Visible = false;
             // 
+            // lblMovieName
+            // 
+            this.lblMovieName.AutoSize = true;
+            this.lblMovieName.Location = new System.Drawing.Point(170, 3);
+            this.lblMovieName.Name = "lblMovieName";
+            this.lblMovieName.Size = new System.Drawing.Size(70, 13);
+            this.lblMovieName.TabIndex = 2;
+            this.lblMovieName.Text = "Movie Name:";
+            // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(164, 39);
+            this.btnSearch.Location = new System.Drawing.Point(164, 45);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(85, 23);
             this.btnSearch.TabIndex = 1;
@@ -316,7 +325,7 @@
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(105, 13);
+            this.txtSearch.Location = new System.Drawing.Point(112, 19);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(191, 20);
             this.txtSearch.TabIndex = 0;
@@ -327,11 +336,11 @@
             // 
             this.lblStatus.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(194, 161);
+            this.lblStatus.Location = new System.Drawing.Point(158, 149);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(24, 13);
+            this.lblStatus.Size = new System.Drawing.Size(93, 13);
             this.lblStatus.TabIndex = 28;
-            this.lblStatus.Text = "0/0";
+            this.lblStatus.Text = "0/0 MyMovie.mkv";
             this.lblStatus.Visible = false;
             // 
             // lblSettings
@@ -339,7 +348,7 @@
             this.lblSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblSettings.AutoSize = true;
             this.lblSettings.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblSettings.Location = new System.Drawing.Point(12, 158);
+            this.lblSettings.Location = new System.Drawing.Point(12, 146);
             this.lblSettings.Name = "lblSettings";
             this.lblSettings.Size = new System.Drawing.Size(45, 13);
             this.lblSettings.TabIndex = 26;
@@ -351,7 +360,7 @@
             this.btnMerge.AllowDrop = true;
             this.btnMerge.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnMerge.Enabled = false;
-            this.btnMerge.Location = new System.Drawing.Point(164, 137);
+            this.btnMerge.Location = new System.Drawing.Point(164, 125);
             this.btnMerge.Name = "btnMerge";
             this.btnMerge.Size = new System.Drawing.Size(85, 23);
             this.btnMerge.TabIndex = 18;
@@ -366,7 +375,7 @@
             this.lblVersion.AutoSize = true;
             this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVersion.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lblVersion.Location = new System.Drawing.Point(356, 163);
+            this.lblVersion.Location = new System.Drawing.Point(356, 151);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(11, 12);
             this.lblVersion.TabIndex = 19;
@@ -380,7 +389,7 @@
             this.cboxOverwrite.Checked = true;
             this.cboxOverwrite.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cboxOverwrite.Enabled = false;
-            this.cboxOverwrite.Location = new System.Drawing.Point(300, 141);
+            this.cboxOverwrite.Location = new System.Drawing.Point(300, 129);
             this.cboxOverwrite.Name = "cboxOverwrite";
             this.cboxOverwrite.Size = new System.Drawing.Size(104, 17);
             this.cboxOverwrite.TabIndex = 22;
@@ -389,9 +398,9 @@
             // 
             // lblTutorial
             // 
-            this.lblTutorial.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lblTutorial.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTutorial.AutoSize = true;
-            this.lblTutorial.Location = new System.Drawing.Point(54, 103);
+            this.lblTutorial.Location = new System.Drawing.Point(50, 90);
             this.lblTutorial.Name = "lblTutorial";
             this.lblTutorial.Size = new System.Drawing.Size(290, 13);
             this.lblTutorial.TabIndex = 24;
@@ -405,7 +414,7 @@
             this.tpQueue.Location = new System.Drawing.Point(4, 23);
             this.tpQueue.Name = "tpQueue";
             this.tpQueue.Padding = new System.Windows.Forms.Padding(3);
-            this.tpQueue.Size = new System.Drawing.Size(416, 182);
+            this.tpQueue.Size = new System.Drawing.Size(416, 170);
             this.tpQueue.TabIndex = 1;
             this.tpQueue.Text = "Queue";
             this.tpQueue.UseVisualStyleBackColor = true;
@@ -442,7 +451,7 @@
             this.lboxFiles.FormattingEnabled = true;
             this.lboxFiles.Location = new System.Drawing.Point(3, 6);
             this.lboxFiles.Name = "lboxFiles";
-            this.lboxFiles.Size = new System.Drawing.Size(367, 173);
+            this.lboxFiles.Size = new System.Drawing.Size(367, 160);
             this.lboxFiles.TabIndex = 0;
             // 
             // tpAdvSettings
@@ -451,7 +460,7 @@
             this.tpAdvSettings.Location = new System.Drawing.Point(4, 23);
             this.tpAdvSettings.Name = "tpAdvSettings";
             this.tpAdvSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tpAdvSettings.Size = new System.Drawing.Size(416, 182);
+            this.tpAdvSettings.Size = new System.Drawing.Size(416, 170);
             this.tpAdvSettings.TabIndex = 2;
             this.tpAdvSettings.Text = "Advanced Settings";
             this.tpAdvSettings.UseVisualStyleBackColor = true;
@@ -507,8 +516,10 @@
             // 
             // progressBar
             // 
+            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.progressBar.Location = new System.Drawing.Point(7, 211);
+            this.progressBar.Location = new System.Drawing.Point(7, 199);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(410, 23);
             this.progressBar.TabIndex = 25;
@@ -520,7 +531,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(424, 238);
+            this.ClientSize = new System.Drawing.Size(424, 226);
             this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.progressBar);
@@ -593,6 +604,8 @@
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Panel pnlModeChange;
+        private System.Windows.Forms.Label lblMovieName;
+        private System.Windows.Forms.ToolTip ttInfo;
     }
 }
 

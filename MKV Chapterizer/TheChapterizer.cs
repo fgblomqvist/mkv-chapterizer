@@ -225,6 +225,7 @@ namespace MKV_Chapterizer
 
         public Chapterizer()
         {
+            WriteLog("Initializing chapterizer");
             worker.DoWork += new DoWorkEventHandler(worker_DoWork);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
             worker.WorkerSupportsCancellation = true;
@@ -291,11 +292,13 @@ namespace MKV_Chapterizer
                     {
                         case 1:
                             //Replace Them
+                            WriteLog("Starting ReplaceChapters job");
                             object file;
                             file = ReplaceChapters(s);
 
                             if (file is string)
                             {
+                                WriteLog("Job failed, either it got cancelled or an error was thrown");
                                 e.Cancel = true;
                                 worker.Dispose();
 
@@ -305,10 +308,12 @@ namespace MKV_Chapterizer
                             }
                             else
                             {
+                                WriteLog("Succeeded replacing chapters");
                                 FileInfo nfile = (FileInfo)file;
 
                                 if (Overwrite)
                                 {
+                                    WriteLog("Overwriting input file");
                                     //Delete the input file
                                     File.Delete(s);
                                     //Rename -new file to original name
@@ -324,10 +329,12 @@ namespace MKV_Chapterizer
                             break;
                         case 2:
                             //Remove Them
+                            WriteLog("Starting RemoveChapters job");
                             file = RemoveChapters(s);
 
                             if (file is string)
                             {
+                                WriteLog("Job failed, either it got cancelled or an error was thrown");
                                 e.Cancel = true;
                                 worker.Dispose();
 
@@ -337,10 +344,12 @@ namespace MKV_Chapterizer
                             }
                             else
                             {
+                                WriteLog("Succeeded removing chapters");
                                 FileInfo nfile = (FileInfo)file;
                                 //check if the user want to overwrite
                                 if (Overwrite)
                                 {
+                                    WriteLog("Overwriting input file");
                                     File.Delete(fi.FullName);
                                     File.Move(nfile.FullName, fi.FullName);
                                 }
@@ -359,9 +368,12 @@ namespace MKV_Chapterizer
                 }
                 else
                 {
+                    //Insert new chapters
+                    WriteLog("Starting InsertChapters job");
                     object file = InsertChapters(s);
                     if (file is string)
                     {
+                        WriteLog("Job failed, either it got cancelled or an error was thrown");
                         e.Cancel = true;
                         worker.Dispose();
 
@@ -371,13 +383,14 @@ namespace MKV_Chapterizer
                     }
                     else
                     {
+                        WriteLog("Succeeded inserting chapters");
                         FileInfo nfile = (FileInfo)file;
 
                         if (Overwrite)
                         {
+                            WriteLog("Overwriting input file");
                             //Delete the input file
                             File.Delete(s);
-
                             //Rename -new file to original name
                             File.Move(nfile.FullName, s);
                         }
@@ -425,6 +438,7 @@ namespace MKV_Chapterizer
                 }
                 catch (Exception ex)
                 {
+                    WriteLog("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
                     MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
                 }
 
@@ -516,7 +530,7 @@ namespace MKV_Chapterizer
 
         private string CreateChapterFile(ChapterDBAccess.ChapterSet chapterSet, string path)
         {
-
+            WriteLog("Creating chapterfile");
             XmlTextWriter xwrite = new XmlTextWriter(path, System.Text.Encoding.UTF8);
 
             xwrite.WriteStartDocument();
@@ -554,7 +568,7 @@ namespace MKV_Chapterizer
 
         private bool ChaptersExist(String file)
         {
-
+            WriteLog("Checking if file contains chapters: " + file);
             MediaInfo info = new MediaInfo();
             info.Open(file);
 
@@ -562,10 +576,12 @@ namespace MKV_Chapterizer
             info.Option("Complete");
             if (info.Inform().Contains("<track type=\"Menu\""))
             {
+                WriteLog("It contains chapters");
                 return true;
             }
             else
             {
+                WriteLog("It didn't contain chapters");
                 return false;
             }
 
