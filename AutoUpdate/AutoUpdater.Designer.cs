@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AutoUpdate));
             this.txtChangelog = new System.Windows.Forms.TextBox();
             this.pbarDownloadProgress = new System.Windows.Forms.ProgressBar();
             this.btnUpdate = new System.Windows.Forms.Button();
@@ -99,6 +100,7 @@
             this.Controls.Add(this.pbarDownloadProgress);
             this.Controls.Add(this.txtChangelog);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AutoUpdate";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "New update available!";

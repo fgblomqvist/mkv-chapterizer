@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.Xml.Linq;
@@ -19,6 +17,7 @@ namespace MKV_Chapterizer
 
         private string[] pUpdateInfo;
         private string pMainExe;
+        private string pApiURL;
 
         public delegate void DownloadProgressDelegate(int percProgress);
 
@@ -37,6 +36,12 @@ namespace MKV_Chapterizer
             set { pMainExe = value; }
         }
 
+        public string ApiURL
+        {
+            get { return pApiURL; }
+            set { pApiURL = value; }
+        }
+
         public AutoUpdate()
         {
             InitializeComponent();
@@ -44,7 +49,6 @@ namespace MKV_Chapterizer
             //Get command line args and save into the data
 
             string[] args = Environment.GetCommandLineArgs();
-            string apiURL = null;
 
             for (int i = 0; i <= args.Count() - 1; i++)
             {
@@ -55,14 +59,17 @@ namespace MKV_Chapterizer
                         break;
 
                     case "-apiurl":
-                        apiURL = args[i + 1];
+                        ApiURL = args[i + 1];
                         break;
                 }
             }
 
-            bwCheckUpdates.DoWork +=new DoWorkEventHandler(bwCheckUpdates_DoWork);
-            bwCheckUpdates.ProgressChanged +=new ProgressChangedEventHandler(bwCheckUpdates_ProgressChanged);
-            bwCheckUpdates.RunWorkerCompleted +=new RunWorkerCompletedEventHandler(bwCheckUpdates_RunWorkerCompleted);
+            if (string.IsNullOrEmpty(ApiURL) || string.IsNullOrEmpty(MainExe))
+            {
+                //Wrong arguments, notify and quit
+                MessageBox.Show("Wrong arguments specified!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Environment.Exit(0);
+            }
 
             bwUpdateProgram.RunWorkerCompleted +=new RunWorkerCompletedEventHandler(bwUpdateProgram_RunWorkerCompleted);
             bwUpdateProgram.DoWork +=new DoWorkEventHandler(bwUpdateProgram_DoWork);
@@ -70,11 +77,46 @@ namespace MKV_Chapterizer
             bwUpdateProgram.WorkerReportsProgress = true;
             bwUpdateProgram.WorkerSupportsCancellation = true;
 
-            btnUpdate.Enabled = false;
-            btnUpdate.Text = "Loading...";
             btnUpdate.Select();
 
-            bwCheckUpdates.RunWorkerAsync(apiURL);
+            if (UpdateAvailable())
+            {
+                lblNewUpdate.Text = string.Format("Version {0} is available for download", UpdateInfo[1]);
+                txtChangelog.Text = UpdateInfo[3];
+                btnUpdate.Text = "Update";
+            }
+            else
+            {
+                Environment.Exit(0);
+            }
+        }
+
+        private bool UpdateAvailable()
+        {
+            FileVersionInfo fi;
+
+            if (File.Exists(MainExe))
+            {
+                fi = FileVersionInfo.GetVersionInfo(MainExe);
+            }
+            else
+            {
+                return false;
+            }
+
+            UpdateInfo = GetUpdateInfo(ApiURL);
+
+            Version curVersion = Version.Parse(fi.FileVersion);
+            Version newVersion = new Version(UpdateInfo[1]);
+
+            if (newVersion > curVersion)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private string[] GetUpdateInfo(string APIUrl)
@@ -101,51 +143,6 @@ namespace MKV_Chapterizer
         {
             bwUpdateProgram.RunWorkerAsync();
             btnUpdate.Enabled = false;
-        }
-
-        private void bwCheckUpdates_DoWork(object sender, DoWorkEventArgs e)
-        {
-            FileVersionInfo fi;
-
-            if (File.Exists(MainExe))
-            {
-                fi = FileVersionInfo.GetVersionInfo(MainExe);
-            }
-            else
-            {
-                return;
-            }
-
-            UpdateInfo = GetUpdateInfo((string)e.Argument);
-
-            Version currentVersion = new Version(fi.FileVersion);
-            Version newVersion = new Version(UpdateInfo[1]);
-
-            if (newVersion > currentVersion)
-            {
-                //There is a new update available
-                e.Result = true;
-            }
-            else
-            {
-                //The user is running the latest version
-                e.Result = false;
-            }
-        }
-
-        private void bwCheckUpdates_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-        }
-
-        private void bwCheckUpdates_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if ((bool)e.Result == true)
-            {
-                lblNewUpdate.Text = string.Format("Version {0} is available for download", UpdateInfo[1]);
-                txtChangelog.Text = UpdateInfo[3];
-                btnUpdate.Text = "Update";
-                btnUpdate.Enabled = true;
-            }
         }
 
         private void bwUpdateProgram_DoWork(object sender, DoWorkEventArgs e)
@@ -208,6 +205,7 @@ namespace MKV_Chapterizer
             {
                 MessageBox.Show("MKV Chapterizer will now be closed to prepare for the update, \r\nso please save all your work before proceeding!", "Update Downloaded Successfully", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Process.Start("update\\" + e.Result);
+                Application.Exit();
             }
             else if (e.Result.GetType().Name == "Exception")
             {
@@ -325,7 +323,7 @@ namespace MKV_Chapterizer
             {
                 try
                 {
-                    Directory.Delete("update\\");
+                    Directory.Delete("update\\", true);
                 }
                 catch (Exception)
                 {
