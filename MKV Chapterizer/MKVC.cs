@@ -218,14 +218,23 @@ namespace MKV_Chapterizer
             get
             {
                 //Check if the regkey with the path to the program exists, if it doesn't it is portable
-                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\MKV Chapterizer");
+                RegistryKey key;
+                if (Environment.Is64BitOperatingSystem)
+                {
+                    key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MKV Chapterizer");
+                }
+                else
+                {
+                    key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MKV Chapterizer");
+                }
+
                 string value = null;
 
                 try
                 {
                     if (key != null)
                     {
-                        value = (string)key.GetValue("InstallPath", null);
+                        value = (string)key.GetValue("InstallLocation", null);
                     }
                     else
                     {
