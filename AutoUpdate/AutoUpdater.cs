@@ -9,11 +9,15 @@ using System.Xml.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Runtime.InteropServices;
 
 namespace MKV_Chapterizer
 {
     public partial class AutoUpdate : Form
     {
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
         private string[] pUpdateInfo;
         private string pMainExe;
@@ -119,6 +123,18 @@ namespace MKV_Chapterizer
             }
         }
 
+        private void ExitMainProgram(string exe)
+        {
+            Process[] processes = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(exe));
+
+            foreach (Process p in processes)
+            {
+                uint WM_CLOSE = 0x10;
+                IntPtr pFoundWindow = p.MainWindowHandle;
+                SendMessage(pFoundWindow, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+            }
+        }
+
         private string[] GetUpdateInfo(string APIUrl)
         {
             WebClient client = new WebClient();
@@ -176,7 +192,7 @@ namespace MKV_Chapterizer
             try
             {
 
-                string url = UpdateInfo[4] + UpdateInfo[6] + UpdateInfo[1] + ".zip";
+                string url = UpdateInfo[4] + UpdateInfo[6] + UpdateInfo[1] + ".exe";
                 result = Download(url, "update\\" + UpdateInfo[1] + ".exe", progressUpdate);
             }
             catch (Exception ex)
@@ -204,6 +220,7 @@ namespace MKV_Chapterizer
             if (e.Result.GetType().Name == "String")
             {
                 MessageBox.Show("MKV Chapterizer will now be closed to prepare for the update, \r\nso please save all your work before proceeding!", "Update Downloaded Successfully", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ExitMainProgram(MainExe);
                 Process.Start("update\\" + e.Result);
                 Application.Exit();
             }
