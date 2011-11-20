@@ -39,6 +39,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;
 using System.Windows.Forms.Design;
+using Microsoft.Win32;
 using Logger;
 
 namespace MKV_Chapterizer
@@ -208,6 +209,41 @@ namespace MKV_Chapterizer
                     lblChapterCount.Visible = true;
                     tabControl.HideTabs = true;
                     this.Show();
+                }
+            }
+        }
+
+        public bool Portable
+        {
+            get
+            {
+                //Check if the regkey with the path to the program exists, if it doesn't it is portable
+                RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\MKV Chapterizer");
+                string value = null;
+
+                try
+                {
+                    if (key != null)
+                    {
+                        value = (string)key.GetValue("InstallPath", null);
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                catch (Exception)
+                {
+                    
+                }
+                
+                if (value != null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
                 }
             }
         }
@@ -615,7 +651,29 @@ namespace MKV_Chapterizer
         {
             WriteLog(string.Format("Starting MKV Chapterizer {0}", Application.ProductVersion));
 
-            bwCheckUpdates.RunWorkerAsync();
+            if (Properties.Settings.Default.autoUpdate)
+            {
+                if (Portable == false)
+                {
+                    try
+                    {
+                        string args = string.Format("-exe \"{0}\" -apiurl \"{1}\"", Path.GetFileName(Application.ExecutablePath), "http://fredrikblomqvist.developer.se:8080/dev/getupdate.php?name=mkvc");
+                        Process.Start("AutoUpdate.exe", args);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        MessageBox.Show("Failed to check for updates: \r\nYou are missing an important component, please reinstall!");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Failed to check for updates: " + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    bwCheckUpdates.RunWorkerAsync();
+                }
+            }
 
             WriteLog("Getting screen scale multiplier");
 
@@ -928,10 +986,22 @@ namespace MKV_Chapterizer
             WriteLog("Checking for updates");
 
             WebClient client = new WebClient();
-            Version version = Version.Parse(client.DownloadString("http://flytandekvave.se/files/projects/mkvc/version.txt"));
+            Version newVersion = null;
+
+            try
+            {
+                newVersion = Version.Parse(client.DownloadString("http://fredrikblomqvist.developer.se:8080/dev/getversion.php?name=mkvc"));
+            }
+            catch (Exception ex)
+            {
+                WriteLog("Failed to check for updates");
+                MessageBox.Show("Failed to check for updates: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             Version curVersion = Version.Parse(Application.ProductVersion);
 
-            if (version > curVersion)
+            if (newVersion > curVersion)
             {
                 WriteLog("Found update");
                 e.Result = true;
@@ -947,7 +1017,7 @@ namespace MKV_Chapterizer
         {
             if ((bool)e.Result == true)
             {
-                MessageBox.Show("There is a new version available at http://code.google.com/p/mkv-chapterizer/!");
+                MessageBox.Show("There is a new version available at http://code.google.com/p/mkv-chapterizer/!", "New Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

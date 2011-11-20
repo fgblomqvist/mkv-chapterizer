@@ -66,6 +66,7 @@ namespace MKV_Chapterizer
 
             Properties.Settings.Default.firstChap00 = chkboxFirstChapter00.Checked;
             Properties.Settings.Default.extraChapEnd = chkboxExtraChapter.Checked;
+            Properties.Settings.Default.autoUpdate = chkboxAutoUpdate.Checked;
             Properties.Settings.Default.customOutputName = txtboxCustomName.Text;
             Properties.Settings.Default.defChapInterval = Int32.Parse(txtboxDefaultInterval.Text);
             Properties.Settings.Default.customChapterName = txtChapterName.Text;
@@ -81,6 +82,7 @@ namespace MKV_Chapterizer
             txtboxDefaultInterval.Text = Properties.Settings.Default.defChapInterval.ToString();
             chkboxFirstChapter00.Checked = Properties.Settings.Default.firstChap00;
             chkboxExtraChapter.Checked = Properties.Settings.Default.extraChapEnd;
+            chkboxAutoUpdate.Checked = Properties.Settings.Default.autoUpdate;
             txtboxCustomName.Text = Properties.Settings.Default.customOutputName;
             txtChapterName.Text = Properties.Settings.Default.customChapterName;
             chkUseLocalMKVMerge.Checked = Properties.Settings.Default.customMKVMerge;

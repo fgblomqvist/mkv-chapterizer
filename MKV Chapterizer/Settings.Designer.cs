@@ -49,12 +49,13 @@
             this.txtMKVPath = new System.Windows.Forms.TextBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnRestoreWarnings = new System.Windows.Forms.Button();
+            this.chkboxAutoUpdate = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(245, 194);
+            this.btnOK.Location = new System.Drawing.Point(245, 223);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 2;
@@ -65,7 +66,7 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(326, 194);
+            this.btnCancel.Location = new System.Drawing.Point(326, 223);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -119,7 +120,7 @@
             this.chkboxExtraChapter.TabIndex = 10;
             this.chkboxExtraChapter.Text = "Extra chapter at end";
             this.infoTip.SetToolTip(this.chkboxExtraChapter, "Example:\r\nVideo is 1 hour 23 minutes.\r\nThe last chapter will be at \r\n1 hour 23 mi" +
-                    "nutes, ignoring\r\nthe chapter interval.");
+        "nutes, ignoring\r\nthe chapter interval.");
             this.chkboxExtraChapter.UseVisualStyleBackColor = true;
             // 
             // txtboxCustomName
@@ -230,7 +231,7 @@
             // btnRestoreWarnings
             // 
             this.btnRestoreWarnings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRestoreWarnings.Location = new System.Drawing.Point(12, 194);
+            this.btnRestoreWarnings.Location = new System.Drawing.Point(12, 223);
             this.btnRestoreWarnings.Name = "btnRestoreWarnings";
             this.btnRestoreWarnings.Size = new System.Drawing.Size(106, 23);
             this.btnRestoreWarnings.TabIndex = 23;
@@ -238,11 +239,22 @@
             this.btnRestoreWarnings.UseVisualStyleBackColor = true;
             this.btnRestoreWarnings.Click += new System.EventHandler(this.btnRestoreWarnings_Click);
             // 
+            // chkboxAutoUpdate
+            // 
+            this.chkboxAutoUpdate.AutoSize = true;
+            this.chkboxAutoUpdate.Location = new System.Drawing.Point(12, 190);
+            this.chkboxAutoUpdate.Name = "chkboxAutoUpdate";
+            this.chkboxAutoUpdate.Size = new System.Drawing.Size(193, 17);
+            this.chkboxAutoUpdate.TabIndex = 24;
+            this.chkboxAutoUpdate.Text = "Auto-search for updates on Launch";
+            this.chkboxAutoUpdate.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(431, 229);
+            this.ClientSize = new System.Drawing.Size(431, 258);
+            this.Controls.Add(this.chkboxAutoUpdate);
             this.Controls.Add(this.btnRestoreWarnings);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.txtMKVPath);
@@ -297,5 +309,6 @@
         private System.Windows.Forms.TextBox txtMKVPath;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Button btnRestoreWarnings;
+        private System.Windows.Forms.CheckBox chkboxAutoUpdate;
     }
 }
