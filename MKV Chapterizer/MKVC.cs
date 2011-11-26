@@ -124,6 +124,45 @@ namespace MKV_Chapterizer
             }
         }
 
+        public enum ChapterMode
+        {
+            Interval,
+            ChapterDB,
+        }
+
+        public ChapterMode Mode
+        {
+            get
+            {
+                if (pnlChapterDB.Visible)
+                {
+                    return ChapterMode.ChapterDB;
+                }
+                else
+                {
+                    return ChapterMode.Interval;
+                }
+            }
+
+            set
+            {
+                if (value == MKVC.ChapterMode.Interval)
+                {
+                    pnlInterval.Visible = true;
+                    pnlInterval.BringToFront();
+                    pnlChapterDB.Visible = false;
+                    lblModeValue.Text = "Interval";
+                }
+                else if (value == MKVC.ChapterMode.ChapterDB)
+                {
+                    pnlChapterDB.Visible = true;
+                    pnlChapterDB.BringToFront();
+                    pnlInterval.Visible = false;
+                    lblModeValue.Text = "ChapterDB";
+                }
+            }
+        }
+
         public bool ShowTutorialMessage
         {
             get
@@ -480,6 +519,18 @@ namespace MKV_Chapterizer
 
             if (ModifierKeys == Keys.Shift)
             {
+                CreateChapterFile(lboxFiles.Items[0].ToString());
+            }
+            else
+            {
+                //Normal
+                UseChapterizer();
+            }
+
+        }
+
+        private void CreateChapterFile(string moviePath)
+        {
                 //Only produce a chapter-file
 
                 SaveFileDialog dlg = new SaveFileDialog();
@@ -496,18 +547,21 @@ namespace MKV_Chapterizer
                 if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     //Create a chapterset
-                    if (
-                    //Create a chapterfile at chosen destination
-                    thechapterizer.CreateChapterFile( ,dlg.FileName);
+                    if (Mode == ChapterMode.Interval)
+                    {
+                        //Create a chapterfile at chosen destination
+                        thechapterizer.ChapterInterval = tbarInterval.Value;
+                        thechapterizer.CustomChapterName = Properties.Settings.Default.customChapterName;
+                        thechapterizer.CreateChapterFile(thechapterizer.CreateChapterSet(thechapterizer.GetMovieRuntime(moviePath)), dlg.FileName);
+                    }
+                    else if (Mode == ChapterMode.ChapterDB && chapterSet != null)
+                    {
+                        thechapterizer.ChapterSet = chapterSet;
+                        thechapterizer.CreateChapterFile(chapterSet, dlg.FileName);
+                    }
                 }
-            }
-            else
-            {
-                //Normal
-                UseChapterizer();
-            }
-
         }
+
         private void UseChapterizer()
         {
             if (Properties.Settings.Default.customMKVMerge)
@@ -539,7 +593,7 @@ namespace MKV_Chapterizer
                 thechapterizer.Files = mkvList;
                 thechapterizer.ChaptersExistAction = queueAction;
 
-                if (pnlChapterDB.Visible && chapterSet != null)
+                if (Mode == ChapterMode.ChapterDB && chapterSet != null)
                 {
                     thechapterizer.ChapterSet = chapterSet;
                 }
@@ -1062,20 +1116,13 @@ namespace MKV_Chapterizer
 
         private void SwitchChapterMode()
         {
-            if (pnlChapterDB.Visible)
+            if (Mode == ChapterMode.ChapterDB)
             {
-                pnlInterval.Visible = true;
-                pnlInterval.BringToFront();
-                pnlChapterDB.Visible = false;
-                lblModeValue.Text = "Interval";
-
+                Mode = ChapterMode.Interval;
             }
             else
             {
-                pnlChapterDB.Visible = true;
-                pnlChapterDB.BringToFront();
-                pnlInterval.Visible = false;
-                lblModeValue.Text = "ChapterDB";
+                Mode = ChapterMode.ChapterDB;
             }
         }
 

@@ -457,7 +457,7 @@ namespace MKV_Chapterizer
             IsBusy = false;
         }
 
-        private ChapterDBAccess.ChapterSet CreateChapterSet(int runTime)
+        public ChapterDBAccess.ChapterSet CreateChapterSet(int runTime)
         {
             ChapterDBAccess.ChapterSet chapterSet = new ChapterDBAccess.ChapterSet();
             ChapterDBAccess.Chapter chapter;
@@ -593,19 +593,12 @@ namespace MKV_Chapterizer
         {
 
             FileInfo info = new FileInfo(file);
-            MediaInfo MI = new MediaInfo();
-
-            MI.Open(info.FullName);
-
-            decimal dd;
-            dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 60000);
-
             String cpath;
 
             if (ChapterSet == null)
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
-                cpath = CreateChapterFile(CreateChapterSet(Convert.ToInt32(dd)), workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CreateChapterSet(GetMovieRuntime(info.FullName)), workDir + "\\chapters.xml");
             }
             else
             {
@@ -656,9 +649,6 @@ namespace MKV_Chapterizer
 
                 if (worker.CancellationPending == true)
                 {
-
-                    MI.Close();
-
                     if (!prc.WaitForExit(500))
                     {
                         prc.Kill();
@@ -967,6 +957,18 @@ namespace MKV_Chapterizer
 
                 return CopyFileCallbackAction.Continue;
             }
+        }
+
+        public int GetMovieRuntime(string movie)
+        {
+            MediaInfo MI = new MediaInfo();
+            MI.Open(movie);
+
+            decimal dd;
+            dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 60000);
+            MI.Close();
+
+            return Convert.ToInt32(dd);
         }
     }
 }
