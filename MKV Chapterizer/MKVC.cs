@@ -362,9 +362,17 @@ namespace MKV_Chapterizer
 
             //Get runtime of movie with MediaInfo
             WriteLog("Retrieving movie runtime");
-            MediaInfo MI = new MediaInfo();
 
-            MI.Open(fi.FullName);
+            try
+            {
+                duration = thechapterizer.GetMovieRuntime(fi.FullName);
+            }
+            catch (Exception)
+            {
+                //The value fetched from MediaInfo is invalid, the mkv is probably corrupt or invalid
+                MessageBox.Show("The mkv file you dropped is either corrupt or invalid, please choose another!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             if (Properties.Settings.Default.queueMode == false)
             {
@@ -429,24 +437,6 @@ namespace MKV_Chapterizer
             {
                 tbarInterval.Enabled = true;
             }
-
-            decimal dd = 0;
-
-            try
-            {
-                dd = decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration"));
-            }
-            catch (Exception)
-            {
-                //The value fetched from MediaInfo is invalid, the mkv is probably corrupt or invalid
-                MessageBox.Show("The mkv file you dropped is either corrupt or invalid, please choose another!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-            }
-
-            dd = Math.Floor(dd) / 60000;
-
-            //Save the runtime in minutes as integer in duration variable
-            duration = Convert.ToInt32(dd);
 
             //Hide the tutorial message
             ShowTutorialMessage = false;
