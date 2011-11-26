@@ -469,7 +469,7 @@ namespace MKV_Chapterizer
                 }
         }
 
-        private void button1_Click(object sender,EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
             //Check if any file is selected
             if (lboxFiles.Items.Count < 1)
@@ -478,6 +478,38 @@ namespace MKV_Chapterizer
                 return;
             }
 
+            if (ModifierKeys == Keys.Shift)
+            {
+                //Only produce a chapter-file
+
+                SaveFileDialog dlg = new SaveFileDialog();
+                dlg.AddExtension = true;
+                dlg.CheckPathExists = true;
+                dlg.DefaultExt = "xml";
+                dlg.DereferenceLinks = true;
+                dlg.FileName = "chapters.xml";
+                dlg.Filter = "(*.xml)|*.xml";
+                dlg.InitialDirectory = Path.GetDirectoryName(lboxFiles.Items[0].ToString());
+                dlg.Title = "Please choose where to save the chapterfile";
+                dlg.ValidateNames = true;
+
+                if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    //Create a chapterset
+                    if (
+                    //Create a chapterfile at chosen destination
+                    thechapterizer.CreateChapterFile( ,dlg.FileName);
+                }
+            }
+            else
+            {
+                //Normal
+                UseChapterizer();
+            }
+
+        }
+        private void UseChapterizer()
+        {
             if (Properties.Settings.Default.customMKVMerge)
             {
                 WriteLog(string.Format("Setting mkvmerge path: {0}", Properties.Settings.Default.customMKVMergePath));
@@ -499,25 +531,25 @@ namespace MKV_Chapterizer
                 PrepareForRun();
 
                 List<string> mkvList = new List<string>();
-                    foreach (string itm in lboxFiles.Items)
-                    {
-                        mkvList.Add(itm);
-                    }
+                foreach (string itm in lboxFiles.Items)
+                {
+                    mkvList.Add(itm);
+                }
 
-                    thechapterizer.Files = mkvList;
-                    thechapterizer.ChaptersExistAction = queueAction;
+                thechapterizer.Files = mkvList;
+                thechapterizer.ChaptersExistAction = queueAction;
 
-                    if (pnlChapterDB.Visible && chapterSet != null)
-                    {
-                        thechapterizer.ChapterSet = chapterSet;
-                    }
-                    else
-                    {
-                        thechapterizer.ChapterInterval = tbarInterval.Value;
-                    }
+                if (pnlChapterDB.Visible && chapterSet != null)
+                {
+                    thechapterizer.ChapterSet = chapterSet;
+                }
+                else
+                {
+                    thechapterizer.ChapterInterval = tbarInterval.Value;
+                }
 
-                    thechapterizer.Overwrite = cboxOverwrite.Checked;
-               
+                thechapterizer.Overwrite = cboxOverwrite.Checked;
+
             }
             else if (btnMerge.Text == "Re-Chapterize")
             {
@@ -528,7 +560,7 @@ namespace MKV_Chapterizer
                 {
                     mkvList.Add(itm);
                 }
-                
+
                 thechapterizer.Files = mkvList;
                 thechapterizer.ChaptersExistAction = 1;
 
@@ -574,7 +606,6 @@ namespace MKV_Chapterizer
 
             WriteLog("Starting chapterizer");
             thechapterizer.Start();
-
         }
 
         private void logWriter_Flushed(object sender, EventArgs e)
@@ -627,11 +658,8 @@ namespace MKV_Chapterizer
                 return;
             }
 
-            string[] sStatus = status.Split(Convert.ToChar(";"));
-
-            lblStatus.Text = sStatus[0] + "    " + sStatus[1];
+            lblStatus.Text = status;
             ReCalcStatusPos();
-
         }
 
         private void thechapterizer_Finished(object sender, RunWorkerCompletedEventArgs e)
@@ -852,12 +880,9 @@ namespace MKV_Chapterizer
             btnAdd.Enabled = false;
             btnRemove.Enabled = false;
 
-            if (QueueMode)
-            {
-                lblStatus.Visible = true;
-            }
+            lblStatus.Text = string.Empty;
+            lblStatus.Visible = true;
 
-            
             //Show progressbar
             ShowProgressBar = true;
 

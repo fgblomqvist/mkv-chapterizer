@@ -273,14 +273,22 @@ namespace MKV_Chapterizer
             List<string> mkvlist = Files;
             int doneMovies = 0;
 
-            Status = doneMovies.ToString() + "/" + Files.Count.ToString() + ";";
+            if (Files.Count > 1)
+            {
+                //Only report done count if it is a queue you are processing
+                Status = doneMovies.ToString() + "/" + Files.Count.ToString();
+            }
 
             //for each mkv the user has added
             foreach (string s in mkvlist)
             {
-                //Update status
-                doneMovies += 1;
-                Status = doneMovies.ToString() + "/" + Files.Count.ToString() + ";" + Path.GetFileName(s);
+                if (Files.Count > 1)
+                {
+                    //Only report done count if it is a queue you are processing
+                    //Update status
+                    doneMovies += 1;
+                    Status = doneMovies.ToString() + "/" + Files.Count.ToString() + " " + Path.GetFileName(s);
+                }
 
                 FileInfo fi = new FileInfo(s);
 
@@ -311,18 +319,15 @@ namespace MKV_Chapterizer
                                 WriteLog("Succeeded replacing chapters");
                                 FileInfo nfile = (FileInfo)file;
 
+                                WriteLog("Handling the finished file");
                                 if (Overwrite)
                                 {
-                                    WriteLog("Overwriting input file");
-                                    //Delete the input file
-                                    File.Delete(s);
-                                    //Rename -new file to original name
-                                    File.Move(nfile.FullName, s);
+                                    //Handle the finished file
+                                    HandleFinishedFile(nfile.FullName, s, Overwrite);
                                 }
                                 else
                                 {
-                                    //Move the -new file from workdir to orginial dir
-                                    File.Move(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name);
+                                    HandleFinishedFile(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name, Overwrite);
                                 }
                             }
 
@@ -346,17 +351,16 @@ namespace MKV_Chapterizer
                             {
                                 WriteLog("Succeeded removing chapters");
                                 FileInfo nfile = (FileInfo)file;
+
                                 //check if the user want to overwrite
+                                WriteLog("Handling the finished file");
                                 if (Overwrite)
                                 {
-                                    WriteLog("Overwriting input file");
-                                    File.Delete(fi.FullName);
-                                    File.Move(nfile.FullName, fi.FullName);
+                                    HandleFinishedFile(nfile.FullName, fi.FullName, Overwrite);
                                 }
                                 else
                                 {
-                                    //Move the -new file from workdir to orginial dir
-                                    File.Move(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name);
+                                    HandleFinishedFile(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name, Overwrite);
                                 }
                             }
                             break;
@@ -386,18 +390,15 @@ namespace MKV_Chapterizer
                         WriteLog("Succeeded inserting chapters");
                         FileInfo nfile = (FileInfo)file;
 
+                        WriteLog("Handling the finished file");
                         if (Overwrite)
                         {
-                            WriteLog("Overwriting input file");
-                            //Delete the input file
-                            File.Delete(s);
                             //Rename -new file to original name
-                            File.Move(nfile.FullName, s);
+                            HandleFinishedFile(nfile.FullName, s, Overwrite);
                         }
                         else
                         {
-                            //Move the -new file from workdir to orginial dir
-                            File.Move(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name);
+                            HandleFinishedFile(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name, Overwrite);
                         }
                     }
                 }
@@ -421,6 +422,7 @@ namespace MKV_Chapterizer
                 }
                 catch (Exception ex)
                 {
+                    WriteError("Failed to delete leftovers: " + ex.ToString());
                     MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
                 }
 
@@ -438,7 +440,7 @@ namespace MKV_Chapterizer
                 }
                 catch (Exception ex)
                 {
-                    WriteLog("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
+                    WriteError("Failed to delete leftovers:" + ex.ToString());
                     MessageBox.Show("Failed to delete leftovers!:" + Environment.NewLine + ex.Message);
                 }
 
@@ -528,7 +530,7 @@ namespace MKV_Chapterizer
             return chapterSet;
         }
 
-        private string CreateChapterFile(ChapterDBAccess.ChapterSet chapterSet, string path)
+        public string CreateChapterFile(ChapterDBAccess.ChapterSet chapterSet, string path)
         {
             WriteLog("Creating chapterfile");
             XmlTextWriter xwrite = new XmlTextWriter(path, System.Text.Encoding.UTF8);
@@ -914,6 +916,56 @@ namespace MKV_Chapterizer
             if (ErrorWriter != null)
             {
                 ErrorWriter.Write(message);
+            }
+        }
+
+        private bool HandleFinishedFile(string path, string newpath, bool overwrite)
+        {
+            string inputDrive = Path.GetPathRoot(path);
+            string outputDrive = Path.GetPathRoot(newpath);
+
+            if (inputDrive == outputDrive)
+            {
+                WriteLog("Deleting the input file");
+                //Delete the input file
+                File.Delete(newpath);
+                WriteLog("Moving the finished file");
+                //Move the file
+                File.Move(path, newpath);
+                return true;
+            }
+            else
+            {
+                WriteLog("Starting to copy the finished file");
+                //Copy the file
+                CopyFileCallback callback = new CopyFileCallback(CopyProgressChanged);
+                AdvancedFileHandling.CopyFile(path, newpath, CopyFileOptions.None, callback);
+               
+                //Then delete the input
+                File.Delete(path);
+                return true;
+            }
+        }
+
+        private CopyFileCallbackAction CopyProgressChanged(string source, string destination, object state, long totalFileSize, long totalBytesTransferred)
+        {
+            if (worker.CancellationPending)
+            {
+                return CopyFileCallbackAction.Cancel;
+            }
+            else
+            {
+                int progress = (int)Math.Round(Convert.ToDecimal((decimal)totalBytesTransferred / (decimal)totalFileSize * 100), 0, MidpointRounding.ToEven);
+                if (Overwrite)
+                {
+                    Status = string.Format("Overwriting old file: {0}%", progress.ToString());
+                }
+                else
+                {
+                    Status = string.Format("Moving chapterized file: {0}%", progress.ToString());
+                }
+
+                return CopyFileCallbackAction.Continue;
             }
         }
     }

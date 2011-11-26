@@ -64,6 +64,7 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="CustomControls">
       <HintPath>..\..\..\..\..\Desktop\CustomControls.dll</HintPath>
@@ -81,6 +82,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdvancedFileHandling.cs" />
     <Compile Include="ChapterDB.cs">
       <SubType>Form</SubType>
     </Compile>
