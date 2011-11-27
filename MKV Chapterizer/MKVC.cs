@@ -717,6 +717,8 @@ namespace MKV_Chapterizer
                 {
                     MessageBox.Show("Finished with this error:" + e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
+                thechapterizer.Clean();
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -787,9 +789,6 @@ namespace MKV_Chapterizer
                     Application.DoEvents();
                 }
             }
-
-            //Clean up after the chapterizer
-            thechapterizer.Clean();
 
             //Save the settings
             Properties.Settings.Default.queueMode = QueueMode;

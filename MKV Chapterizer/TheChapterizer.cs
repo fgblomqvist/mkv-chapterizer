@@ -255,7 +255,7 @@ namespace MKV_Chapterizer
             {
                 try
                 {
-                    Directory.Delete(workDir);
+                    Directory.Delete(workDir, true);
                 }
                 catch (Exception ex)
                 {
