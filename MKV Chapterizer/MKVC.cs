@@ -41,6 +41,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Forms.Design;
 using Microsoft.Win32;
 using Logger;
+using System.Collections.Specialized;
 
 namespace MKV_Chapterizer
 {
@@ -542,7 +543,7 @@ namespace MKV_Chapterizer
                         //Create a chapterfile at chosen destination
                         thechapterizer.ChapterInterval = tbarInterval.Value;
                         thechapterizer.CustomChapterName = Properties.Settings.Default.customChapterName;
-                        thechapterizer.CreateChapterFile(thechapterizer.CreateChapterSet(thechapterizer.GetMovieRuntime(moviePath)), dlg.FileName);
+                        thechapterizer.CreateChapterFile(thechapterizer.CreateChapterSet(thechapterizer.GetMovieRuntime(moviePath), thechapterizer.ChapterInterval), dlg.FileName);
                     }
                     else if (Mode == ChapterMode.ChapterDB && chapterSet != null)
                     {
@@ -649,7 +650,15 @@ namespace MKV_Chapterizer
             }
 
             WriteLog("Starting chapterizer");
-            thechapterizer.Start();
+
+            if (!chkboxOutputChapterfile.Checked)
+            {
+                thechapterizer.Start(Chapterizer.Operations.Chapterize);
+            }
+            else
+            {
+                thechapterizer.Start(Chapterizer.Operations.Chapterfile);
+            }
         }
 
         private void logWriter_Flushed(object sender, EventArgs e)
@@ -779,6 +788,8 @@ namespace MKV_Chapterizer
 
         private void MKVC_Closing(object sender, FormClosingEventArgs e)
         {
+            WriteLog("Exiting MKV Chapterizer");
+
             if (thechapterizer.IsBusy)
             {
                 btnMerge.Text = "Cancelling...";
@@ -1165,6 +1176,18 @@ namespace MKV_Chapterizer
         private void SemiEnableLabel(Label lbl)
         {
             lbl.ForeColor = System.Drawing.SystemColors.ControlText;
+        }
+
+        private void chkboxOutputChapterfile_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkboxOutputChapterfile.Checked)
+            {
+                grpboxMKVHasChapters.Enabled = false;
+            }
+            else
+            {
+                grpboxMKVHasChapters.Enabled = true;
+            }
         }
     }
 

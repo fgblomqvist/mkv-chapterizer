@@ -35,10 +35,11 @@ namespace MKV_Chapterizer
         private static TextWriter pLogWriter;
         private static TextWriter pErrorWriter;
 
-        private static BackgroundWorker worker = new BackgroundWorker();
+        private static BackgroundWorker chapterizeWorker = new BackgroundWorker();
+        private static BackgroundWorker chapterfileWorker = new BackgroundWorker();
         
         //------------------------------------------------------
-        //   External used Properties
+        //   External used Properties and Enumerators
         //------------------------------------------------------
 
         // delegate declaration
@@ -48,6 +49,12 @@ namespace MKV_Chapterizer
         public event ProgressChangedEventHandler ProgressChanged;
         public event ProgressChangedEventHandler StatusChanged;
         public event FinishedEventHandler Finished;
+
+        public enum Operations
+        {
+            Chapterize,
+            Chapterfile,
+        }
 
         public string Status
         {
@@ -226,27 +233,43 @@ namespace MKV_Chapterizer
         public Chapterizer()
         {
             WriteLog("Initializing chapterizer");
-            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
-            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
-            worker.WorkerSupportsCancellation = true;
+
+            //Bind the events for the chapterizeWorker
+            chapterizeWorker.DoWork += new DoWorkEventHandler(chapterizeWorker_DoWork);
+            chapterizeWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(chapterizeWorker_RunWorkerCompleted);
+            chapterizeWorker.WorkerSupportsCancellation = true;
+
+            //Bind the events for the chapterfileWorker
+            chapterfileWorker.DoWork += new DoWorkEventHandler(chapterfileWorker_DoWork);
+            chapterfileWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(chapterfileWorker_RunWorkerCompleted);
+            chapterfileWorker.WorkerSupportsCancellation = true;
         }
 
         //------------------------------------------------------
         //   Accessable Functions
         //------------------------------------------------------
 
-        public void Start()
+        public void Start(Operations operation)
         {
-            //Create the working dir
-            GenerateWorkingDir();
+            if (operation == Operations.Chapterize)
+            {
+                //Create the working dir
+                GenerateWorkingDir();
 
-            IsBusy = true;
-            worker.RunWorkerAsync();
+                IsBusy = true;
+                chapterizeWorker.RunWorkerAsync();
+            }
+            else if (operation == Operations.Chapterfile)
+            {
+                //Output a chapterfile to the same directory as every file specified
+                IsBusy = true;
+                chapterfileWorker.RunWorkerAsync(Files);
+            }
         }
 
         public void Cancel()
         {
-            worker.CancelAsync();
+            chapterizeWorker.CancelAsync();
         }
 
         public void Clean()
@@ -268,7 +291,7 @@ namespace MKV_Chapterizer
         //   Internal used methods
         //------------------------------------------------------
 
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        private void chapterizeWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             List<string> mkvlist = Files;
             int doneMovies = 0;
@@ -308,7 +331,7 @@ namespace MKV_Chapterizer
                             {
                                 WriteLog("Job failed, either it got cancelled or an error was thrown");
                                 e.Cancel = true;
-                                worker.Dispose();
+                                chapterizeWorker.Dispose();
 
                                 //Pass the new file to the complete event for cleaning
                                 pError = (string)file;
@@ -341,7 +364,7 @@ namespace MKV_Chapterizer
                             {
                                 WriteLog("Job failed, either it got cancelled or an error was thrown");
                                 e.Cancel = true;
-                                worker.Dispose();
+                                chapterizeWorker.Dispose();
 
                                 //Pass the new file to the complete event for cleaning
                                 pError = (string)file;
@@ -379,7 +402,7 @@ namespace MKV_Chapterizer
                     {
                         WriteLog("Job failed, either it got cancelled or an error was thrown");
                         e.Cancel = true;
-                        worker.Dispose();
+                        chapterizeWorker.Dispose();
 
                         //Pass the new file to the complete event for cleaning
                         pError = (string)file;
@@ -405,7 +428,7 @@ namespace MKV_Chapterizer
             }
         }
 
-        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void chapterizeWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             RunWorkerCompletedEventArgs ps;
 
@@ -457,7 +480,38 @@ namespace MKV_Chapterizer
             IsBusy = false;
         }
 
-        public ChapterDBAccess.ChapterSet CreateChapterSet(int runTime)
+        private void chapterfileWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            OutputChapterFiles((List<string>)e.Argument, ChapterInterval);
+        }
+
+        private void chapterfileWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            RunWorkerCompletedEventArgs ps;
+
+            if (e.Cancelled == false & e.Error == null)
+            {
+                //The operation completed successfully
+                ps = new RunWorkerCompletedEventArgs(null, null, false);
+                Finished(this, ps);
+            }
+            else if (e.Cancelled == true & e.Error == null)
+            {
+                //The user cancelled
+                ps = new RunWorkerCompletedEventArgs(null, null, true);
+                Finished(this, ps);
+            }
+            else if (e.Cancelled == false & e.Error != null)
+            {
+                //There was an error
+                ps = new RunWorkerCompletedEventArgs(null, e.Error, false);
+                Finished(this, ps);
+            }
+
+            IsBusy = false;
+        }
+
+        public ChapterDBAccess.ChapterSet CreateChapterSet(int runTime, int interval)
         {
             ChapterDBAccess.ChapterSet chapterSet = new ChapterDBAccess.ChapterSet();
             ChapterDBAccess.Chapter chapter;
@@ -468,7 +522,6 @@ namespace MKV_Chapterizer
             int start;
             int extraval = 0;
             int[] time = { 00, 00 };
-            int interval = ChapterInterval; // trackBar1.Value;
 
             if (count < 0)
             {
@@ -532,7 +585,40 @@ namespace MKV_Chapterizer
 
         public string CreateChapterFile(ChapterDBAccess.ChapterSet chapterSet, string path)
         {
+            return CreateChapterFile(chapterSet, path, true);
+        }
+
+        public string CreateChapterFile(ChapterDBAccess.ChapterSet chapterSet, string path, bool overwrite)
+        {
             WriteLog("Creating chapterfile");
+
+            if (Path.GetExtension(path) != "xml")
+            {
+                path += "\\chapters.xml";
+            }
+
+            if (File.Exists(path))
+            {
+                //If the there already exists a file with the same name as the specified, check if we should overwrite
+                if (!overwrite)
+                {
+                    //If we shouldn't overwrite, exit
+                    return null;
+                }
+                else
+                {
+                    //Delete the existing file
+                    try
+                    {
+                        File.Delete(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+
             XmlTextWriter xwrite = new XmlTextWriter(path, System.Text.Encoding.UTF8);
 
             xwrite.WriteStartDocument();
@@ -598,7 +684,7 @@ namespace MKV_Chapterizer
             if (ChapterSet == null)
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
-                cpath = CreateChapterFile(CreateChapterSet(GetMovieRuntime(info.FullName)), workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CreateChapterSet(GetMovieRuntime(info.FullName), ChapterInterval), workDir + "\\chapters.xml");
             }
             else
             {
@@ -647,7 +733,7 @@ namespace MKV_Chapterizer
 
                 //Check for Cancellation
 
-                if (worker.CancellationPending == true)
+                if (chapterizeWorker.CancellationPending == true)
                 {
                     if (!prc.WaitForExit(500))
                     {
@@ -713,7 +799,7 @@ namespace MKV_Chapterizer
 
                 //Check for Cancellation
 
-                if (worker.CancellationPending == true)
+                if (chapterizeWorker.CancellationPending == true)
                 {
 
                     if (!prc.WaitForExit(500))
@@ -775,7 +861,7 @@ namespace MKV_Chapterizer
 
                 //Check for Cancellation
 
-                if (worker.CancellationPending == true)
+                if (chapterizeWorker.CancellationPending == true)
                 {
 
                     if (!prc.WaitForExit(500))
@@ -811,7 +897,7 @@ namespace MKV_Chapterizer
             if (ChapterSet == null)
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
-                cpath = CreateChapterFile(CreateChapterSet(Convert.ToInt32(dd)), workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CreateChapterSet(Convert.ToInt32(dd), ChapterInterval), workDir + "\\chapters.xml");
             }
             else
             {
@@ -836,7 +922,7 @@ namespace MKV_Chapterizer
 
                 //Check for Cancellation
 
-                if (worker.CancellationPending == true)
+                if (chapterizeWorker.CancellationPending == true)
                 {
 
                     MI.Close();
@@ -939,7 +1025,7 @@ namespace MKV_Chapterizer
 
         private CopyFileCallbackAction CopyProgressChanged(string source, string destination, object state, long totalFileSize, long totalBytesTransferred)
         {
-            if (worker.CancellationPending)
+            if (chapterizeWorker.CancellationPending)
             {
                 return CopyFileCallbackAction.Cancel;
             }
@@ -969,6 +1055,22 @@ namespace MKV_Chapterizer
             MI.Close();
 
             return Convert.ToInt32(dd);
+        }
+
+        public void OutputChapterFiles(List<string> mkvlist, int interval)
+        {
+            int progressIncrement = (int)Math.Floor(100 / (decimal)mkvlist.Count);
+            Progress = 0;
+
+            foreach (string mkv in mkvlist)
+            {
+                //Try to output a chapterfile at the files destination
+                int runtime = GetMovieRuntime(mkv);
+                ChapterDBAccess.ChapterSet chapterSet = CreateChapterSet(runtime, interval);
+                CreateChapterFile(chapterSet, Path.GetDirectoryName(mkv));
+                //Increment progress
+                Progress += progressIncrement;
+            }
         }
     }
 }

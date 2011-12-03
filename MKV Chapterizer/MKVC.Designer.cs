@@ -35,6 +35,7 @@
             this.queueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
             this.bwCheckUpdates = new System.ComponentModel.BackgroundWorker();
+            this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.pnlMain = new System.Windows.Forms.Panel();
@@ -64,12 +65,13 @@
             this.btnAdd = new System.Windows.Forms.Button();
             this.lboxFiles = new System.Windows.Forms.ListBox();
             this.tpAdvSettings = new System.Windows.Forms.TabPage();
+            this.grpboxChapterFile = new System.Windows.Forms.GroupBox();
+            this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
             this.grpboxMKVHasChapters = new System.Windows.Forms.GroupBox();
             this.rbtnDoNothing = new System.Windows.Forms.RadioButton();
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
-            this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenu.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
@@ -80,6 +82,7 @@
             this.pnlChapterDB.SuspendLayout();
             this.tpQueue.SuspendLayout();
             this.tpAdvSettings.SuspendLayout();
+            this.grpboxChapterFile.SuspendLayout();
             this.grpboxMKVHasChapters.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -456,6 +459,7 @@
             // 
             // tpAdvSettings
             // 
+            this.tpAdvSettings.Controls.Add(this.grpboxChapterFile);
             this.tpAdvSettings.Controls.Add(this.grpboxMKVHasChapters);
             this.tpAdvSettings.Location = new System.Drawing.Point(4, 23);
             this.tpAdvSettings.Name = "tpAdvSettings";
@@ -464,6 +468,30 @@
             this.tpAdvSettings.TabIndex = 2;
             this.tpAdvSettings.Text = "Advanced Settings";
             this.tpAdvSettings.UseVisualStyleBackColor = true;
+            // 
+            // grpboxChapterFile
+            // 
+            this.grpboxChapterFile.Controls.Add(this.chkboxOutputChapterfile);
+            this.grpboxChapterFile.Location = new System.Drawing.Point(6, 76);
+            this.grpboxChapterFile.Name = "grpboxChapterFile";
+            this.grpboxChapterFile.Size = new System.Drawing.Size(402, 88);
+            this.grpboxChapterFile.TabIndex = 2;
+            this.grpboxChapterFile.TabStop = false;
+            this.grpboxChapterFile.Text = "Chapter file creation";
+            // 
+            // chkboxOutputChapterfile
+            // 
+            this.chkboxOutputChapterfile.AutoSize = true;
+            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 41);
+            this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
+            this.chkboxOutputChapterfile.Size = new System.Drawing.Size(250, 17);
+            this.chkboxOutputChapterfile.TabIndex = 0;
+            this.chkboxOutputChapterfile.Text = "Only output chapter files in the mkvs\' directories";
+            this.ttInfo.SetToolTip(this.chkboxOutputChapterfile, "If this is checked, MKV Chapterizer will output a\r\nfile called \"chapters\" in the " +
+        "directory of each mkv.\r\nThis file can later be used to merge manually with\r\nmkvm" +
+        "erge.");
+            this.chkboxOutputChapterfile.UseVisualStyleBackColor = true;
+            this.chkboxOutputChapterfile.CheckedChanged += new System.EventHandler(this.chkboxOutputChapterfile_CheckedChanged);
             // 
             // grpboxMKVHasChapters
             // 
@@ -474,7 +502,7 @@
             this.grpboxMKVHasChapters.Controls.Add(this.rbtnReplaceThem);
             this.grpboxMKVHasChapters.Location = new System.Drawing.Point(6, 6);
             this.grpboxMKVHasChapters.Name = "grpboxMKVHasChapters";
-            this.grpboxMKVHasChapters.Size = new System.Drawing.Size(380, 64);
+            this.grpboxMKVHasChapters.Size = new System.Drawing.Size(402, 64);
             this.grpboxMKVHasChapters.TabIndex = 1;
             this.grpboxMKVHasChapters.TabStop = false;
             this.grpboxMKVHasChapters.Text = "If the mkv has chapters...";
@@ -482,7 +510,7 @@
             // rbtnDoNothing
             // 
             this.rbtnDoNothing.AutoSize = true;
-            this.rbtnDoNothing.Location = new System.Drawing.Point(261, 28);
+            this.rbtnDoNothing.Location = new System.Drawing.Point(272, 31);
             this.rbtnDoNothing.Name = "rbtnDoNothing";
             this.rbtnDoNothing.Size = new System.Drawing.Size(90, 17);
             this.rbtnDoNothing.TabIndex = 2;
@@ -493,7 +521,7 @@
             // rbtnRemoveThem
             // 
             this.rbtnRemoveThem.AutoSize = true;
-            this.rbtnRemoveThem.Location = new System.Drawing.Point(128, 28);
+            this.rbtnRemoveThem.Location = new System.Drawing.Point(139, 31);
             this.rbtnRemoveThem.Name = "rbtnRemoveThem";
             this.rbtnRemoveThem.Size = new System.Drawing.Size(95, 17);
             this.rbtnRemoveThem.TabIndex = 1;
@@ -505,7 +533,7 @@
             // 
             this.rbtnReplaceThem.AutoSize = true;
             this.rbtnReplaceThem.Checked = true;
-            this.rbtnReplaceThem.Location = new System.Drawing.Point(6, 28);
+            this.rbtnReplaceThem.Location = new System.Drawing.Point(17, 31);
             this.rbtnReplaceThem.Name = "rbtnReplaceThem";
             this.rbtnReplaceThem.Size = new System.Drawing.Size(95, 17);
             this.rbtnReplaceThem.TabIndex = 0;
@@ -558,6 +586,8 @@
             this.pnlChapterDB.PerformLayout();
             this.tpQueue.ResumeLayout(false);
             this.tpAdvSettings.ResumeLayout(false);
+            this.grpboxChapterFile.ResumeLayout(false);
+            this.grpboxChapterFile.PerformLayout();
             this.grpboxMKVHasChapters.ResumeLayout(false);
             this.grpboxMKVHasChapters.PerformLayout();
             this.ResumeLayout(false);
@@ -606,6 +636,8 @@
         private System.Windows.Forms.Panel pnlModeChange;
         private System.Windows.Forms.Label lblMovieName;
         private System.Windows.Forms.ToolTip ttInfo;
+        private System.Windows.Forms.GroupBox grpboxChapterFile;
+        private System.Windows.Forms.CheckBox chkboxOutputChapterfile;
     }
 }
 
