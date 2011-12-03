@@ -592,7 +592,7 @@ namespace MKV_Chapterizer
         {
             WriteLog("Creating chapterfile");
 
-            if (Path.GetExtension(path) != "xml")
+            if (Path.GetExtension(path) != ".xml")
             {
                 path += "\\chapters.xml";
             }
