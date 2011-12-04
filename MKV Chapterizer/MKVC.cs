@@ -925,7 +925,7 @@ namespace MKV_Chapterizer
         {
             /* Disable the controls on which you set the chapterproperties and disable the ability
              * to add new files to the queu and remove files from the queu.
-             * TODO: The ability of adding files to the queue during run and deleting files from the queu aswell */
+             * TODO: The ability of adding files to the queue during run and deleting files from the queue aswell */
             tbarInterval.Enabled = false;
             cboxOverwrite.Enabled = false;
             btnAdd.Enabled = false;
@@ -933,6 +933,12 @@ namespace MKV_Chapterizer
             lboxFiles.Enabled = false;
             btnAdd.Enabled = false;
             btnRemove.Enabled = false;
+            pnlChapterDB.Enabled = false;
+
+            grpboxChapterFile.Enabled = false;
+            grpboxMKVHasChapters.Enabled = false;
+
+            pnlModeChange.Enabled = false;
 
             lblStatus.Text = string.Empty;
             lblStatus.Visible = true;
@@ -957,6 +963,8 @@ namespace MKV_Chapterizer
                 lblTrackbarValue.Enabled = true;
                 lblMin.Enabled = true;
                 lblNumOfChapters.Enabled = true;
+                grpboxChapterFile.Enabled = true;
+                grpboxMKVHasChapters.Enabled = true;
             }
             else
             {
