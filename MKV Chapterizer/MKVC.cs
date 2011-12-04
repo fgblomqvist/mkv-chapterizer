@@ -567,6 +567,7 @@ namespace MKV_Chapterizer
             }
 
             thechapterizer.CustomChapterName = Properties.Settings.Default.customChapterName;
+            thechapterizer.ShowConsole = Properties.Settings.Default.showConsole;
             thechapterizer.LogWriter = logWriter;
             thechapterizer.ErrorWriter = errorWriter;
 

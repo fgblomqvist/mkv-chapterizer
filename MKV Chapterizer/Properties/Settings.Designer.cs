@@ -142,5 +142,17 @@ namespace MKV_Chapterizer.Properties {
                 this["autoUpdate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool showConsole {
+            get {
+                return ((bool)(this["showConsole"]));
+            }
+            set {
+                this["showConsole"] = value;
+            }
+        }
     }
 }

@@ -34,6 +34,7 @@ namespace MKV_Chapterizer
         private static string workDir;
         private static TextWriter pLogWriter;
         private static TextWriter pErrorWriter;
+        private static bool pShowConsole;
 
         private static BackgroundWorker chapterizeWorker = new BackgroundWorker();
         private static BackgroundWorker chapterfileWorker = new BackgroundWorker();
@@ -148,6 +149,19 @@ namespace MKV_Chapterizer
             set
             {
                 pIsBusy = value;
+            }
+        }
+
+        public bool ShowConsole
+        {
+            get
+            {
+                return pShowConsole;
+            }
+
+            set
+            {
+                pShowConsole = value;
             }
         }
 
@@ -709,7 +723,16 @@ namespace MKV_Chapterizer
             prcinfo.Arguments = args;
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;
-            prcinfo.CreateNoWindow = true;
+
+            if (ShowConsole)
+            {
+                prcinfo.CreateNoWindow = false;
+            }
+            else
+            {
+                prcinfo.CreateNoWindow = true;
+            }
+
             prcinfo.UseShellExecute = false;
 
             prc.StartInfo = prcinfo;
@@ -786,7 +809,16 @@ namespace MKV_Chapterizer
             prcinfo.Arguments = pArgs;
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;
-            prcinfo.CreateNoWindow = true;
+
+            if (ShowConsole)
+            {
+                prcinfo.CreateNoWindow = false;
+            }
+            else
+            {
+                prcinfo.CreateNoWindow = true;
+            }
+
             prcinfo.UseShellExecute = false;
 
             prc.StartInfo = prcinfo;
@@ -848,7 +880,16 @@ namespace MKV_Chapterizer
             prcinfo.Arguments = args;
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;
-            prcinfo.CreateNoWindow = true;
+
+            if (ShowConsole)
+            {
+                prcinfo.CreateNoWindow = false;
+            }
+            else
+            {
+                prcinfo.CreateNoWindow = true;
+            }
+
             prcinfo.UseShellExecute = false;
 
             prc.StartInfo = prcinfo;

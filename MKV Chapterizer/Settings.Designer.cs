@@ -50,6 +50,7 @@
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnRestoreWarnings = new System.Windows.Forms.Button();
             this.chkboxAutoUpdate = new System.Windows.Forms.CheckBox();
+            this.chkboxShowConsole = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnOK
@@ -249,11 +250,24 @@
             this.chkboxAutoUpdate.Text = "Auto-search for updates on Launch";
             this.chkboxAutoUpdate.UseVisualStyleBackColor = true;
             // 
+            // chkboxShowConsole
+            // 
+            this.chkboxShowConsole.AutoSize = true;
+            this.chkboxShowConsole.Location = new System.Drawing.Point(229, 183);
+            this.chkboxShowConsole.Name = "chkboxShowConsole";
+            this.chkboxShowConsole.Size = new System.Drawing.Size(148, 30);
+            this.chkboxShowConsole.TabIndex = 25;
+            this.chkboxShowConsole.Text = "Show mkvmerge console \r\nwhen chapterizing";
+            this.infoTip.SetToolTip(this.chkboxShowConsole, "Don\'t enable this if you don\'t know what it means");
+            this.chkboxShowConsole.UseVisualStyleBackColor = true;
+            this.chkboxShowConsole.Visible = false;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(431, 258);
+            this.Controls.Add(this.chkboxShowConsole);
             this.Controls.Add(this.chkboxAutoUpdate);
             this.Controls.Add(this.btnRestoreWarnings);
             this.Controls.Add(this.btnBrowse);
@@ -310,5 +324,6 @@
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Button btnRestoreWarnings;
         private System.Windows.Forms.CheckBox chkboxAutoUpdate;
+        private System.Windows.Forms.CheckBox chkboxShowConsole;
     }
 }
