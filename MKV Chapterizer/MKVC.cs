@@ -750,7 +750,7 @@ namespace MKV_Chapterizer
                 {
                     try
                     {
-                        string args = string.Format("-exe \"{0}\" -apiurl \"{1}\"", Path.GetFileName(Application.ExecutablePath), "http://fredrikblomqvist.developer.se:8080/dev/getupdate.php?name=mkvc");
+                        string args = string.Format("-exe \"{0}\" -apiurls \"{1}\"", Path.GetFileName(Application.ExecutablePath), "http://fredrikblomqvist.developer.se/dev/getupdate.php?name=mkvc|http://mumble.codecafe.com/dev/getupdate.php?name=mkvc");
                         Process.Start("AutoUpdate.exe", args);
                     }
                     catch (FileNotFoundException)

@@ -21,7 +21,7 @@ namespace MKV_Chapterizer
 
         private string[] pUpdateInfo;
         private string pMainExe;
-        private string pApiURL;
+        private string[] pApiURLs;
 
         public delegate void DownloadProgressDelegate(int percProgress);
 
@@ -40,10 +40,10 @@ namespace MKV_Chapterizer
             set { pMainExe = value; }
         }
 
-        public string ApiURL
+        public string[] ApiURLs
         {
-            get { return pApiURL; }
-            set { pApiURL = value; }
+            get { return pApiURLs; }
+            set { pApiURLs = value; }
         }
 
         public AutoUpdate()
@@ -62,13 +62,13 @@ namespace MKV_Chapterizer
                         MainExe = args[i + 1];
                         break;
 
-                    case "-apiurl":
-                        ApiURL = args[i + 1];
+                    case "-apiurls":
+                        ApiURLs = args[i + 1].Split('|');
                         break;
                 }
             }
 
-            if (string.IsNullOrEmpty(ApiURL) || string.IsNullOrEmpty(MainExe))
+            if (ApiURLs.Length == null || string.IsNullOrEmpty(MainExe))
             {
                 //Wrong arguments, notify and quit
                 MessageBox.Show("Wrong arguments specified!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -108,10 +108,20 @@ namespace MKV_Chapterizer
                 return false;
             }
 
-            UpdateInfo = GetUpdateInfo(ApiURL);
+            UpdateInfo = GetUpdateInfo(ApiURLs);
 
             Version curVersion = Version.Parse(fi.FileVersion);
-            Version newVersion = new Version(UpdateInfo[1]);
+            Version newVersion;
+
+            if (UpdateInfo != null)
+            {
+                newVersion = new Version(UpdateInfo[1]);
+            }
+            else
+            {
+                MessageBox.Show("Failed to check for updates, maybe the update server is down?", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
 
             if (newVersion > curVersion)
             {
@@ -135,10 +145,27 @@ namespace MKV_Chapterizer
             }
         }
 
-        private string[] GetUpdateInfo(string APIUrl)
+        private string[] GetUpdateInfo(string[] APIUrls)
         {
             WebClient client = new WebClient();
-            string xml = client.DownloadString(new Uri(APIUrl));
+            string xml = string.Empty;
+
+            try
+            {
+                xml = client.DownloadString(new Uri(APIUrls[0]));
+            }
+            catch (WebException)
+            {
+                //Failed to connect, try the other URL
+                try
+                {
+                    xml = client.DownloadString(new Uri(APIUrls[1]));
+                }
+                catch (WebException)
+                {
+                    return null;
+                }
+            }
             XDocument xdoc = XDocument.Parse(xml);
             XElement xe = xdoc.Root.Element("program");
 
@@ -179,7 +206,8 @@ namespace MKV_Chapterizer
             bool result = false;
 
             //Check if the updateurl is any specific type
-
+            //Not needed anymore...
+            /*
             switch (UpdateInfo[5])
             {
                 case "freedns.afraid.org":
@@ -188,10 +216,10 @@ namespace MKV_Chapterizer
                     UpdateInfo[4] = FetchFreeDNSURL(UpdateInfo[4]);
                     break;
             }
+            */
 
             try
             {
-
                 string url = UpdateInfo[4] + UpdateInfo[6] + UpdateInfo[1] + ".exe";
                 result = Download(url, "update\\" + UpdateInfo[1] + ".exe", progressUpdate);
             }
@@ -204,7 +232,6 @@ namespace MKV_Chapterizer
             if (result == true)
             {
                 //Download succeeded, notify the user and start the setup
-                //Download succeeded, return to the main thread
                 e.Result = UpdateInfo[1] + ".exe";
             }
                 
@@ -230,6 +257,7 @@ namespace MKV_Chapterizer
             }
         }
 
+        //This function is apparently not needed anymore
         private string FetchFreeDNSURL(string url)
         {
             WebClient client = new WebClient();
