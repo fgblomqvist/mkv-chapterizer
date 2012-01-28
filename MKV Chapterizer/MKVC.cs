@@ -152,6 +152,7 @@ namespace MKV_Chapterizer
                 {
                     case UIStatuses.Input:
 
+                        WriteLog("Setting UI to Input mode");
                         lblChapterCount.Enabled = true;
                         lblNumOfChapters.Enabled = true;
                         lblChapterInterval.Enabled = true;
@@ -161,14 +162,28 @@ namespace MKV_Chapterizer
                         tbarInterval.Enabled = true;
                         btnMerge.Enabled = true;
 
+                        btnSearch.Enabled = true;
+                        txtSearch.Enabled = true;
+                        lblSearch.Enabled = true;
+
                         ShowTutorialMessage = false;
+                        ShowProgressBar = false;
                         pnlModeChange.Enabled = true;
 
                         btnAdd.Enabled = true;
                         btnRemove.Enabled = true;
                         lboxFiles.Enabled = true;
+
                         grpboxChapterFile.Enabled = true;
-                        grpboxMKVHasChapters.Enabled = true;
+
+                        if (chkboxOutputChapterfile.Checked)
+                        {
+                            grpboxMKVHasChapters.Enabled = false;
+                        }
+                        else
+                        {
+                            grpboxMKVHasChapters.Enabled = true;
+                        }
 
                         if (UIMode == UIModes.Single)
                         {
@@ -178,6 +193,9 @@ namespace MKV_Chapterizer
                         {
                             ShowModeChange = false;
                         }
+
+                        btnMerge.Text = "Chapterize";
+                        progressBar.Value = 0;
 
                         break;
 
@@ -251,6 +269,9 @@ namespace MKV_Chapterizer
                         btnAdd.Enabled = false;
                         btnRemove.Enabled = false;
                         pnlChapterDB.Enabled = false;
+                        btnSearch.Enabled = false;
+                        txtSearch.Enabled = false;
+                        lblSearch.Enabled = false;
 
                         grpboxChapterFile.Enabled = false;
                         grpboxMKVHasChapters.Enabled = false;
@@ -574,10 +595,6 @@ namespace MKV_Chapterizer
                     ChapterCount = CalcChapterCount(duration, ConvertToSeconds(tbarInterval.Value, cboxUnit.Text));
                 }
             }
-            else
-            {
-                UIStatus = UIStatuses.Input;
-            }
         }
 
         private void EnableControls(bool RemoveMode)
@@ -644,9 +661,12 @@ namespace MKV_Chapterizer
                 return;
             }
 
-            if (ModifierKeys == Keys.Shift)
+            if (UIMode == UIModes.Single && ModifierKeys == Keys.Shift)
             {
-                CreateChapterFile(lboxFiles.Items[0].ToString());
+                if (CreateChapterFile(lboxFiles.Items[0].ToString()) == true)
+                {
+                    UIStatus = UIStatuses.AwaitFileDrop;
+                }
             }
             else
             {
@@ -656,7 +676,7 @@ namespace MKV_Chapterizer
 
         }
 
-        private void CreateChapterFile(string moviePath)
+        private bool CreateChapterFile(string moviePath)
         {
                 //Only produce a chapter-file
 
@@ -685,6 +705,12 @@ namespace MKV_Chapterizer
                         thechapterizer.ChapterSet = chapterSet;
                         thechapterizer.CreateChapterFile(chapterSet, dlg.FileName);
                     }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
         }
 
@@ -873,6 +899,7 @@ namespace MKV_Chapterizer
             }
             else
             {
+                lboxFiles.Items.Clear();
                 UIStatus = UIStatuses.Input;
             }
 
