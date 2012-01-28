@@ -161,10 +161,7 @@ namespace MKV_Chapterizer
                         cboxOverwrite.Enabled = true;
                         tbarInterval.Enabled = true;
                         btnMerge.Enabled = true;
-
-                        btnSearch.Enabled = true;
-                        txtSearch.Enabled = true;
-                        lblSearch.Enabled = true;
+                        pnlChapterDB.Enabled = true;
 
                         ShowTutorialMessage = false;
                         ShowProgressBar = false;
@@ -269,9 +266,6 @@ namespace MKV_Chapterizer
                         btnAdd.Enabled = false;
                         btnRemove.Enabled = false;
                         pnlChapterDB.Enabled = false;
-                        btnSearch.Enabled = false;
-                        txtSearch.Enabled = false;
-                        lblSearch.Enabled = false;
 
                         grpboxChapterFile.Enabled = false;
                         grpboxMKVHasChapters.Enabled = false;
@@ -594,6 +588,10 @@ namespace MKV_Chapterizer
                     //Calculate the number of chapters with default chapter interval
                     ChapterCount = CalcChapterCount(duration, ConvertToSeconds(tbarInterval.Value, cboxUnit.Text));
                 }
+            }
+            else
+            {
+                UIStatus = UIStatuses.Input;
             }
         }
 

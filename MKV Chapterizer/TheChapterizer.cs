@@ -956,14 +956,11 @@ namespace MKV_Chapterizer
 
             MI.Open(info2.FullName);
 
-            decimal dd;
-            dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 60000);
-
             string cpath;
             if (ChapterSet == null)
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
-                cpath = CreateChapterFile(CreateChapterSet(Convert.ToInt32(dd), ChapterInterval), workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CreateChapterSet(GetMovieRuntime(info2.FullName), ChapterInterval), workDir + "\\chapters.xml");
             }
             else
             {

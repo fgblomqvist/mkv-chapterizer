@@ -205,6 +205,7 @@ namespace MKV_Chapterizer
         private void btnUse_Click(object sender, EventArgs e)
         {
             ChosenChapter = (ChapterDBAccess.ChapterSet)dgViewResults.SelectedRows[0].Cells[2].Value;
+            this.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }
 
