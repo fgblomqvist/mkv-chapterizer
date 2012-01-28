@@ -1081,7 +1081,15 @@ namespace MKV_Chapterizer
                 WriteLog("Starting to copy the finished file");
                 //Copy the file
                 CopyFileCallback callback = new CopyFileCallback(CopyProgressChanged);
-                AdvancedFileHandling.CopyFile(path, newpath, CopyFileOptions.None, callback);
+                try
+                {
+                    AdvancedFileHandling.CopyFile(path, newpath, CopyFileOptions.None, callback);
+                }
+                catch (IOException)
+                {
+                    //Assume the user cancelled
+                    return false;
+                }
                
                 //Then delete the input
                 File.Delete(path);

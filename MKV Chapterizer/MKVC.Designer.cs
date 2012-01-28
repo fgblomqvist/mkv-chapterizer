@@ -429,7 +429,7 @@
             // 
             this.lblTutorial.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTutorial.AutoSize = true;
-            this.lblTutorial.Location = new System.Drawing.Point(60, 90);
+            this.lblTutorial.Location = new System.Drawing.Point(67, 86);
             this.lblTutorial.Name = "lblTutorial";
             this.lblTutorial.Size = new System.Drawing.Size(290, 13);
             this.lblTutorial.TabIndex = 24;

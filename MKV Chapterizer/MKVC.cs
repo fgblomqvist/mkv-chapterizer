@@ -1194,7 +1194,7 @@ namespace MKV_Chapterizer
 
         private void ReCalcStatusPos()
         {
-            int newx = 205 - (int)Math.Round(Convert.ToDecimal(lblStatus.Width / 2), 0, MidpointRounding.ToEven);
+            int newx = (int)Math.Round((decimal)this.Width / (decimal)2, 0, MidpointRounding.ToEven) - (int)Math.Round(Convert.ToDecimal(lblStatus.Width / 2), 0, MidpointRounding.ToEven);
             lblStatus.Location = new Point(newx, lblStatus.Location.Y);
         }
 
