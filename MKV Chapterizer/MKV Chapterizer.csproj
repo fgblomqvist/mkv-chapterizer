@@ -165,6 +165,9 @@
   <ItemGroup>
     <None Include="bin\Debug\MediaInfo.dll" />
     <None Include="bin\Debug\mkvmerge.exe" />
+    <Content Include="AutoUpdate.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>

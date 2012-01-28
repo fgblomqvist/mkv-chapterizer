@@ -36,6 +36,7 @@
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
             this.bwCheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
+            this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.pnlMain = new System.Windows.Forms.Panel();
@@ -44,14 +45,14 @@
             this.lblMode = new System.Windows.Forms.Label();
             this.lblModeValue = new System.Windows.Forms.Label();
             this.pnlInterval = new System.Windows.Forms.Panel();
+            this.cboxUnit = new System.Windows.Forms.ComboBox();
             this.lblChapterInterval = new System.Windows.Forms.Label();
             this.lblChapterCount = new System.Windows.Forms.Label();
             this.lblNumOfChapters = new System.Windows.Forms.Label();
             this.tbarInterval = new System.Windows.Forms.TrackBar();
             this.lblTrackbarValue = new System.Windows.Forms.Label();
-            this.lblMin = new System.Windows.Forms.Label();
             this.pnlChapterDB = new System.Windows.Forms.Panel();
-            this.lblMovieName = new System.Windows.Forms.Label();
+            this.lblSearch = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.lblStatus = new System.Windows.Forms.Label();
@@ -66,7 +67,6 @@
             this.lboxFiles = new System.Windows.Forms.ListBox();
             this.tpAdvSettings = new System.Windows.Forms.TabPage();
             this.grpboxChapterFile = new System.Windows.Forms.GroupBox();
-            this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
             this.grpboxMKVHasChapters = new System.Windows.Forms.GroupBox();
             this.rbtnDoNothing = new System.Windows.Forms.RadioButton();
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
@@ -120,8 +120,24 @@
             this.bwCheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckUpdates_DoWork);
             this.bwCheckUpdates.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCheckUpdates_RunWorkerCompleted);
             // 
+            // chkboxOutputChapterfile
+            // 
+            this.chkboxOutputChapterfile.AutoSize = true;
+            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 41);
+            this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
+            this.chkboxOutputChapterfile.Size = new System.Drawing.Size(250, 17);
+            this.chkboxOutputChapterfile.TabIndex = 0;
+            this.chkboxOutputChapterfile.Text = "Only output chapter files in the mkvs\' directories";
+            this.ttInfo.SetToolTip(this.chkboxOutputChapterfile, "If this is checked, MKV Chapterizer will output a\r\nfile called \"chapters\" in the " +
+        "directory of each mkv.\r\nThis file can later be used to merge manually with\r\nmkvm" +
+        "erge.");
+            this.chkboxOutputChapterfile.UseVisualStyleBackColor = true;
+            this.chkboxOutputChapterfile.CheckedChanged += new System.EventHandler(this.chkboxOutputChapterfile_CheckedChanged);
+            // 
             // tabControl
             // 
+            this.tabControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.tpSettings);
             this.tabControl.Controls.Add(this.tpQueue);
             this.tabControl.Controls.Add(this.tpAdvSettings);
@@ -129,7 +145,7 @@
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(424, 197);
+            this.tabControl.Size = new System.Drawing.Size(445, 197);
             this.tabControl.TabIndex = 1;
             // 
             // tpSettings
@@ -138,7 +154,7 @@
             this.tpSettings.Location = new System.Drawing.Point(4, 23);
             this.tpSettings.Name = "tpSettings";
             this.tpSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSettings.Size = new System.Drawing.Size(416, 170);
+            this.tpSettings.Size = new System.Drawing.Size(437, 170);
             this.tpSettings.TabIndex = 0;
             this.tpSettings.Text = "Settings";
             this.tpSettings.UseVisualStyleBackColor = true;
@@ -159,23 +175,23 @@
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMain.Location = new System.Drawing.Point(3, 3);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(410, 164);
+            this.pnlMain.Size = new System.Drawing.Size(431, 164);
             this.pnlMain.TabIndex = 0;
             // 
             // pnlModeChange
             // 
+            this.pnlModeChange.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.pnlModeChange.Controls.Add(this.btnSwitch);
             this.pnlModeChange.Controls.Add(this.lblMode);
             this.pnlModeChange.Controls.Add(this.lblModeValue);
-            this.pnlModeChange.Location = new System.Drawing.Point(133, 84);
+            this.pnlModeChange.Location = new System.Drawing.Point(154, 80);
             this.pnlModeChange.Name = "pnlModeChange";
             this.pnlModeChange.Size = new System.Drawing.Size(130, 23);
             this.pnlModeChange.TabIndex = 33;
             // 
             // btnSwitch
             // 
-            this.btnSwitch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSwitch.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnSwitch.BackColor = System.Drawing.Color.Transparent;
             this.btnSwitch.FlatAppearance.BorderColor = System.Drawing.Color.White;
             this.btnSwitch.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White;
@@ -191,8 +207,7 @@
             // 
             // lblMode
             // 
-            this.lblMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblMode.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblMode.AutoSize = true;
             this.lblMode.Location = new System.Drawing.Point(9, 6);
             this.lblMode.Name = "lblMode";
@@ -202,8 +217,7 @@
             // 
             // lblModeValue
             // 
-            this.lblModeValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblModeValue.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblModeValue.AutoSize = true;
             this.lblModeValue.Location = new System.Drawing.Point(52, 6);
             this.lblModeValue.Name = "lblModeValue";
@@ -213,16 +227,33 @@
             // 
             // pnlInterval
             // 
+            this.pnlInterval.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlInterval.Controls.Add(this.cboxUnit);
             this.pnlInterval.Controls.Add(this.lblChapterInterval);
             this.pnlInterval.Controls.Add(this.lblChapterCount);
             this.pnlInterval.Controls.Add(this.lblNumOfChapters);
             this.pnlInterval.Controls.Add(this.tbarInterval);
             this.pnlInterval.Controls.Add(this.lblTrackbarValue);
-            this.pnlInterval.Controls.Add(this.lblMin);
             this.pnlInterval.Location = new System.Drawing.Point(0, 0);
             this.pnlInterval.Name = "pnlInterval";
-            this.pnlInterval.Size = new System.Drawing.Size(410, 74);
+            this.pnlInterval.Size = new System.Drawing.Size(431, 74);
             this.pnlInterval.TabIndex = 32;
+            // 
+            // cboxUnit
+            // 
+            this.cboxUnit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cboxUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboxUnit.FormattingEnabled = true;
+            this.cboxUnit.Items.AddRange(new object[] {
+            "seconds",
+            "minutes",
+            "hours"});
+            this.cboxUnit.Location = new System.Drawing.Point(354, 10);
+            this.cboxUnit.Name = "cboxUnit";
+            this.cboxUnit.Size = new System.Drawing.Size(74, 21);
+            this.cboxUnit.TabIndex = 28;
+            this.cboxUnit.SelectedIndexChanged += new System.EventHandler(this.cboxUnit_SelectedIndexChanged);
             // 
             // lblChapterInterval
             // 
@@ -268,7 +299,7 @@
             this.tbarInterval.Maximum = 60;
             this.tbarInterval.Minimum = 1;
             this.tbarInterval.Name = "tbarInterval";
-            this.tbarInterval.Size = new System.Drawing.Size(235, 45);
+            this.tbarInterval.Size = new System.Drawing.Size(228, 45);
             this.tbarInterval.TabIndex = 19;
             this.tbarInterval.Value = 5;
             this.tbarInterval.Scroll += new System.EventHandler(this.trackBar1_Scroll);
@@ -279,26 +310,15 @@
             this.lblTrackbarValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTrackbarValue.AutoSize = true;
             this.lblTrackbarValue.Enabled = false;
-            this.lblTrackbarValue.Location = new System.Drawing.Point(340, 14);
+            this.lblTrackbarValue.Location = new System.Drawing.Point(334, 14);
             this.lblTrackbarValue.Name = "lblTrackbarValue";
             this.lblTrackbarValue.Size = new System.Drawing.Size(12, 13);
             this.lblTrackbarValue.TabIndex = 20;
             this.lblTrackbarValue.Text = "x";
             // 
-            // lblMin
-            // 
-            this.lblMin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblMin.AutoSize = true;
-            this.lblMin.Enabled = false;
-            this.lblMin.Location = new System.Drawing.Point(358, 14);
-            this.lblMin.Name = "lblMin";
-            this.lblMin.Size = new System.Drawing.Size(43, 13);
-            this.lblMin.TabIndex = 27;
-            this.lblMin.Text = "minutes";
-            // 
             // pnlChapterDB
             // 
-            this.pnlChapterDB.Controls.Add(this.lblMovieName);
+            this.pnlChapterDB.Controls.Add(this.lblSearch);
             this.pnlChapterDB.Controls.Add(this.btnSearch);
             this.pnlChapterDB.Controls.Add(this.txtSearch);
             this.pnlChapterDB.Location = new System.Drawing.Point(0, 0);
@@ -307,18 +327,22 @@
             this.pnlChapterDB.TabIndex = 28;
             this.pnlChapterDB.Visible = false;
             // 
-            // lblMovieName
+            // lblSearch
             // 
-            this.lblMovieName.AutoSize = true;
-            this.lblMovieName.Location = new System.Drawing.Point(170, 3);
-            this.lblMovieName.Name = "lblMovieName";
-            this.lblMovieName.Size = new System.Drawing.Size(70, 13);
-            this.lblMovieName.TabIndex = 2;
-            this.lblMovieName.Text = "Movie Name:";
+            this.lblSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSearch.AutoSize = true;
+            this.lblSearch.Location = new System.Drawing.Point(180, 3);
+            this.lblSearch.Name = "lblSearch";
+            this.lblSearch.Size = new System.Drawing.Size(70, 13);
+            this.lblSearch.TabIndex = 2;
+            this.lblSearch.Text = "Movie Name:";
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(164, 45);
+            this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearch.Location = new System.Drawing.Point(175, 45);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(85, 23);
             this.btnSearch.TabIndex = 1;
@@ -328,7 +352,9 @@
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(112, 19);
+            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSearch.Location = new System.Drawing.Point(122, 19);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(191, 20);
             this.txtSearch.TabIndex = 0;
@@ -339,7 +365,7 @@
             // 
             this.lblStatus.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(158, 149);
+            this.lblStatus.Location = new System.Drawing.Point(168, 149);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(93, 13);
             this.lblStatus.TabIndex = 28;
@@ -363,13 +389,13 @@
             this.btnMerge.AllowDrop = true;
             this.btnMerge.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnMerge.Enabled = false;
-            this.btnMerge.Location = new System.Drawing.Point(164, 125);
+            this.btnMerge.Location = new System.Drawing.Point(174, 125);
             this.btnMerge.Name = "btnMerge";
             this.btnMerge.Size = new System.Drawing.Size(85, 23);
             this.btnMerge.TabIndex = 18;
             this.btnMerge.Text = "Chapterize";
             this.btnMerge.UseVisualStyleBackColor = true;
-            this.btnMerge.Click += new System.EventHandler(this.button1_Click);
+            this.btnMerge.Click += new System.EventHandler(this.btnMerge_Click);
             // 
             // lblVersion
             // 
@@ -378,7 +404,7 @@
             this.lblVersion.AutoSize = true;
             this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVersion.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lblVersion.Location = new System.Drawing.Point(356, 151);
+            this.lblVersion.Location = new System.Drawing.Point(377, 151);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(11, 12);
             this.lblVersion.TabIndex = 19;
@@ -392,7 +418,7 @@
             this.cboxOverwrite.Checked = true;
             this.cboxOverwrite.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cboxOverwrite.Enabled = false;
-            this.cboxOverwrite.Location = new System.Drawing.Point(300, 129);
+            this.cboxOverwrite.Location = new System.Drawing.Point(321, 129);
             this.cboxOverwrite.Name = "cboxOverwrite";
             this.cboxOverwrite.Size = new System.Drawing.Size(104, 17);
             this.cboxOverwrite.TabIndex = 22;
@@ -403,7 +429,7 @@
             // 
             this.lblTutorial.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTutorial.AutoSize = true;
-            this.lblTutorial.Location = new System.Drawing.Point(50, 90);
+            this.lblTutorial.Location = new System.Drawing.Point(60, 90);
             this.lblTutorial.Name = "lblTutorial";
             this.lblTutorial.Size = new System.Drawing.Size(290, 13);
             this.lblTutorial.TabIndex = 24;
@@ -417,7 +443,7 @@
             this.tpQueue.Location = new System.Drawing.Point(4, 23);
             this.tpQueue.Name = "tpQueue";
             this.tpQueue.Padding = new System.Windows.Forms.Padding(3);
-            this.tpQueue.Size = new System.Drawing.Size(416, 170);
+            this.tpQueue.Size = new System.Drawing.Size(437, 170);
             this.tpQueue.TabIndex = 1;
             this.tpQueue.Text = "Queue";
             this.tpQueue.UseVisualStyleBackColor = true;
@@ -426,7 +452,7 @@
             // 
             this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRemove.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRemove.Location = new System.Drawing.Point(381, 47);
+            this.btnRemove.Location = new System.Drawing.Point(402, 47);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(27, 23);
             this.btnRemove.TabIndex = 2;
@@ -438,7 +464,7 @@
             // 
             this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdd.Location = new System.Drawing.Point(381, 18);
+            this.btnAdd.Location = new System.Drawing.Point(402, 18);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(27, 23);
             this.btnAdd.TabIndex = 1;
@@ -454,7 +480,7 @@
             this.lboxFiles.FormattingEnabled = true;
             this.lboxFiles.Location = new System.Drawing.Point(3, 6);
             this.lboxFiles.Name = "lboxFiles";
-            this.lboxFiles.Size = new System.Drawing.Size(367, 160);
+            this.lboxFiles.Size = new System.Drawing.Size(388, 160);
             this.lboxFiles.TabIndex = 0;
             // 
             // tpAdvSettings
@@ -464,34 +490,22 @@
             this.tpAdvSettings.Location = new System.Drawing.Point(4, 23);
             this.tpAdvSettings.Name = "tpAdvSettings";
             this.tpAdvSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tpAdvSettings.Size = new System.Drawing.Size(416, 170);
+            this.tpAdvSettings.Size = new System.Drawing.Size(437, 170);
             this.tpAdvSettings.TabIndex = 2;
             this.tpAdvSettings.Text = "Advanced Settings";
             this.tpAdvSettings.UseVisualStyleBackColor = true;
             // 
             // grpboxChapterFile
             // 
+            this.grpboxChapterFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grpboxChapterFile.Controls.Add(this.chkboxOutputChapterfile);
             this.grpboxChapterFile.Location = new System.Drawing.Point(6, 76);
             this.grpboxChapterFile.Name = "grpboxChapterFile";
-            this.grpboxChapterFile.Size = new System.Drawing.Size(402, 88);
+            this.grpboxChapterFile.Size = new System.Drawing.Size(423, 88);
             this.grpboxChapterFile.TabIndex = 2;
             this.grpboxChapterFile.TabStop = false;
             this.grpboxChapterFile.Text = "Chapter file creation";
-            // 
-            // chkboxOutputChapterfile
-            // 
-            this.chkboxOutputChapterfile.AutoSize = true;
-            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 41);
-            this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
-            this.chkboxOutputChapterfile.Size = new System.Drawing.Size(250, 17);
-            this.chkboxOutputChapterfile.TabIndex = 0;
-            this.chkboxOutputChapterfile.Text = "Only output chapter files in the mkvs\' directories";
-            this.ttInfo.SetToolTip(this.chkboxOutputChapterfile, "If this is checked, MKV Chapterizer will output a\r\nfile called \"chapters\" in the " +
-        "directory of each mkv.\r\nThis file can later be used to merge manually with\r\nmkvm" +
-        "erge.");
-            this.chkboxOutputChapterfile.UseVisualStyleBackColor = true;
-            this.chkboxOutputChapterfile.CheckedChanged += new System.EventHandler(this.chkboxOutputChapterfile_CheckedChanged);
             // 
             // grpboxMKVHasChapters
             // 
@@ -502,7 +516,7 @@
             this.grpboxMKVHasChapters.Controls.Add(this.rbtnReplaceThem);
             this.grpboxMKVHasChapters.Location = new System.Drawing.Point(6, 6);
             this.grpboxMKVHasChapters.Name = "grpboxMKVHasChapters";
-            this.grpboxMKVHasChapters.Size = new System.Drawing.Size(402, 64);
+            this.grpboxMKVHasChapters.Size = new System.Drawing.Size(423, 64);
             this.grpboxMKVHasChapters.TabIndex = 1;
             this.grpboxMKVHasChapters.TabStop = false;
             this.grpboxMKVHasChapters.Text = "If the mkv has chapters...";
@@ -549,7 +563,7 @@
             this.progressBar.ForeColor = System.Drawing.SystemColors.Desktop;
             this.progressBar.Location = new System.Drawing.Point(7, 199);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(410, 23);
+            this.progressBar.Size = new System.Drawing.Size(431, 23);
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
             // 
@@ -559,7 +573,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(424, 226);
+            this.ClientSize = new System.Drawing.Size(445, 226);
             this.ContextMenuStrip = this.contextMenu;
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.progressBar);
@@ -630,14 +644,14 @@
         private System.Windows.Forms.Label lblNumOfChapters;
         private System.Windows.Forms.TrackBar tbarInterval;
         private System.Windows.Forms.Label lblTrackbarValue;
-        private System.Windows.Forms.Label lblMin;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Panel pnlModeChange;
-        private System.Windows.Forms.Label lblMovieName;
+        private System.Windows.Forms.Label lblSearch;
         private System.Windows.Forms.ToolTip ttInfo;
         private System.Windows.Forms.GroupBox grpboxChapterFile;
         private System.Windows.Forms.CheckBox chkboxOutputChapterfile;
+        private System.Windows.Forms.ComboBox cboxUnit;
     }
 }
 

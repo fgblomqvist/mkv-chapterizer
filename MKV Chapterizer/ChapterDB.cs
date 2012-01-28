@@ -16,10 +16,38 @@ namespace MKV_Chapterizer
     {
         ChapterDBAccess chapterDBAccess = new ChapterDBAccess();
         BackgroundWorker bwSearch = new BackgroundWorker();
+        private string pMovieName;
+        private ChapterDBAccess.ChapterSet pChosenChapter;
 
         public ChapterDB()
         {
             InitializeComponent();
+        }
+
+        public string MovieName
+        {
+            get
+            {
+                return pMovieName;
+            }
+
+            set
+            {
+                pMovieName = value;
+            }
+        }
+
+        public ChapterDBAccess.ChapterSet ChosenChapter
+        {
+            get
+            {
+                return pChosenChapter;
+            }
+
+            set
+            {
+                pChosenChapter = value;
+            }
         }
 
         private void ChapterDB_Load(object sender, EventArgs e)
@@ -28,14 +56,23 @@ namespace MKV_Chapterizer
             bwSearch.DoWork +=new DoWorkEventHandler(bwSearch_DoWork);
             bwSearch.RunWorkerCompleted +=new RunWorkerCompletedEventHandler(bwSearch_RunWorkerCompleted);
             bwSearch.WorkerSupportsCancellation = true;
+
+            bwSearch.RunWorkerAsync(MovieName);
         }
 
-        public void SearchChapters(string movieName)
+        public ChapterDBAccess.ChapterSet ShowDialog(string movieName)
         {
+            MovieName = movieName;
             txtboxSearchName.Text = movieName;
             lblStatus.Text = "Searching...";
-            this.Show();
-            bwSearch.RunWorkerAsync(movieName);
+            if (this.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                return ChosenChapter;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private void ApplyColors()
@@ -167,7 +204,7 @@ namespace MKV_Chapterizer
 
         private void btnUse_Click(object sender, EventArgs e)
         {
-            MKVC.chapterSet = (ChapterDBAccess.ChapterSet)dgViewResults.SelectedRows[0].Cells[2].Value;
+            ChosenChapter = (ChapterDBAccess.ChapterSet)dgViewResults.SelectedRows[0].Cells[2].Value;
             this.Close();
         }
 

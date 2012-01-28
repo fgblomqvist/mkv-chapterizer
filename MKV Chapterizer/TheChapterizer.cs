@@ -87,6 +87,12 @@ namespace MKV_Chapterizer
             }
         }
 
+        /// <summary>
+        /// Gets or sets the chapter interval.
+        /// </summary>
+        /// <value>
+        /// The chapter interval in seconds.
+        /// </value>
         public int ChapterInterval
         {
             get
@@ -525,17 +531,23 @@ namespace MKV_Chapterizer
             IsBusy = false;
         }
 
-        public ChapterDBAccess.ChapterSet CreateChapterSet(int runTime, int interval)
+        /// <summary>
+        /// Creates a chapter set.
+        /// </summary>
+        /// <param name="runtime">The runtime of the movie in seconds.</param>
+        /// <param name="interval">The interval in seconds.</param>
+        /// <returns></returns>
+        public ChapterDBAccess.ChapterSet CreateChapterSet(int runtime, int interval)
         {
             ChapterDBAccess.ChapterSet chapterSet = new ChapterDBAccess.ChapterSet();
             ChapterDBAccess.Chapter chapter;
 
-            decimal count = runTime / ChapterInterval;
+            decimal count = runtime / interval;
 
             int nmbr = Convert.ToInt32(count);
             int start;
             int extraval = 0;
-            int[] time = { 00, 00 };
+            int[] time = { 00, 00 , 00};
 
             if (count < 0)
             {
@@ -554,7 +566,7 @@ namespace MKV_Chapterizer
             if (Properties.Settings.Default.firstChap00)
             {
                 chapter = new ChapterDBAccess.Chapter();
-                chapter.Time = TimeSpan.Parse(time[0] + ":" + time[1]);
+                chapter.Time = TimeSpan.Parse(time[0] + ":" + time[1] + ":" + time[2]);
                 chapter.Name = CustomChapterName.Replace("%N", "1").Replace("%T", string.Format("{0:00}:{1:00}:{2:00}", (int)chapter.Time.TotalHours, chapter.Time.Minutes, chapter.Time.Seconds));
                 chapterSet.Chapters.Add(chapter);
                 extraval = 1;
@@ -562,16 +574,22 @@ namespace MKV_Chapterizer
 
             for (start = 0 + extraval; start <= nmbr; start++)
             {
-                time[1] += interval;
+                time[2] += interval;
 
-                if (time[1] >= 60)
+                while (time[2] >= 60)
                 {
-                    time[0] += 1;
+                    time[2] -= 60;
+                    time[1] += 1;
+                }
+
+                while (time[1] >= 60)
+                {
                     time[1] -= 60;
+                    time[0] += 1;
                 }
 
                 chapter = new ChapterDBAccess.Chapter();
-                chapter.Time = TimeSpan.Parse(time[0] + ":" + time[1]);
+                chapter.Time = TimeSpan.Parse(time[0] + ":" + time[1] + ":" + time[2]);
                 chapter.Name = CustomChapterName.Replace("%N", Convert.ToString(start + 1)).Replace("%T", string.Format("{0:00}:{1:00}:{2:00}", (int)chapter.Time.TotalHours, chapter.Time.Minutes, chapter.Time.Seconds));
 
                 chapterSet.Chapters.Add(chapter);
@@ -581,7 +599,14 @@ namespace MKV_Chapterizer
             {
 
                 int hours = 0;
-                int minutes = runTime;
+                int minutes = 0;
+                int seconds = runtime;
+
+                while (seconds >= 60)
+                {
+                    seconds -= 60;
+                    minutes += 1;
+                }
 
                 while (minutes >= 60)
                 {
@@ -590,7 +615,7 @@ namespace MKV_Chapterizer
                 }
 
                 chapter = new ChapterDBAccess.Chapter();
-                chapter.Time = TimeSpan.Parse(hours.ToString() + ":" + minutes.ToString());
+                chapter.Time = TimeSpan.Parse(hours.ToString() + ":" + minutes.ToString() + ":" + seconds.ToString());
                 chapter.Name = CustomChapterName.Replace("%N", Convert.ToString(start + 1)).Replace("%T", string.Format("{0:00}:{1:00}:{2:00}", (int)chapter.Time.TotalHours, chapter.Time.Minutes, chapter.Time.Seconds));
             }
 
@@ -1086,13 +1111,18 @@ namespace MKV_Chapterizer
             }
         }
 
+        /// <summary>
+        /// Gets the movie runtime in seconds
+        /// </summary>
+        /// <param name="movie">The movie.</param>
+        /// <returns></returns>
         public int GetMovieRuntime(string movie)
         {
             MediaInfo MI = new MediaInfo();
             MI.Open(movie);
 
             decimal dd;
-            dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 60000);
+            dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 1000);
             MI.Close();
 
             return Convert.ToInt32(dd);
