@@ -59,17 +59,14 @@ namespace MKV_Chapterizer
         private int LOGPIXELSX = 88;
         private IntPtr NULL = IntPtr.Zero;
 
-        public static string var;
-        public static int duration;
-        public static FileInfo[] theFiles;
-        public static int chapterCount;
-        public static float screenMultiplier = 1.0F;
-        public static bool pQueueMode;
-        public static string[] sargs;
-        public static int tbarVal = 5;
-        public int queueAction = 1;
-        public int queueProgress;
-        public static ChapterDBAccess.ChapterSet chapterSet;
+        private static int duration;
+        private static float screenMultiplier = 1.0F;
+        private static string[] sargs;
+        private static int tbarVal = 5;
+        private static int queueAction = 1;
+        private static ChapterDBAccess.ChapterSet chapterSet;
+        private static UIModes pUIMode;
+        private static UIStatuses pUIStatus;
 
         private delegate void ObjectDelegate(int percentage);
         private delegate void ObjectDelegate2(string status);
@@ -129,6 +126,192 @@ namespace MKV_Chapterizer
         {
             Interval,
             ChapterDB,
+        }
+
+        public enum UIModes
+        {
+            Single,
+            Queue,
+        }
+
+        public enum UIStatuses
+        {
+            Input,
+            AwaitFileDrop,
+            RemoveChapters,
+            Working,
+        }
+
+        public UIStatuses UIStatus
+        {
+            set
+            {
+                pUIStatus = value;
+
+                switch (value)
+                {
+                    case UIStatuses.Input:
+
+                        lblChapterCount.Enabled = true;
+                        lblNumOfChapters.Enabled = true;
+                        lblChapterInterval.Enabled = true;
+                        lblTrackbarValue.Enabled = true;
+                        cboxUnit.Enabled = true;
+                        cboxOverwrite.Enabled = true;
+                        tbarInterval.Enabled = true;
+                        btnMerge.Enabled = true;
+
+                        ShowTutorialMessage = false;
+                        pnlModeChange.Enabled = true;
+
+                        btnAdd.Enabled = true;
+                        btnRemove.Enabled = true;
+                        lboxFiles.Enabled = true;
+                        grpboxChapterFile.Enabled = true;
+                        grpboxMKVHasChapters.Enabled = true;
+
+                        if (UIMode == UIModes.Single)
+                        {
+                            ShowModeChange = true;
+                        }
+                        else
+                        {
+                            ShowModeChange = false;
+                        }
+
+                        break;
+
+                    case UIStatuses.AwaitFileDrop:
+
+                        WriteLog("Setting UI to await file drop");
+                        tbarInterval.Enabled = false;
+                        btnMerge.Enabled = false;
+                        cboxOverwrite.Enabled = false;
+
+                        lblNumOfChapters.Enabled = false;
+                        lblChapterCount.Text = string.Empty;
+                        lblChapterInterval.Enabled = false;
+                        lblTrackbarValue.Enabled = false;
+                        lblStatus.Visible = false;
+
+                        lboxFiles.Items.Clear();
+
+                        ShowTutorialMessage = true;
+                        ShowModeChange = false;
+                        ShowProgressBar = false;
+
+                        cboxUnit.SelectedIndex = 1;
+                        cboxUnit.Enabled = false;
+
+                        //Change mode to interval if it's not there
+                        if (pnlChapterDB.Visible == true)
+                        {
+                            SwitchChapterMode();
+                        }
+
+                        //Set the tut message
+                        lblTutorial.Text = "Start by either dropping a MKV file on me or right-clicking me";
+
+                        btnMerge.Text = "Chapterize";
+                        progressBar.Value = 0;
+
+                        break;
+
+                    case UIStatuses.RemoveChapters:
+
+                        lblChapterCount.Enabled = false;
+                        lblNumOfChapters.Enabled = false;
+                        lblChapterInterval.Enabled = false;
+                        lblTrackbarValue.Enabled = false;
+                        cboxUnit.Enabled = false;
+                        cboxOverwrite.Enabled = true;
+                        tbarInterval.Enabled = false;
+                        btnMerge.Enabled = true;
+
+                        ShowTutorialMessage = false;
+                        pnlModeChange.Enabled = true;
+
+                        btnAdd.Enabled = true;
+                        btnRemove.Enabled = true;
+                        lboxFiles.Enabled = true;
+                        grpboxChapterFile.Enabled = true;
+                        grpboxMKVHasChapters.Enabled = true;
+                        ShowModeChange = false;
+
+                        break;
+
+                    case UIStatuses.Working:
+
+                        tbarInterval.Enabled = false;
+                        cboxUnit.Enabled = false;
+                        cboxOverwrite.Enabled = false;
+                        btnAdd.Enabled = false;
+                        btnRemove.Enabled = false;
+                        lboxFiles.Enabled = false;
+                        btnAdd.Enabled = false;
+                        btnRemove.Enabled = false;
+                        pnlChapterDB.Enabled = false;
+
+                        grpboxChapterFile.Enabled = false;
+                        grpboxMKVHasChapters.Enabled = false;
+
+                        pnlModeChange.Enabled = false;
+
+                        lblStatus.Text = string.Empty;
+                        lblStatus.Visible = true;
+
+                        //Show progressbar
+                        ShowProgressBar = true;
+
+                        btnMerge.Text = "Cancel";
+
+                        break;
+                }
+            }
+        }
+
+        public UIModes UIMode
+        {
+            get
+            {
+                return pUIMode;
+            }
+
+            set
+            {
+                pUIMode = value;
+
+                switch (value)
+                {
+                    case UIModes.Queue:
+
+                        WriteLog("Setting UI to Queue mode");
+                        tabControl.HideTabs = false;
+                        queueToolStripMenuItem.Checked = true;
+                        lblChapterCount.Visible = false;
+                        lblNumOfChapters.Visible = false;
+                        cboxOverwrite.Text = "Overwrite old files";
+
+                        break;
+
+                    case UIModes.Single:
+
+                        WriteLog("Setting UI to Single mode");
+                        tabControl.HideTabs = true;
+                        queueToolStripMenuItem.Checked = false;
+                        lblChapterCount.Visible = true;
+                        lblNumOfChapters.Visible = true;
+                        cboxOverwrite.Text = "Overwrite old file";
+
+                        //Navigate back to first tab in-case the user is on another tab
+                        tabControl.SelectedIndex = 0;
+
+                        break;
+
+                }
+
+                lboxFiles.Items.Clear();
+            }
         }
 
         public ChapterMode Mode
@@ -192,63 +375,6 @@ namespace MKV_Chapterizer
                 {
                     float y = 225 * screenMultiplier;
                     Size = new Size((int)this.Size.Width, (int)y);
-                }
-            }
-        }
-
-        public bool QueueMode
-        {
-            get
-            {
-                return Properties.Settings.Default.queueMode;
-            }
-
-            set
-            {
-                Properties.Settings.Default.queueMode = value;
-
-                if (value)
-                {
-                    WriteLog("Setting UI to Queue mode");
-
-                    EnableControls(false);
-
-                    //Disable ability to change mode
-                    ShowModeChange = false;
-                    //Check the box in the context menu
-                    queueToolStripMenuItem.Checked = true;
-                    //Empty files and number of chapters
-                    lblChapterCount.Text = string.Empty;
-                    lboxFiles.Items.Clear();
-                    //Enable queueUI
-                    cboxOverwrite.Text = "Overwrite old files";
-                    lblNumOfChapters.Visible = false;
-                    ShowTutorialMessage = false;
-                    lblChapterCount.Visible = false;
-                    tabControl.HideTabs = false;
-                    this.Show();
-                }
-                else
-                {
-                    WriteLog("Setting UI to single file mode");
-
-                    DisableControls();
-
-                    //Navigate back to first tab in-case the user is on another tab
-                    tabControl.SelectedIndex = 0;
-
-                    //Uncheck the box in the context menu
-                    queueToolStripMenuItem.Checked = false;
-                    //Empty files and number of chapters
-                    lblChapterCount.Text = string.Empty;
-                    lboxFiles.Items.Clear();
-                    //Disable queueUI
-                    cboxOverwrite.Text = "Overwrite old file";
-                    lblNumOfChapters.Visible = true;
-                    ShowTutorialMessage = true;
-                    lblChapterCount.Visible = true;
-                    tabControl.HideTabs = true;
-                    this.Show();
                 }
             }
         }
@@ -324,7 +450,7 @@ namespace MKV_Chapterizer
 
             string[] s = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-            if (!QueueMode)
+            if (UIMode == UIModes.Single)
             {
                 if (s != null && s.Count() != 1)
                 {
@@ -356,7 +482,7 @@ namespace MKV_Chapterizer
             WriteLog("User dropped mkv(s) on the UI");
 
             //temp: Clear the lboxFiles if no queue
-            if (Properties.Settings.Default.queueMode == false)
+            if (UIMode == UIModes.Single)
             {
                 lboxFiles.Items.Clear();
             }
@@ -374,7 +500,7 @@ namespace MKV_Chapterizer
                 if (exist != true)
                 {
                     lboxFiles.Items.Add(str);
-                    if (QueueMode == true)
+                    if (UIMode == UIModes.Queue)
                     {
                         tabControl.SelectedIndex = 1;
                     }
@@ -397,7 +523,7 @@ namespace MKV_Chapterizer
                 return;
             }
 
-            if (Properties.Settings.Default.queueMode == false)
+            if (UIMode == UIModes.Single)
             {
                 if (ChaptersExist(fi.FullName))
                 {
@@ -407,7 +533,6 @@ namespace MKV_Chapterizer
 
                     switch (f.Result)
                     {
-
                         case 0:
 
                             //Cancel
@@ -420,10 +545,9 @@ namespace MKV_Chapterizer
                             WriteLog("User chose to de-chapterize the mkv");
 
                             sargs = new string[] { fi.FullName, "false" };
-                            btnMerge.Text = "De-Chapterize";
 
-                            EnableControls(true);
-                            ShowModeChange = false;
+                            btnMerge.Text = "De-Chapterize";
+                            UIStatus = UIStatuses.RemoveChapters;
 
                             break;
 
@@ -434,12 +558,9 @@ namespace MKV_Chapterizer
 
                             sargs = new string[] { fi.FullName, "true" };
 
-                            tbarInterval.Enabled = true;
+                            UIStatus = UIStatuses.Input;
                             btnMerge.Text = "Re-Chapterize";
 
-                            //Enable the controls for the merging process
-                            EnableControls(false);
-                            ShowModeChange = true;
                             //Calculate the number of chapters with default chapter interval
                             ChapterCount = CalcChapterCount(duration, ConvertToSeconds(tbarInterval.Value, cboxUnit.Text));
                             break;
@@ -448,21 +569,15 @@ namespace MKV_Chapterizer
                 }
                 else
                 {
-                    tbarInterval.Enabled = true;
-                    //Enable the controls for the merging process
-                    EnableControls(false);
-                    ShowModeChange = true;
+                    UIStatus = UIStatuses.Input;
                     //Calculate the number of chapters with default chapter interval
                     ChapterCount = CalcChapterCount(duration, ConvertToSeconds(tbarInterval.Value, cboxUnit.Text));
                 }
             }
             else
             {
-                tbarInterval.Enabled = true;
+                UIStatus = UIStatuses.Input;
             }
-
-            //Hide the tutorial message
-            ShowTutorialMessage = false;
         }
 
         private void EnableControls(bool RemoveMode)
@@ -608,8 +723,7 @@ namespace MKV_Chapterizer
 
             if (btnMerge.Text == "Chapterize")
             {
-
-                PrepareForRun();
+                UIStatus = UIStatuses.Working;
 
                 List<string> mkvList = new List<string>();
                 foreach (string itm in lboxFiles.Items)
@@ -634,7 +748,7 @@ namespace MKV_Chapterizer
             }
             else if (btnMerge.Text == "Re-Chapterize")
             {
-                PrepareForRun();
+                UIStatus = UIStatuses.Working;
 
                 List<string> mkvList = new List<string>();
                 foreach (string itm in lboxFiles.Items)
@@ -659,7 +773,7 @@ namespace MKV_Chapterizer
             }
             else if (btnMerge.Text == "De-Chapterize")
             {
-                PrepareForRun();
+                UIStatus = UIStatuses.Working;
 
                 List<string> mkvList = new List<string>();
                 foreach (string itm in lboxFiles.Items)
@@ -753,17 +867,25 @@ namespace MKV_Chapterizer
 
         private void thechapterizer_Finished(object sender, RunWorkerCompletedEventArgs e)
         {
-                RestoreUI();
-                if (e.Cancelled == false && e.Error == null)
-                {
-                    MessageBox.Show("Finished without errors", "Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (e.Cancelled == false && e.Error != null)
-                {
-                    MessageBox.Show("Finished with this error:" + e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            if (UIMode == UIModes.Single)
+            {
+                UIStatus = UIStatuses.AwaitFileDrop;
+            }
+            else
+            {
+                UIStatus = UIStatuses.Input;
+            }
 
-                thechapterizer.Clean();
+            if (e.Cancelled == false && e.Error == null)
+            {
+                MessageBox.Show("Finished without errors", "Finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if (e.Cancelled == false && e.Error != null)
+            {
+                MessageBox.Show("Finished with this error:" + e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            thechapterizer.Clean();
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -773,7 +895,7 @@ namespace MKV_Chapterizer
             ChapterCount = CalcChapterCount(duration, ConvertToSeconds(tbarInterval.Value, cboxUnit.Text));
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MKVC_Load(object sender, EventArgs e)
         {
             WriteLog(string.Format("Starting MKV Chapterizer {0}", Application.ProductVersion));
 
@@ -808,17 +930,14 @@ namespace MKV_Chapterizer
             WriteLog(string.Format("Screen scale multiplier = {0}", screenMultiplier));
 
             //Set to default mode
-            QueueMode = false;
-            ShowModeChange = false;
-            cboxUnit.SelectedIndex = 1;
-
+            UIMode = UIModes.Single;
+            UIStatus = UIStatuses.AwaitFileDrop;
+            
             tbarInterval.Value = Properties.Settings.Default.defChapInterval;
 
             lblTrackbarValue.Text = tbarInterval.Value.ToString();
             lblVersion.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion)));
 
-            ShowProgressBar = false;
-            
         }
 
         private void MKVC_Closing(object sender, FormClosingEventArgs e)
@@ -837,7 +956,6 @@ namespace MKV_Chapterizer
             }
 
             //Save the settings
-            Properties.Settings.Default.queueMode = QueueMode;
             Properties.Settings.Default.Save();
         }
 
@@ -937,7 +1055,7 @@ namespace MKV_Chapterizer
 
             if (lboxFiles.Items.Count == 0)
             {
-                RestoreUI();
+                UIStatus = UIStatuses.Input;
             }
         }
         private void AddDragHandlers(Control parent)
@@ -950,97 +1068,6 @@ namespace MKV_Chapterizer
                 control.DragDrop += new DragEventHandler(this.DragDropHandler);
                 control.DragEnter += new DragEventHandler(this.DragEnterHandler);
             }
-        }
-
-        private void PrepareForRun()
-        {
-            /* Disable the controls on which you set the chapterproperties and disable the ability
-             * to add new files to the queu and remove files from the queu.
-             * TODO: The ability of adding files to the queue during run and deleting files from the queue aswell */
-            tbarInterval.Enabled = false;
-            cboxUnit.Enabled = false;
-            cboxOverwrite.Enabled = false;
-            btnAdd.Enabled = false;
-            btnRemove.Enabled = false;
-            lboxFiles.Enabled = false;
-            btnAdd.Enabled = false;
-            btnRemove.Enabled = false;
-            pnlChapterDB.Enabled = false;
-
-            grpboxChapterFile.Enabled = false;
-            grpboxMKVHasChapters.Enabled = false;
-
-            pnlModeChange.Enabled = false;
-
-            lblStatus.Text = string.Empty;
-            lblStatus.Visible = true;
-
-            //Show progressbar
-            ShowProgressBar = true;
-
-            btnMerge.Text = "Cancel";
-        }
-
-        private void RestoreUI()
-        {
-            /* Prepare for new drop*/
-
-            //Don't disable these if the UI is Queuemode
-            if (QueueMode)
-            {
-                tbarInterval.Enabled = true;
-                cboxOverwrite.Enabled = true;
-                btnMerge.Enabled = true;
-                lblChapterInterval.Enabled = true;
-                lblTrackbarValue.Enabled = true;
-                cboxUnit.Enabled = true;
-                lblNumOfChapters.Enabled = true;
-                grpboxChapterFile.Enabled = true;
-                grpboxMKVHasChapters.Enabled = true;
-            }
-            else
-            {
-                //Enable tutorial message
-                ShowTutorialMessage = true;
-
-                tbarInterval.Enabled = false;
-                cboxOverwrite.Enabled = false;
-                btnMerge.Enabled = false;
-                lblChapterInterval.Enabled = false;
-                lblTrackbarValue.Enabled = false;
-                cboxUnit.Enabled = false;
-                lblNumOfChapters.Enabled = false;
-            }
-
-            btnAdd.Enabled = true;
-            btnRemove.Enabled = true;
-            lboxFiles.Enabled = true;
-
-            //Change mode to interval if it's not there
-            if (pnlChapterDB.Visible == true)
-            {
-                SwitchChapterMode();
-            }
-
-            //Inactivate mode change
-            ShowModeChange = false;
-
-            //Reset chapter count
-            lblChapterCount.Text = string.Empty;
-
-            //Set its message
-            lblTutorial.Text = "Start by either dropping a MKV file on me or right-clicking me";
-
-            //Clear the queue
-            lboxFiles.Items.Clear();
-
-            btnMerge.Text = "Chapterize";
-            progressBar.Value = 0;
-
-            //Hide progressbar
-            ShowProgressBar = false;
-
-            lblStatus.Visible = false;
         }
 
         private void label9_Click(object sender, EventArgs e)
@@ -1077,11 +1104,13 @@ namespace MKV_Chapterizer
         {
             if (queueToolStripMenuItem.Checked)
             {
-                QueueMode = true;
+                UIMode = UIModes.Queue;
+                UIStatus = UIStatuses.Input;
             }
             else
             {
-                QueueMode = false;
+                UIMode = UIModes.Single;
+                UIStatus = UIStatuses.AwaitFileDrop;
             }
         }
 

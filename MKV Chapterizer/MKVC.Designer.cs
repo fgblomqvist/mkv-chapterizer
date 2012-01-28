@@ -585,7 +585,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MKV Chapterizer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MKVC_Closing);
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.MKVC_Load);
             this.contextMenu.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
             this.tpSettings.ResumeLayout(false);

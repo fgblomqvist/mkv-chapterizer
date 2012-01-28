@@ -14,9 +14,6 @@
     <Setting Name="customOutputName" Type="System.String" Scope="User">
       <Value Profile="(Default)">%O-new</Value>
     </Setting>
-    <Setting Name="queueMode" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="customChapterName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Chapter %N</Value>
     </Setting>

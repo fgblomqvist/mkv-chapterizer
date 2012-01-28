@@ -73,18 +73,6 @@ namespace MKV_Chapterizer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool queueMode {
-            get {
-                return ((bool)(this["queueMode"]));
-            }
-            set {
-                this["queueMode"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Chapter %N")]
         public string customChapterName {
             get {
