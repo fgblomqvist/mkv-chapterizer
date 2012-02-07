@@ -163,11 +163,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Debug\MediaInfo.dll" />
-    <None Include="bin\Debug\mkvmerge.exe" />
-    <Content Include="AutoUpdate.exe">
+    <Content Include="SharpDate.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="bin\Debug\MediaInfo.dll" />
+    <None Include="bin\Debug\mkvmerge.exe" />
     <Content Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
