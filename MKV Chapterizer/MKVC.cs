@@ -926,26 +926,7 @@ namespace MKV_Chapterizer
 
             if (Properties.Settings.Default.autoUpdate)
             {
-                if (Portable == false)
-                {
-                    try
-                    {
-                        string args = string.Format("-exe \"{0}\" -apiurls \"{1}\"", Path.GetFileName(Application.ExecutablePath), "http://fredrikblomqvist.developer.se/dev/getupdate.php?name=mkvc|http://mumble.codecafe.com/dev/getupdate.php?name=mkvc");
-                        Process.Start("SharpDate.exe", args);
-                    }
-                    catch (Win32Exception)
-                    {
-                        MessageBox.Show("Failed to check for updates: \r\nYou are missing an important component, please reinstall!");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Failed to check for updates: " + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else
-                {
-                    bwCheckUpdates.RunWorkerAsync();
-                }
+                CheckUpdates();
             }
 
             WriteLog("Getting screen scale multiplier");
@@ -963,6 +944,31 @@ namespace MKV_Chapterizer
             lblTrackbarValue.Text = tbarInterval.Value.ToString();
             lblVersion.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion)));
 
+        }
+
+        private void CheckUpdates()
+        {
+            if (Portable == false)
+            {
+                Process prc = Process.GetCurrentProcess();
+                try
+                {
+                    string args = string.Format("-version {2} -pids {0} -apiurls \"{1}\"", prc.Id.ToString(), "http://fredrikblomqvist.developer.se/dev/getupdate.php?name=mkvc|http://mumble.codecafe.com/dev/getupdate.php?name=mkvc", Application.ProductVersion.ToString());
+                    Process.Start("SharpDate.exe", args);
+                }
+                catch (Win32Exception)
+                {
+                    MessageBox.Show("Failed to check for updates: \r\nYou are missing an important component, please reinstall!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed to check for updates: " + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                bwCheckUpdates.RunWorkerAsync();
+            }
         }
 
         private void MKVC_Closing(object sender, FormClosingEventArgs e)
