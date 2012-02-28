@@ -480,7 +480,7 @@ namespace MKV_Chapterizer
             {
                 fi = new FileInfo(i);
 
-                if (fi.Extension == ".mkv")
+                if (fi.Extension.ToLower() == ".mkv")
                 {
                     e.Effect = DragDropEffects.All;
                 }
