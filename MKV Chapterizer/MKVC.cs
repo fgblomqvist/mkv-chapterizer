@@ -75,6 +75,7 @@ namespace MKV_Chapterizer
         private Chapterizer thechapterizer;
 
         private Log log = new Log("mkvc.log");
+        private List<string> mkvList = new List<string>();
 
         public MKVC()
         {
@@ -1058,9 +1059,20 @@ namespace MKV_Chapterizer
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
-            if (lboxFiles.SelectedIndex != -1)
+            int index = lboxFiles.SelectedIndex;
+
+            if (index != -1)
             {
                 lboxFiles.Items.RemoveAt(lboxFiles.SelectedIndex);
+            }
+            else
+            {
+                return;
+            }
+
+            if (lboxFiles.Items.Count > 0)
+            {
+                lboxFiles.SelectedIndex = index - 1;
             }
 
             if (lboxFiles.Items.Count == 0)
@@ -1098,7 +1110,7 @@ namespace MKV_Chapterizer
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (openMKVdlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (openMKVdlg.ShowDialog() == DialogResult.OK)
             {
                 //Enable Chaterizing
                 EnableControls(false);
@@ -1281,6 +1293,63 @@ namespace MKV_Chapterizer
             {
                 ChapterCount = CalcChapterCount(duration, ConvertToSeconds(tbarInterval.Value, cboxUnit.Text));
             }
+        }
+
+        private void btnAddFolder_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dlg = new FolderBrowserDialog();
+            dlg.ShowNewFolderButton = false;
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                //Ask if we should scan recursively
+                if (MessageBox.Show("Do you want to scan recursively?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    IEnumerable<string> mkvs = FindMKV(dlg.SelectedPath);
+                    foreach (string file in mkvs)
+                    {
+                        lboxFiles.Items.Add(file);
+                    }
+                }
+                else
+                {
+                    foreach (string file in Directory.GetFiles(dlg.SelectedPath))
+                    {
+                        if (Path.GetExtension(file) == ".mkv")
+                        {
+                            lboxFiles.Items.Add(file);
+                        }
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<string> FindMKV(string selectedPath)
+        {
+            try
+            {
+                foreach (string d in Directory.GetDirectories(selectedPath))
+                {
+                    if (d.EndsWith("Converted"))
+                    {
+                        continue;
+                    }
+
+                    foreach (string f in Directory.GetFiles(d))
+                    {
+                        if (Path.GetExtension(f) == ".mkv")
+                        {
+                            mkvList.Add(f);
+                        }
+                    }
+                    FindMKV(d);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+            return mkvList;
         }
     }
 }

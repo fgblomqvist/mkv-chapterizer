@@ -36,7 +36,6 @@
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
             this.bwCheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
-            this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.pnlMain = new System.Windows.Forms.Panel();
@@ -62,11 +61,13 @@
             this.cboxOverwrite = new System.Windows.Forms.CheckBox();
             this.lblTutorial = new System.Windows.Forms.Label();
             this.tpQueue = new System.Windows.Forms.TabPage();
+            this.btnAddFolder = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.lboxFiles = new System.Windows.Forms.ListBox();
             this.tpAdvSettings = new System.Windows.Forms.TabPage();
             this.grpboxChapterFile = new System.Windows.Forms.GroupBox();
+            this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
             this.grpboxMKVHasChapters = new System.Windows.Forms.GroupBox();
             this.rbtnDoNothing = new System.Windows.Forms.RadioButton();
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
@@ -89,7 +90,7 @@
             // websiteToolStripMenuItem
             // 
             this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.websiteToolStripMenuItem.Text = "Website";
             this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
             // 
@@ -99,13 +100,13 @@
             this.websiteToolStripMenuItem,
             this.queueToolStripMenuItem});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(144, 48);
+            this.contextMenu.Size = new System.Drawing.Size(138, 48);
             // 
             // queueToolStripMenuItem
             // 
             this.queueToolStripMenuItem.CheckOnClick = true;
             this.queueToolStripMenuItem.Name = "queueToolStripMenuItem";
-            this.queueToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+            this.queueToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.queueToolStripMenuItem.Text = "Queue Mode";
             this.queueToolStripMenuItem.Click += new System.EventHandler(this.queueToolStripMenuItem_Click);
             // 
@@ -119,20 +120,6 @@
             // 
             this.bwCheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckUpdates_DoWork);
             this.bwCheckUpdates.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCheckUpdates_RunWorkerCompleted);
-            // 
-            // chkboxOutputChapterfile
-            // 
-            this.chkboxOutputChapterfile.AutoSize = true;
-            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 41);
-            this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
-            this.chkboxOutputChapterfile.Size = new System.Drawing.Size(250, 17);
-            this.chkboxOutputChapterfile.TabIndex = 0;
-            this.chkboxOutputChapterfile.Text = "Only output chapter files in the mkvs\' directories";
-            this.ttInfo.SetToolTip(this.chkboxOutputChapterfile, "If this is checked, MKV Chapterizer will output a\r\nfile called \"chapters\" in the " +
-        "directory of each mkv.\r\nThis file can later be used to merge manually with\r\nmkvm" +
-        "erge.");
-            this.chkboxOutputChapterfile.UseVisualStyleBackColor = true;
-            this.chkboxOutputChapterfile.CheckedChanged += new System.EventHandler(this.chkboxOutputChapterfile_CheckedChanged);
             // 
             // tabControl
             // 
@@ -221,7 +208,7 @@
             this.lblModeValue.AutoSize = true;
             this.lblModeValue.Location = new System.Drawing.Point(52, 6);
             this.lblModeValue.Name = "lblModeValue";
-            this.lblModeValue.Size = new System.Drawing.Size(42, 13);
+            this.lblModeValue.Size = new System.Drawing.Size(44, 13);
             this.lblModeValue.TabIndex = 30;
             this.lblModeValue.Text = "Interval";
             // 
@@ -262,7 +249,7 @@
             this.lblChapterInterval.Enabled = false;
             this.lblChapterInterval.Location = new System.Drawing.Point(9, 14);
             this.lblChapterInterval.Name = "lblChapterInterval";
-            this.lblChapterInterval.Size = new System.Drawing.Size(85, 13);
+            this.lblChapterInterval.Size = new System.Drawing.Size(89, 13);
             this.lblChapterInterval.TabIndex = 12;
             this.lblChapterInterval.Text = "Chapter Interval:";
             // 
@@ -284,7 +271,7 @@
             this.lblNumOfChapters.Enabled = false;
             this.lblNumOfChapters.Location = new System.Drawing.Point(9, 55);
             this.lblNumOfChapters.Name = "lblNumOfChapters";
-            this.lblNumOfChapters.Size = new System.Drawing.Size(104, 13);
+            this.lblNumOfChapters.Size = new System.Drawing.Size(109, 13);
             this.lblNumOfChapters.TabIndex = 13;
             this.lblNumOfChapters.Text = "Number of Chapters:";
             // 
@@ -312,7 +299,7 @@
             this.lblTrackbarValue.Enabled = false;
             this.lblTrackbarValue.Location = new System.Drawing.Point(334, 14);
             this.lblTrackbarValue.Name = "lblTrackbarValue";
-            this.lblTrackbarValue.Size = new System.Drawing.Size(12, 13);
+            this.lblTrackbarValue.Size = new System.Drawing.Size(13, 13);
             this.lblTrackbarValue.TabIndex = 20;
             this.lblTrackbarValue.Text = "x";
             // 
@@ -334,7 +321,7 @@
             this.lblSearch.AutoSize = true;
             this.lblSearch.Location = new System.Drawing.Point(180, 3);
             this.lblSearch.Name = "lblSearch";
-            this.lblSearch.Size = new System.Drawing.Size(70, 13);
+            this.lblSearch.Size = new System.Drawing.Size(72, 13);
             this.lblSearch.TabIndex = 2;
             this.lblSearch.Text = "Movie Name:";
             // 
@@ -367,7 +354,7 @@
             this.lblStatus.AutoSize = true;
             this.lblStatus.Location = new System.Drawing.Point(168, 149);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(93, 13);
+            this.lblStatus.Size = new System.Drawing.Size(94, 13);
             this.lblStatus.TabIndex = 28;
             this.lblStatus.Text = "0/0 MyMovie.mkv";
             this.lblStatus.Visible = false;
@@ -379,7 +366,7 @@
             this.lblSettings.ForeColor = System.Drawing.SystemColors.ControlText;
             this.lblSettings.Location = new System.Drawing.Point(12, 146);
             this.lblSettings.Name = "lblSettings";
-            this.lblSettings.Size = new System.Drawing.Size(45, 13);
+            this.lblSettings.Size = new System.Drawing.Size(47, 13);
             this.lblSettings.TabIndex = 26;
             this.lblSettings.Text = "Settings";
             this.lblSettings.Click += new System.EventHandler(this.lblSettings_Click);
@@ -406,7 +393,7 @@
             this.lblVersion.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.lblVersion.Location = new System.Drawing.Point(377, 151);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(11, 12);
+            this.lblVersion.Size = new System.Drawing.Size(10, 12);
             this.lblVersion.TabIndex = 19;
             this.lblVersion.Text = "v";
             this.lblVersion.Click += new System.EventHandler(this.label9_Click);
@@ -418,9 +405,9 @@
             this.cboxOverwrite.Checked = true;
             this.cboxOverwrite.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cboxOverwrite.Enabled = false;
-            this.cboxOverwrite.Location = new System.Drawing.Point(321, 129);
+            this.cboxOverwrite.Location = new System.Drawing.Point(315, 129);
             this.cboxOverwrite.Name = "cboxOverwrite";
-            this.cboxOverwrite.Size = new System.Drawing.Size(104, 17);
+            this.cboxOverwrite.Size = new System.Drawing.Size(110, 17);
             this.cboxOverwrite.TabIndex = 22;
             this.cboxOverwrite.Text = "Overwrite old file";
             this.cboxOverwrite.UseVisualStyleBackColor = true;
@@ -431,12 +418,13 @@
             this.lblTutorial.AutoSize = true;
             this.lblTutorial.Location = new System.Drawing.Point(67, 86);
             this.lblTutorial.Name = "lblTutorial";
-            this.lblTutorial.Size = new System.Drawing.Size(290, 13);
+            this.lblTutorial.Size = new System.Drawing.Size(307, 13);
             this.lblTutorial.TabIndex = 24;
             this.lblTutorial.Text = "Start by either dropping a MKV file on me or right-clicking me";
             // 
             // tpQueue
             // 
+            this.tpQueue.Controls.Add(this.btnAddFolder);
             this.tpQueue.Controls.Add(this.btnRemove);
             this.tpQueue.Controls.Add(this.btnAdd);
             this.tpQueue.Controls.Add(this.lboxFiles);
@@ -448,27 +436,40 @@
             this.tpQueue.Text = "Queue";
             this.tpQueue.UseVisualStyleBackColor = true;
             // 
+            // btnAddFolder
+            // 
+            this.btnAddFolder.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAddFolder.BackgroundImage")));
+            this.btnAddFolder.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnAddFolder.Location = new System.Drawing.Point(397, 44);
+            this.btnAddFolder.Name = "btnAddFolder";
+            this.btnAddFolder.Size = new System.Drawing.Size(32, 31);
+            this.btnAddFolder.TabIndex = 3;
+            this.btnAddFolder.UseVisualStyleBackColor = true;
+            this.btnAddFolder.Click += new System.EventHandler(this.btnAddFolder_Click);
+            // 
             // btnRemove
             // 
             this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRemove.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnRemove.BackgroundImage")));
+            this.btnRemove.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnRemove.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRemove.Location = new System.Drawing.Point(402, 47);
+            this.btnRemove.Location = new System.Drawing.Point(397, 81);
             this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(27, 23);
+            this.btnRemove.Size = new System.Drawing.Size(32, 32);
             this.btnRemove.TabIndex = 2;
-            this.btnRemove.Text = "-";
             this.btnRemove.UseVisualStyleBackColor = true;
             this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // btnAdd
             // 
             this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAdd.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAdd.BackgroundImage")));
+            this.btnAdd.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdd.Location = new System.Drawing.Point(402, 18);
+            this.btnAdd.Location = new System.Drawing.Point(397, 6);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(27, 23);
+            this.btnAdd.Size = new System.Drawing.Size(32, 32);
             this.btnAdd.TabIndex = 1;
-            this.btnAdd.Text = "+";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
@@ -478,6 +479,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lboxFiles.FormattingEnabled = true;
+            this.lboxFiles.HorizontalScrollbar = true;
             this.lboxFiles.Location = new System.Drawing.Point(3, 6);
             this.lboxFiles.Name = "lboxFiles";
             this.lboxFiles.Size = new System.Drawing.Size(388, 160);
@@ -506,6 +508,20 @@
             this.grpboxChapterFile.TabIndex = 2;
             this.grpboxChapterFile.TabStop = false;
             this.grpboxChapterFile.Text = "Chapter file creation";
+            // 
+            // chkboxOutputChapterfile
+            // 
+            this.chkboxOutputChapterfile.AutoSize = true;
+            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 41);
+            this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
+            this.chkboxOutputChapterfile.Size = new System.Drawing.Size(264, 17);
+            this.chkboxOutputChapterfile.TabIndex = 0;
+            this.chkboxOutputChapterfile.Text = "Only output chapter files in the mkvs\' directories";
+            this.ttInfo.SetToolTip(this.chkboxOutputChapterfile, "If this is checked, MKV Chapterizer will output a\r\nfile called \"chapters\" in the " +
+        "directory of each mkv.\r\nThis file can later be used to merge manually with\r\nmkvm" +
+        "erge.");
+            this.chkboxOutputChapterfile.UseVisualStyleBackColor = true;
+            this.chkboxOutputChapterfile.CheckedChanged += new System.EventHandler(this.chkboxOutputChapterfile_CheckedChanged);
             // 
             // grpboxMKVHasChapters
             // 
@@ -537,7 +553,7 @@
             this.rbtnRemoveThem.AutoSize = true;
             this.rbtnRemoveThem.Location = new System.Drawing.Point(139, 31);
             this.rbtnRemoveThem.Name = "rbtnRemoveThem";
-            this.rbtnRemoveThem.Size = new System.Drawing.Size(95, 17);
+            this.rbtnRemoveThem.Size = new System.Drawing.Size(96, 17);
             this.rbtnRemoveThem.TabIndex = 1;
             this.rbtnRemoveThem.Text = "Remove Them";
             this.rbtnRemoveThem.UseVisualStyleBackColor = true;
@@ -549,7 +565,7 @@
             this.rbtnReplaceThem.Checked = true;
             this.rbtnReplaceThem.Location = new System.Drawing.Point(17, 31);
             this.rbtnReplaceThem.Name = "rbtnReplaceThem";
-            this.rbtnReplaceThem.Size = new System.Drawing.Size(95, 17);
+            this.rbtnReplaceThem.Size = new System.Drawing.Size(96, 17);
             this.rbtnReplaceThem.TabIndex = 0;
             this.rbtnReplaceThem.TabStop = true;
             this.rbtnReplaceThem.Text = "Replace Them";
@@ -652,6 +668,7 @@
         private System.Windows.Forms.GroupBox grpboxChapterFile;
         private System.Windows.Forms.CheckBox chkboxOutputChapterfile;
         private System.Windows.Forms.ComboBox cboxUnit;
+        private System.Windows.Forms.Button btnAddFolder;
     }
 }
 
