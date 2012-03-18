@@ -847,7 +847,6 @@ namespace MKV_Chapterizer
         private void errorWriter_Flushed(object sender, EventArgs e)
         {
             log.Write(sender.ToString(), Log.Type.Error);
-            MessageBox.Show(this, sender.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             //Clean the stringwriter
             StringBuilder sb = logWriter.GetStringBuilder();
