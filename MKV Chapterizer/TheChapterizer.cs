@@ -32,8 +32,6 @@ namespace MKV_Chapterizer
         private static string pMKVMergePath;
         private static string pCustomChapterName;
         private static string workDir;
-        private static TextWriter pLogWriter;
-        private static TextWriter pErrorWriter;
         private static bool pShowConsole;
 
         private static BackgroundWorker chapterizeWorker = new BackgroundWorker();
@@ -215,36 +213,14 @@ namespace MKV_Chapterizer
         }
 
         /// <summary>
-        /// Gets or sets the TextWriter that the chapterizer should write log entries to.
+        /// Log entries will be sent to this.
         /// </summary>
-        public TextWriter LogWriter
-        {
-            get
-            {
-                return pLogWriter;
-            }
-
-            set
-            {
-                pLogWriter = value;
-            }
-        }
+        public Action<string> WriteLog { get; set; }
 
         /// <summary>
-        /// Gets or sets the TextWriter that the chapterizer should write errorlog entries to.
+        /// Error log entries will be sent to this.
         /// </summary>
-        public TextWriter ErrorWriter
-        {
-            get
-            {
-                return pErrorWriter;
-            }
-
-            set
-            {
-                pErrorWriter = value;
-            }
-        }
+        public Action<string> WriteError { get; set; }
         
         //------------------------------------------------------
         //   Constructor
@@ -252,7 +228,6 @@ namespace MKV_Chapterizer
 
         public Chapterizer()
         {
-            WriteLog("Initializing chapterizer");
 
             //Bind the events for the chapterizeWorker
             chapterizeWorker.DoWork += new DoWorkEventHandler(chapterizeWorker_DoWork);
@@ -1039,22 +1014,6 @@ namespace MKV_Chapterizer
             catch (Exception ex)
             {
                 WriteError(string.Format("Failed to create working directory: {0}", ex.ToString()));
-            }
-        }
-
-        private void WriteLog(string message)
-        {
-            if (LogWriter != null)
-            {
-                LogWriter.Write(message);
-            }
-        }
-
-        private void WriteError(string message)
-        {
-            if (ErrorWriter != null)
-            {
-                ErrorWriter.Write(message);
             }
         }
 

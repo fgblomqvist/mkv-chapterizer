@@ -72,9 +72,7 @@ namespace MKV_Chapterizer
         private delegate void ObjectDelegate2(string status);
         private delegate void ObjectDelegate3();
 
-        Chapterizer thechapterizer = new Chapterizer();
-        private StringWriterExt logWriter = new StringWriterExt(true);
-        private StringWriterExt errorWriter = new StringWriterExt(true);
+        private Chapterizer thechapterizer;
 
         private Log log = new Log("mkvc.log");
 
@@ -87,13 +85,15 @@ namespace MKV_Chapterizer
             {
                 ctl.AllowDrop = true;
             }
-            
-            logWriter.Flushed +=new StringWriterExt.FlushedEventHandler(logWriter_Flushed);
-            errorWriter.Flushed +=new StringWriterExt.FlushedEventHandler(errorWriter_Flushed);
 
-            thechapterizer.ProgressChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_ProgressChanged);
-            thechapterizer.StatusChanged += new Chapterizer.ProgressChangedEventHandler(thechapterizer_StatusChanged);
-            thechapterizer.Finished += new Chapterizer.FinishedEventHandler(thechapterizer_Finished);
+            WriteLog("Initializing chapterizer");
+            thechapterizer = new Chapterizer();
+            thechapterizer.WriteLog = WriteLog;
+            thechapterizer.WriteError = WriteError;
+
+            thechapterizer.ProgressChanged += thechapterizer_ProgressChanged;
+            thechapterizer.StatusChanged += thechapterizer_StatusChanged;
+            thechapterizer.Finished += thechapterizer_Finished;
 
         }
 
@@ -742,8 +742,6 @@ namespace MKV_Chapterizer
 
             thechapterizer.CustomChapterName = Properties.Settings.Default.customChapterName;
             thechapterizer.ShowConsole = Properties.Settings.Default.showConsole;
-            thechapterizer.LogWriter = logWriter;
-            thechapterizer.ErrorWriter = errorWriter;
 
             if (btnMerge.Text == "Chapterize")
             {
@@ -833,24 +831,6 @@ namespace MKV_Chapterizer
             {
                 thechapterizer.Start(Chapterizer.Operations.Chapterfile);
             }
-        }
-
-        private void logWriter_Flushed(object sender, EventArgs e)
-        {
-            log.Write(sender.ToString());
-
-            //Clean the stringwriter
-            StringBuilder sb = logWriter.GetStringBuilder();
-            sb.Remove(0, sb.Length);
-        }
-
-        private void errorWriter_Flushed(object sender, EventArgs e)
-        {
-            log.Write(sender.ToString(), Log.Type.Error);
-
-            //Clean the stringwriter
-            StringBuilder sb = logWriter.GetStringBuilder();
-            sb.Remove(0, sb.Length);
         }
 
         private void thechapterizer_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -1259,26 +1239,26 @@ namespace MKV_Chapterizer
 
         private void WriteLog(string message)
         {
-            if (logWriter != null)
+            if (log != null)
             {
-                logWriter.Write(message);
+                log.Write(message);
             }
         }
 
         private void WriteError(string message)
         {
-            if (errorWriter != null)
+            if (log != null)
             {
-                errorWriter.Write(message);
+                log.Write(message, Log.Type.Error);
             }
         }
 
-        private void SemiDisableLabel(Label lbl)
+        private void SemiDisableLabel(Control lbl)
         {
             lbl.ForeColor = System.Drawing.SystemColors.AppWorkspace;
         }
 
-        private void SemiEnableLabel(Label lbl)
+        private void SemiEnableLabel(Control lbl)
         {
             lbl.ForeColor = System.Drawing.SystemColors.ControlText;
         }
@@ -1303,50 +1283,4 @@ namespace MKV_Chapterizer
             }
         }
     }
-
-    public class StringWriterExt : StringWriter
-    {
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public delegate void FlushedEventHandler(object sender, EventArgs args);
-        public event FlushedEventHandler Flushed;
-        public virtual bool AutoFlush { get; set; }
-
-        public StringWriterExt()
-            : base() { }
-
-        public StringWriterExt(bool autoFlush)
-            : base() { this.AutoFlush = autoFlush; }
-
-        protected void OnFlush()
-        {
-            var eh = Flushed;
-            if (eh != null)
-                eh(this, EventArgs.Empty);
-        }
-
-        public override void Flush()
-        {
-            base.Flush();
-            OnFlush();
-        }
-
-        public override void Write(char value)
-        {
-            base.Write(value);
-            if (AutoFlush) Flush();
-        }
-
-        public override void Write(string value)
-        {
-            base.Write(value);
-            if (AutoFlush) Flush();
-        }
-
-        public override void Write(char[] buffer, int index, int count)
-        {
-            base.Write(buffer, index, count);
-            if (AutoFlush) Flush();
-        }
-    }
-
 }
