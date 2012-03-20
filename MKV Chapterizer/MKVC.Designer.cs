@@ -61,6 +61,8 @@
             this.cboxOverwrite = new System.Windows.Forms.CheckBox();
             this.lblTutorial = new System.Windows.Forms.Label();
             this.tpQueue = new System.Windows.Forms.TabPage();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.btnImport = new System.Windows.Forms.Button();
             this.btnAddFolder = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
@@ -73,8 +75,6 @@
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
-            this.btnImport = new System.Windows.Forms.Button();
-            this.btnExport = new System.Windows.Forms.Button();
             this.contextMenu.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
@@ -440,11 +440,37 @@
             this.tpQueue.Text = "Queue";
             this.tpQueue.UseVisualStyleBackColor = true;
             // 
+            // btnExport
+            // 
+            this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExport.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnExport.BackgroundImage")));
+            this.btnExport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExport.Location = new System.Drawing.Point(403, 138);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(28, 28);
+            this.btnExport.TabIndex = 5;
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // btnImport
+            // 
+            this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnImport.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnImport.BackgroundImage")));
+            this.btnImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnImport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnImport.Location = new System.Drawing.Point(403, 105);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(28, 28);
+            this.btnImport.TabIndex = 4;
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
             // btnAddFolder
             // 
             this.btnAddFolder.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAddFolder.BackgroundImage")));
             this.btnAddFolder.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnAddFolder.Location = new System.Drawing.Point(397, 39);
+            this.btnAddFolder.Location = new System.Drawing.Point(403, 39);
             this.btnAddFolder.Name = "btnAddFolder";
             this.btnAddFolder.Size = new System.Drawing.Size(29, 28);
             this.btnAddFolder.TabIndex = 3;
@@ -457,7 +483,7 @@
             this.btnRemove.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnRemove.BackgroundImage")));
             this.btnRemove.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnRemove.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRemove.Location = new System.Drawing.Point(397, 72);
+            this.btnRemove.Location = new System.Drawing.Point(403, 72);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(28, 28);
             this.btnRemove.TabIndex = 2;
@@ -470,7 +496,7 @@
             this.btnAdd.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAdd.BackgroundImage")));
             this.btnAdd.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdd.Location = new System.Drawing.Point(397, 6);
+            this.btnAdd.Location = new System.Drawing.Point(403, 6);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(28, 28);
             this.btnAdd.TabIndex = 1;
@@ -486,7 +512,7 @@
             this.lboxFiles.HorizontalScrollbar = true;
             this.lboxFiles.Location = new System.Drawing.Point(3, 6);
             this.lboxFiles.Name = "lboxFiles";
-            this.lboxFiles.Size = new System.Drawing.Size(388, 160);
+            this.lboxFiles.Size = new System.Drawing.Size(394, 160);
             this.lboxFiles.TabIndex = 0;
             // 
             // tpAdvSettings
@@ -586,30 +612,6 @@
             this.progressBar.Size = new System.Drawing.Size(431, 23);
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
-            // 
-            // btnImport
-            // 
-            this.btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnImport.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnImport.BackgroundImage")));
-            this.btnImport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnImport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnImport.Location = new System.Drawing.Point(397, 105);
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(28, 28);
-            this.btnImport.TabIndex = 4;
-            this.btnImport.UseVisualStyleBackColor = true;
-            // 
-            // btnExport
-            // 
-            this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExport.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnExport.BackgroundImage")));
-            this.btnExport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btnExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExport.Location = new System.Drawing.Point(397, 138);
-            this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(28, 28);
-            this.btnExport.TabIndex = 5;
-            this.btnExport.UseVisualStyleBackColor = true;
             // 
             // MKVC
             // 
