@@ -3,7 +3,7 @@
   MKV Chapterizer
   ---------------------------
  
-  Copyright © 2010-2011 Fredrik Blomqvist
+  Copyright © 2010-2012 Fredrik Blomqvist
 
   This file is part of MKV Chapterizer.
 
@@ -25,23 +25,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Xml;
 using System.IO;
 using MediaInfoLib;
 using System.Net;
 using System.Diagnostics;
-using System.Threading;
 using System.Runtime.InteropServices;
-using System.Collections.ObjectModel;
-using System.Windows.Forms.Design;
 using Microsoft.Win32;
 using Logger;
-using System.Collections.Specialized;
 
 namespace MKV_Chapterizer
 {
@@ -58,35 +51,27 @@ namespace MKV_Chapterizer
         [DllImport("user32.dll", EntryPoint = "ReleaseDC")]
         public static extern IntPtr ReleaseDC(IntPtr hWnd, IntPtr hDc);
 
-        private int LOGPIXELSX = 88;
-        private IntPtr NULL = IntPtr.Zero;
+        private const int LOGPIXELSX = 88;
+        private readonly IntPtr NULL = IntPtr.Zero;
 
         private static int duration;
         private static float screenMultiplier = 1.0F;
-        private static string[] sargs;
-        private static int tbarVal = 5;
         private static int queueAction = 1;
         private static ChapterDBAccess.ChapterSet chapterSet;
         private static UIModes pUIMode;
-        private static UIStatuses pUIStatus;
 
-        private delegate void ObjectDelegate(int percentage);
-
+        private delegate void ProcessChangedHandler(int percentage);
         private delegate void ObjectDelegate2(string status);
 
-        private delegate void ObjectDelegate3();
-
-        private Chapterizer thechapterizer;
-
-        private Log log = new Log("mkvc.log");
-        private List<string> mkvList = new List<string>();
+        private readonly Chapterizer thechapterizer;
+        private readonly Log log = new Log("mkvc.log");
 
         public MKVC()
         {
             InitializeComponent();
             AddDragHandlers(this);
 
-            foreach (Control ctl in this.Controls)
+            foreach (Control ctl in Controls)
             {
                 ctl.AllowDrop = true;
             }
@@ -151,8 +136,6 @@ namespace MKV_Chapterizer
         {
             set
             {
-                pUIStatus = value;
-
                 switch (value)
                 {
                     case UIStatuses.Input:
@@ -178,23 +161,8 @@ namespace MKV_Chapterizer
 
                         grpboxChapterFile.Enabled = true;
 
-                        if (chkboxOutputChapterfile.Checked)
-                        {
-                            grpboxMKVHasChapters.Enabled = false;
-                        }
-                        else
-                        {
-                            grpboxMKVHasChapters.Enabled = true;
-                        }
-
-                        if (UIMode == UIModes.Single)
-                        {
-                            ShowModeChange = true;
-                        }
-                        else
-                        {
-                            ShowModeChange = false;
-                        }
+                        grpboxMKVHasChapters.Enabled = !chkboxOutputChapterfile.Checked;
+                        ShowModeChange = (UIMode == UIModes.Single);
 
                         btnMerge.Text = "Chapterize";
                         progressBar.Value = 0;
@@ -224,13 +192,13 @@ namespace MKV_Chapterizer
                         cboxUnit.Enabled = false;
 
                         //Change mode to interval if it's not there
-                        if (pnlChapterDB.Visible == true)
+                        if (pnlChapterDB.Visible)
                         {
                             SwitchChapterMode();
                         }
 
                         //Set the tut message
-                        lblTutorial.Text = "Start by either dropping a MKV file on me or right-clicking me";
+                        lblTutorial.Text = "Start by either dropping a MKV file on me or switching to batch mode";
 
                         btnMerge.Text = "Chapterize";
                         progressBar.Value = 0;
@@ -308,6 +276,7 @@ namespace MKV_Chapterizer
                         lblChapterCount.Visible = false;
                         lblNumOfChapters.Visible = false;
                         cboxOverwrite.Text = "Overwrite old files";
+                        lblUIMode.Text = "Batch Mode";
 
                         break;
 
@@ -319,6 +288,7 @@ namespace MKV_Chapterizer
                         lblChapterCount.Visible = true;
                         lblNumOfChapters.Visible = true;
                         cboxOverwrite.Text = "Overwrite old file";
+                        lblUIMode.Text = "Single Mode";
 
                         //Navigate back to first tab in-case the user is on another tab
                         tabControl.SelectedIndex = 0;
@@ -339,22 +309,19 @@ namespace MKV_Chapterizer
                 {
                     return ChapterMode.ChapterDB;
                 }
-                else
-                {
-                    return ChapterMode.Interval;
-                }
+                return ChapterMode.Interval;
             }
 
             set
             {
-                if (value == MKVC.ChapterMode.Interval)
+                if (value == ChapterMode.Interval)
                 {
                     pnlInterval.Visible = true;
                     pnlInterval.BringToFront();
                     pnlChapterDB.Visible = false;
                     lblModeValue.Text = "Interval";
                 }
-                else if (value == MKVC.ChapterMode.ChapterDB)
+                else if (value == ChapterMode.ChapterDB)
                 {
                     pnlChapterDB.Visible = true;
                     pnlChapterDB.BringToFront();
@@ -381,14 +348,13 @@ namespace MKV_Chapterizer
             {
                 if (value)
                 {
-                    float y;
-                    y = 254*screenMultiplier;
-                    Size = new Size((int) this.Size.Width, (int) y);
+                    float y = 254 * screenMultiplier;
+                    Size = new Size(Size.Width, (int)y);
                 }
                 else
                 {
-                    float y = 225*screenMultiplier;
-                    Size = new Size((int) this.Size.Width, (int) y);
+                    float y = 225 * screenMultiplier;
+                    Size = new Size(Size.Width, (int)y);
                 }
             }
         }
@@ -398,19 +364,8 @@ namespace MKV_Chapterizer
             get
             {
                 //Check if the regkey with the path to the program exists, if it doesn't it is portable
-                RegistryKey key;
-                if (Environment.Is64BitOperatingSystem)
-                {
-                    key =
-                        Registry.LocalMachine.OpenSubKey(
-                            "SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MKV Chapterizer");
-                }
-                else
-                {
-                    key =
-                        Registry.LocalMachine.OpenSubKey(
-                            "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MKV Chapterizer");
-                }
+                RegistryKey key = Registry.LocalMachine.OpenSubKey
+                    (Environment.Is64BitOperatingSystem ? "SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MKV Chapterizer" : "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\MKV Chapterizer");
 
                 string value = null;
 
@@ -425,19 +380,11 @@ namespace MKV_Chapterizer
                         return true;
                     }
                 }
-                catch (Exception)
+                catch
                 {
-
                 }
 
-                if (value != null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return (value == null);
             }
         }
 
@@ -460,10 +407,10 @@ namespace MKV_Chapterizer
         }
 
 
-        private void DragEnterHandler(object sender, System.Windows.Forms.DragEventArgs e)
+        private void DragEnterHandler(object sender, DragEventArgs e)
         {
 
-            string[] s = (string[]) e.Data.GetData(DataFormats.FileDrop);
+            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop);
 
             if (UIMode == UIModes.Single)
             {
@@ -474,12 +421,13 @@ namespace MKV_Chapterizer
                 }
             }
 
-            FileInfo fi;
-
-            foreach (string i in s)
+            if (s == null)
             {
-                fi = new FileInfo(i);
+                return;
+            }
 
+            foreach (FileInfo fi in s.Select(i => new FileInfo(i)))
+            {
                 if (fi.Extension.ToLower() == ".mkv")
                 {
                     e.Effect = DragDropEffects.All;
@@ -492,7 +440,7 @@ namespace MKV_Chapterizer
             }
         }
 
-        private void DragDropHandler(object sender, System.Windows.Forms.DragEventArgs e)
+        private void DragDropHandler(object sender, DragEventArgs e)
         {
             WriteLog("User dropped mkv(s) on the UI");
 
@@ -563,8 +511,6 @@ namespace MKV_Chapterizer
                             //Remove
                             WriteLog("User chose to de-chapterize the mkv");
 
-                            sargs = new string[] {fi.FullName, "false"};
-
                             btnMerge.Text = "De-Chapterize";
                             UIStatus = UIStatuses.RemoveChapters;
 
@@ -575,14 +521,11 @@ namespace MKV_Chapterizer
                             //Remove and Insert New
                             WriteLog("User chose to re-chapterize the mkv");
 
-                            sargs = new string[] {fi.FullName, "true"};
-
                             UIStatus = UIStatuses.Input;
                             btnMerge.Text = "Re-Chapterize";
 
                             //Calculate the number of chapters with default chapter interval
-                            ChapterCount = CalcChapterCount(duration,
-                                                            ConvertToSeconds(tbarInterval.Value, cboxUnit.Text));
+                            ChapterCount = CalcChapterCount(duration, ConvertToSeconds(tbarInterval.Value, cboxUnit.Text));
                             break;
                     }
 
@@ -625,23 +568,10 @@ namespace MKV_Chapterizer
             cboxOverwrite.Enabled = true;
         }
 
-        private void DisableControls()
-        {
-            tbarInterval.Enabled = false;
-            lblChapterInterval.Enabled = false;
-            lblTrackbarValue.Enabled = false;
-            cboxUnit.Enabled = false;
-            btnMerge.Enabled = false;
-            cboxOverwrite.Enabled = false;
-            lblNumOfChapters.Enabled = false;
-        }
-
         private bool ChaptersExist(String file)
         {
-
             MediaInfo info = new MediaInfo();
             info.Open(file);
-            int lol = info.Count_Get(StreamKind.Chapters);
 
             info.Option("Inform", "XML");
             info.Option("Complete");
@@ -649,10 +579,7 @@ namespace MKV_Chapterizer
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         private void btnMerge_Click(object sender, EventArgs e)
@@ -667,7 +594,7 @@ namespace MKV_Chapterizer
 
             if (UIMode == UIModes.Single && ModifierKeys == Keys.Shift)
             {
-                if (CreateChapterFile(lboxFiles.Items[0].ToString()) == true)
+                if (CreateChapterFile(lboxFiles.Items[0].ToString()))
                 {
                     UIStatus = UIStatuses.AwaitFileDrop;
                 }
@@ -695,7 +622,7 @@ namespace MKV_Chapterizer
             dlg.Title = "Please choose where to save the chapterfile";
             dlg.ValidateNames = true;
 
-            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (dlg.ShowDialog() == DialogResult.OK)
             {
                 //Create a chapterset
                 if (Mode == ChapterMode.Interval)
@@ -712,13 +639,9 @@ namespace MKV_Chapterizer
                     thechapterizer.ChapterSet = chapterSet;
                     thechapterizer.CreateChapterFile(chapterSet, dlg.FileName);
                 }
-
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         private int ConvertToSeconds(int p, string currentUnit)
@@ -756,11 +679,7 @@ namespace MKV_Chapterizer
             {
                 UIStatus = UIStatuses.Working;
 
-                List<string> mkvList = new List<string>();
-                foreach (string itm in lboxFiles.Items)
-                {
-                    mkvList.Add(itm);
-                }
+                List<string> mkvList = lboxFiles.Items.Cast<string>().ToList();
 
                 thechapterizer.Files = mkvList;
                 thechapterizer.ChaptersExistAction = queueAction;
@@ -781,11 +700,7 @@ namespace MKV_Chapterizer
             {
                 UIStatus = UIStatuses.Working;
 
-                List<string> mkvList = new List<string>();
-                foreach (string itm in lboxFiles.Items)
-                {
-                    mkvList.Add(itm);
-                }
+                List<string> mkvList = lboxFiles.Items.Cast<string>().ToList();
 
                 thechapterizer.Files = mkvList;
                 thechapterizer.ChaptersExistAction = 1;
@@ -806,11 +721,7 @@ namespace MKV_Chapterizer
             {
                 UIStatus = UIStatuses.Working;
 
-                List<string> mkvList = new List<string>();
-                foreach (string itm in lboxFiles.Items)
-                {
-                    mkvList.Add(itm);
-                }
+                List<string> mkvList = lboxFiles.Items.Cast<string>().ToList();
 
                 thechapterizer.Files = mkvList;
                 thechapterizer.ChaptersExistAction = 2;
@@ -832,14 +743,7 @@ namespace MKV_Chapterizer
 
             WriteLog("Starting chapterizer");
 
-            if (!chkboxOutputChapterfile.Checked)
-            {
-                thechapterizer.Start(Chapterizer.Operations.Chapterize);
-            }
-            else
-            {
-                thechapterizer.Start(Chapterizer.Operations.Chapterfile);
-            }
+            thechapterizer.Start(!chkboxOutputChapterfile.Checked ? Chapterizer.Operations.Chapterize : Chapterizer.Operations.Chapterfile);
         }
 
         private void thechapterizer_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -851,7 +755,7 @@ namespace MKV_Chapterizer
         {
             if (InvokeRequired)
             {
-                ObjectDelegate method = new ObjectDelegate(UpdateProgressbar);
+                ProcessChangedHandler method = new ProcessChangedHandler(UpdateProgressbar);
                 Invoke(method, percentage);
                 return;
             }
@@ -905,7 +809,6 @@ namespace MKV_Chapterizer
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             lblTrackbarValue.Text = tbarInterval.Value.ToString();
-            tbarVal = tbarInterval.Value;
             ChapterCount = CalcChapterCount(duration, ConvertToSeconds(tbarInterval.Value, cboxUnit.Text));
         }
 
@@ -954,8 +857,7 @@ namespace MKV_Chapterizer
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Failed to check for updates: " + ex.ToString(), "Error", MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
+                    MessageBox.Show("Failed to check for updates: " + ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -1014,7 +916,7 @@ namespace MKV_Chapterizer
         public int CalcChapterCount(int runtime, int interval)
         {
 
-            int count = Convert.ToInt32(Math.Floor((decimal) runtime/(decimal) interval));
+            int count = Convert.ToInt32(Math.Floor((decimal)runtime/interval));
 
             if (Properties.Settings.Default.firstChap00)
             {
@@ -1047,26 +949,19 @@ namespace MKV_Chapterizer
 
         }
 
-        private void lblSettings_Click(object sender, EventArgs e)
+        private void pnlSettings_Click(object sender, EventArgs e)
         {
-
-            // passing the original instance of Form1 to Form2 Constructor 
             Settings f = new Settings();
             f.ShowDialog();
-
         }
 
         private float GetScreenScaleMulitplier()
         {
             IntPtr hdcScreen = GetDC(NULL);
-            int iDPI = -1; // assume failure
-            if (hdcScreen != null)
-            {
-                iDPI = GetDeviceCaps(hdcScreen, LOGPIXELSX);
-                ReleaseDC(NULL, hdcScreen);
-            }
+            int iDPI = GetDeviceCaps(hdcScreen, LOGPIXELSX);
+            ReleaseDC(NULL, hdcScreen);
 
-            float multiplier = (float) iDPI/(float) 96;
+            float multiplier = (float)iDPI/96;
             return multiplier;
 
         }
@@ -1102,8 +997,8 @@ namespace MKV_Chapterizer
                 if (control.Controls.Count > 0)
                     AddDragHandlers(control);
 
-                control.DragDrop += new DragEventHandler(this.DragDropHandler);
-                control.DragEnter += new DragEventHandler(this.DragEnterHandler);
+                control.DragDrop += new DragEventHandler(DragDropHandler);
+                control.DragEnter += new DragEventHandler(DragEnterHandler);
             }
         }
 
@@ -1180,13 +1075,11 @@ namespace MKV_Chapterizer
             WriteLog("Checking for updates");
 
             WebClient client = new WebClient();
-            Version newVersion = null;
+            Version newVersion;
 
             try
             {
-                newVersion =
-                    Version.Parse(
-                        client.DownloadString("http://fredrikblomqvist.developer.se:8080/dev/getversion.php?name=mkvc"));
+                newVersion = Version.Parse(client.DownloadString("http://fredrikblomqvist.developer.se/dev/getversion.php?name=mkvc"));
             }
             catch (Exception ex)
             {
@@ -1212,7 +1105,7 @@ namespace MKV_Chapterizer
 
         private void bwCheckUpdates_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if ((bool) e.Result == true)
+            if ((bool)e.Result)
             {
                 MessageBox.Show("There is a new version available at http://code.google.com/p/mkv-chapterizer/!",
                                 "New Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1226,14 +1119,7 @@ namespace MKV_Chapterizer
 
         private void SwitchChapterMode()
         {
-            if (Mode == ChapterMode.ChapterDB)
-            {
-                Mode = ChapterMode.Interval;
-            }
-            else
-            {
-                Mode = ChapterMode.ChapterDB;
-            }
+            Mode = (Mode == ChapterMode.ChapterDB) ? ChapterMode.Interval : ChapterMode.ChapterDB;
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -1264,7 +1150,7 @@ namespace MKV_Chapterizer
 
         private void ReCalcStatusPos()
         {
-            int newx = (int) Math.Round((decimal) this.Width/(decimal) 2, 0, MidpointRounding.ToEven) -
+            int newx = (int) Math.Round((decimal)Width/2, 0, MidpointRounding.ToEven) -
                        (int) Math.Round(Convert.ToDecimal(lblStatus.Width/2), 0, MidpointRounding.ToEven);
             lblStatus.Location = new Point(newx, lblStatus.Location.Y);
         }
@@ -1287,7 +1173,7 @@ namespace MKV_Chapterizer
 
         private void SemiDisableLabel(Control lbl)
         {
-            lbl.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            lbl.ForeColor = SystemColors.AppWorkspace;
         }
 
         private void SemiEnableLabel(Control lbl)
@@ -1319,7 +1205,7 @@ namespace MKV_Chapterizer
                     MessageBox.Show("Do you want to scan recursively?", "", MessageBoxButtons.YesNo,
                                     MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    IEnumerable<string> mkvs = FindMKV(dlg.SelectedPath);
+                    IEnumerable<string> mkvs = FindMKV(dlg.SelectedPath, new List<string>());
                     foreach (string file in mkvs)
                     {
                         lboxFiles.Items.Add(file);
@@ -1338,7 +1224,7 @@ namespace MKV_Chapterizer
             }
         }
 
-        private IEnumerable<string> FindMKV(string selectedPath)
+        private IEnumerable<string> FindMKV(string selectedPath, List<string> ongoingList)
         {
             try
             {
@@ -1349,14 +1235,8 @@ namespace MKV_Chapterizer
                         continue;
                     }
 
-                    foreach (string f in Directory.GetFiles(d))
-                    {
-                        if (Path.GetExtension(f) == ".mkv")
-                        {
-                            mkvList.Add(f);
-                        }
-                    }
-                    FindMKV(d);
+                    ongoingList.AddRange(Directory.GetFiles(d).Where(f => Path.GetExtension(f) == ".mkv"));
+                    FindMKV(d, ongoingList);
                 }
             }
             catch (Exception ex)
@@ -1364,7 +1244,7 @@ namespace MKV_Chapterizer
                 MessageBox.Show(ex.ToString());
             }
 
-            return mkvList;
+            return ongoingList;
         }
 
         private void btnExport_Click(object sender, EventArgs e)
@@ -1406,6 +1286,41 @@ namespace MKV_Chapterizer
                 string[] files = File.ReadAllText(dlg.FileName).Split(new string[] {Environment.NewLine} , StringSplitOptions.RemoveEmptyEntries);
                 lboxFiles.Items.AddRange(files);
             }
+        }
+
+        private void MouseEnter_ToHand(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Hand;
+        }
+
+        private void MouseLeave_ToDefault(object sender, EventArgs e)
+        {
+            Cursor = Cursors.Default;
+        }
+
+        private void lblUIMode_Click(object sender, EventArgs e)
+        {
+            if (UIMode == UIModes.Single)
+            {
+                //Change to batch mode
+                UIMode = UIModes.Queue;
+                UIStatus = UIStatuses.Input;
+            }
+            else
+            {
+                UIMode = UIModes.Single;
+                UIStatus = UIStatuses.AwaitFileDrop;
+            }
+        }
+
+        private void lblSettings_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pnlUIMode_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

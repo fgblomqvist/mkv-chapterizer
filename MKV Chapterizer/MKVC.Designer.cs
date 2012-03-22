@@ -36,9 +36,14 @@
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
             this.bwCheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
+            this.pnlUIMode = new System.Windows.Forms.Panel();
+            this.lblUIMode = new System.Windows.Forms.Label();
+            this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.pnlSettings = new System.Windows.Forms.Panel();
+            this.lblSettings = new System.Windows.Forms.Label();
             this.pnlModeChange = new System.Windows.Forms.Panel();
             this.btnSwitch = new System.Windows.Forms.Button();
             this.lblMode = new System.Windows.Forms.Label();
@@ -55,7 +60,6 @@
             this.btnSearch = new System.Windows.Forms.Button();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.lblSettings = new System.Windows.Forms.Label();
             this.btnMerge = new System.Windows.Forms.Button();
             this.lblVersion = new System.Windows.Forms.Label();
             this.cboxOverwrite = new System.Windows.Forms.CheckBox();
@@ -69,16 +73,17 @@
             this.lboxFiles = new System.Windows.Forms.ListBox();
             this.tpAdvSettings = new System.Windows.Forms.TabPage();
             this.grpboxChapterFile = new System.Windows.Forms.GroupBox();
-            this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
             this.grpboxMKVHasChapters = new System.Windows.Forms.GroupBox();
             this.rbtnDoNothing = new System.Windows.Forms.RadioButton();
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
             this.contextMenu.SuspendLayout();
+            this.pnlUIMode.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
             this.pnlMain.SuspendLayout();
+            this.pnlSettings.SuspendLayout();
             this.pnlModeChange.SuspendLayout();
             this.pnlInterval.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbarInterval)).BeginInit();
@@ -92,7 +97,7 @@
             // websiteToolStripMenuItem
             // 
             this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.websiteToolStripMenuItem.Text = "Website";
             this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
             // 
@@ -102,13 +107,13 @@
             this.websiteToolStripMenuItem,
             this.queueToolStripMenuItem});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(138, 48);
+            this.contextMenu.Size = new System.Drawing.Size(144, 48);
             // 
             // queueToolStripMenuItem
             // 
             this.queueToolStripMenuItem.CheckOnClick = true;
             this.queueToolStripMenuItem.Name = "queueToolStripMenuItem";
-            this.queueToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.queueToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.queueToolStripMenuItem.Text = "Queue Mode";
             this.queueToolStripMenuItem.Click += new System.EventHandler(this.queueToolStripMenuItem_Click);
             // 
@@ -122,6 +127,46 @@
             // 
             this.bwCheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckUpdates_DoWork);
             this.bwCheckUpdates.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCheckUpdates_RunWorkerCompleted);
+            // 
+            // pnlUIMode
+            // 
+            this.pnlUIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlUIMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlUIMode.Controls.Add(this.lblUIMode);
+            this.pnlUIMode.Location = new System.Drawing.Point(58, 144);
+            this.pnlUIMode.Name = "pnlUIMode";
+            this.pnlUIMode.Size = new System.Drawing.Size(72, 18);
+            this.pnlUIMode.TabIndex = 35;
+            this.ttInfo.SetToolTip(this.pnlUIMode, "Switch");
+            // 
+            // lblUIMode
+            // 
+            this.lblUIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblUIMode.AutoSize = true;
+            this.lblUIMode.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblUIMode.Location = new System.Drawing.Point(3, 1);
+            this.lblUIMode.Name = "lblUIMode";
+            this.lblUIMode.Size = new System.Drawing.Size(65, 13);
+            this.lblUIMode.TabIndex = 34;
+            this.lblUIMode.Text = "Batch Mode";
+            this.ttInfo.SetToolTip(this.lblUIMode, "Switch mode");
+            this.lblUIMode.Click += new System.EventHandler(this.lblUIMode_Click);
+            this.lblUIMode.MouseEnter += new System.EventHandler(this.MouseEnter_ToHand);
+            this.lblUIMode.MouseLeave += new System.EventHandler(this.MouseLeave_ToDefault);
+            // 
+            // chkboxOutputChapterfile
+            // 
+            this.chkboxOutputChapterfile.AutoSize = true;
+            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 41);
+            this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
+            this.chkboxOutputChapterfile.Size = new System.Drawing.Size(265, 17);
+            this.chkboxOutputChapterfile.TabIndex = 0;
+            this.chkboxOutputChapterfile.Text = "Only output chapter files in the mkvs\' directories";
+            this.ttInfo.SetToolTip(this.chkboxOutputChapterfile, "If this is checked, MKV Chapterizer will output a\r\nfile called \"chapters\" in the " +
+        "directory of each mkv.\r\nThis file can later be used to merge manually with\r\nmkvm" +
+        "erge.");
+            this.chkboxOutputChapterfile.UseVisualStyleBackColor = true;
+            this.chkboxOutputChapterfile.CheckedChanged += new System.EventHandler(this.chkboxOutputChapterfile_CheckedChanged);
             // 
             // tabControl
             // 
@@ -152,11 +197,12 @@
             // 
             this.pnlMain.AllowDrop = true;
             this.pnlMain.BackColor = System.Drawing.Color.Transparent;
+            this.pnlMain.Controls.Add(this.pnlSettings);
+            this.pnlMain.Controls.Add(this.pnlUIMode);
             this.pnlMain.Controls.Add(this.pnlModeChange);
             this.pnlMain.Controls.Add(this.pnlInterval);
             this.pnlMain.Controls.Add(this.pnlChapterDB);
             this.pnlMain.Controls.Add(this.lblStatus);
-            this.pnlMain.Controls.Add(this.lblSettings);
             this.pnlMain.Controls.Add(this.btnMerge);
             this.pnlMain.Controls.Add(this.lblVersion);
             this.pnlMain.Controls.Add(this.cboxOverwrite);
@@ -166,6 +212,30 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(431, 164);
             this.pnlMain.TabIndex = 0;
+            // 
+            // pnlSettings
+            // 
+            this.pnlSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlSettings.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlSettings.Controls.Add(this.lblSettings);
+            this.pnlSettings.Location = new System.Drawing.Point(2, 144);
+            this.pnlSettings.Name = "pnlSettings";
+            this.pnlSettings.Size = new System.Drawing.Size(54, 18);
+            this.pnlSettings.TabIndex = 36;
+            // 
+            // lblSettings
+            // 
+            this.lblSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblSettings.AutoSize = true;
+            this.lblSettings.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblSettings.Location = new System.Drawing.Point(3, 1);
+            this.lblSettings.Name = "lblSettings";
+            this.lblSettings.Size = new System.Drawing.Size(47, 13);
+            this.lblSettings.TabIndex = 26;
+            this.lblSettings.Text = "Settings";
+            this.lblSettings.Click += new System.EventHandler(this.pnlSettings_Click);
+            this.lblSettings.MouseEnter += new System.EventHandler(this.MouseEnter_ToHand);
+            this.lblSettings.MouseLeave += new System.EventHandler(this.MouseLeave_ToDefault);
             // 
             // pnlModeChange
             // 
@@ -361,18 +431,6 @@
             this.lblStatus.Text = "0/0 MyMovie.mkv";
             this.lblStatus.Visible = false;
             // 
-            // lblSettings
-            // 
-            this.lblSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblSettings.AutoSize = true;
-            this.lblSettings.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblSettings.Location = new System.Drawing.Point(12, 146);
-            this.lblSettings.Name = "lblSettings";
-            this.lblSettings.Size = new System.Drawing.Size(47, 13);
-            this.lblSettings.TabIndex = 26;
-            this.lblSettings.Text = "Settings";
-            this.lblSettings.Click += new System.EventHandler(this.lblSettings_Click);
-            // 
             // btnMerge
             // 
             this.btnMerge.AllowDrop = true;
@@ -393,12 +451,14 @@
             this.lblVersion.AutoSize = true;
             this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVersion.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lblVersion.Location = new System.Drawing.Point(377, 151);
+            this.lblVersion.Location = new System.Drawing.Point(400, 150);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(10, 12);
             this.lblVersion.TabIndex = 19;
             this.lblVersion.Text = "v";
             this.lblVersion.Click += new System.EventHandler(this.label9_Click);
+            this.lblVersion.MouseEnter += new System.EventHandler(this.MouseEnter_ToHand);
+            this.lblVersion.MouseLeave += new System.EventHandler(this.MouseLeave_ToDefault);
             // 
             // cboxOverwrite
             // 
@@ -407,9 +467,9 @@
             this.cboxOverwrite.Checked = true;
             this.cboxOverwrite.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cboxOverwrite.Enabled = false;
-            this.cboxOverwrite.Location = new System.Drawing.Point(315, 129);
+            this.cboxOverwrite.Location = new System.Drawing.Point(314, 129);
             this.cboxOverwrite.Name = "cboxOverwrite";
-            this.cboxOverwrite.Size = new System.Drawing.Size(110, 17);
+            this.cboxOverwrite.Size = new System.Drawing.Size(111, 17);
             this.cboxOverwrite.TabIndex = 22;
             this.cboxOverwrite.Text = "Overwrite old file";
             this.cboxOverwrite.UseVisualStyleBackColor = true;
@@ -418,11 +478,11 @@
             // 
             this.lblTutorial.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTutorial.AutoSize = true;
-            this.lblTutorial.Location = new System.Drawing.Point(67, 86);
+            this.lblTutorial.Location = new System.Drawing.Point(44, 86);
             this.lblTutorial.Name = "lblTutorial";
-            this.lblTutorial.Size = new System.Drawing.Size(307, 13);
+            this.lblTutorial.Size = new System.Drawing.Size(343, 13);
             this.lblTutorial.TabIndex = 24;
-            this.lblTutorial.Text = "Start by either dropping a MKV file on me or right-clicking me";
+            this.lblTutorial.Text = "Start by either dropping a MKV file on me or switching to batch mode";
             // 
             // tpQueue
             // 
@@ -539,20 +599,6 @@
             this.grpboxChapterFile.TabStop = false;
             this.grpboxChapterFile.Text = "Chapter file creation";
             // 
-            // chkboxOutputChapterfile
-            // 
-            this.chkboxOutputChapterfile.AutoSize = true;
-            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 41);
-            this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
-            this.chkboxOutputChapterfile.Size = new System.Drawing.Size(264, 17);
-            this.chkboxOutputChapterfile.TabIndex = 0;
-            this.chkboxOutputChapterfile.Text = "Only output chapter files in the mkvs\' directories";
-            this.ttInfo.SetToolTip(this.chkboxOutputChapterfile, "If this is checked, MKV Chapterizer will output a\r\nfile called \"chapters\" in the " +
-        "directory of each mkv.\r\nThis file can later be used to merge manually with\r\nmkvm" +
-        "erge.");
-            this.chkboxOutputChapterfile.UseVisualStyleBackColor = true;
-            this.chkboxOutputChapterfile.CheckedChanged += new System.EventHandler(this.chkboxOutputChapterfile_CheckedChanged);
-            // 
             // grpboxMKVHasChapters
             // 
             this.grpboxMKVHasChapters.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -572,7 +618,7 @@
             this.rbtnDoNothing.AutoSize = true;
             this.rbtnDoNothing.Location = new System.Drawing.Point(272, 31);
             this.rbtnDoNothing.Name = "rbtnDoNothing";
-            this.rbtnDoNothing.Size = new System.Drawing.Size(90, 17);
+            this.rbtnDoNothing.Size = new System.Drawing.Size(91, 17);
             this.rbtnDoNothing.TabIndex = 2;
             this.rbtnDoNothing.Text = "Skip the MKV";
             this.rbtnDoNothing.UseVisualStyleBackColor = true;
@@ -583,7 +629,7 @@
             this.rbtnRemoveThem.AutoSize = true;
             this.rbtnRemoveThem.Location = new System.Drawing.Point(139, 31);
             this.rbtnRemoveThem.Name = "rbtnRemoveThem";
-            this.rbtnRemoveThem.Size = new System.Drawing.Size(96, 17);
+            this.rbtnRemoveThem.Size = new System.Drawing.Size(97, 17);
             this.rbtnRemoveThem.TabIndex = 1;
             this.rbtnRemoveThem.Text = "Remove Them";
             this.rbtnRemoveThem.UseVisualStyleBackColor = true;
@@ -595,7 +641,7 @@
             this.rbtnReplaceThem.Checked = true;
             this.rbtnReplaceThem.Location = new System.Drawing.Point(17, 31);
             this.rbtnReplaceThem.Name = "rbtnReplaceThem";
-            this.rbtnReplaceThem.Size = new System.Drawing.Size(96, 17);
+            this.rbtnReplaceThem.Size = new System.Drawing.Size(97, 17);
             this.rbtnReplaceThem.TabIndex = 0;
             this.rbtnReplaceThem.TabStop = true;
             this.rbtnReplaceThem.Text = "Replace Them";
@@ -633,10 +679,14 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MKVC_Closing);
             this.Load += new System.EventHandler(this.MKVC_Load);
             this.contextMenu.ResumeLayout(false);
+            this.pnlUIMode.ResumeLayout(false);
+            this.pnlUIMode.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tpSettings.ResumeLayout(false);
             this.pnlMain.ResumeLayout(false);
             this.pnlMain.PerformLayout();
+            this.pnlSettings.ResumeLayout(false);
+            this.pnlSettings.PerformLayout();
             this.pnlModeChange.ResumeLayout(false);
             this.pnlModeChange.PerformLayout();
             this.pnlInterval.ResumeLayout(false);
@@ -701,6 +751,9 @@
         private System.Windows.Forms.Button btnAddFolder;
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Label lblUIMode;
+        private System.Windows.Forms.Panel pnlUIMode;
+        private System.Windows.Forms.Panel pnlSettings;
     }
 }
 
