@@ -38,6 +38,7 @@
             this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
             this.pnlUIMode = new System.Windows.Forms.Panel();
             this.lblUIMode = new System.Windows.Forms.Label();
+            this.rbtnExtractChapters = new System.Windows.Forms.RadioButton();
             this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
@@ -73,11 +74,13 @@
             this.lboxFiles = new System.Windows.Forms.ListBox();
             this.tpAdvSettings = new System.Windows.Forms.TabPage();
             this.grpboxChapterFile = new System.Windows.Forms.GroupBox();
+            this.rbtnGenerateNew = new System.Windows.Forms.RadioButton();
             this.grpboxMKVHasChapters = new System.Windows.Forms.GroupBox();
             this.rbtnDoNothing = new System.Windows.Forms.RadioButton();
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
+            this.btnChapterFormat = new System.Windows.Forms.Button();
             this.contextMenu.SuspendLayout();
             this.pnlUIMode.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -154,10 +157,23 @@
             this.lblUIMode.MouseEnter += new System.EventHandler(this.MouseEnter_ToHand);
             this.lblUIMode.MouseLeave += new System.EventHandler(this.MouseLeave_ToDefault);
             // 
+            // rbtnExtractChapters
+            // 
+            this.rbtnExtractChapters.AutoSize = true;
+            this.rbtnExtractChapters.Enabled = false;
+            this.rbtnExtractChapters.Location = new System.Drawing.Point(36, 60);
+            this.rbtnExtractChapters.Name = "rbtnExtractChapters";
+            this.rbtnExtractChapters.Size = new System.Drawing.Size(181, 17);
+            this.rbtnExtractChapters.TabIndex = 2;
+            this.rbtnExtractChapters.Text = "Extract chapters from the mkv\'s";
+            this.ttInfo.SetToolTip(this.rbtnExtractChapters, "If the mkv has chapters, they will get extracted.\r\nOtherwise, nothing will be don" +
+        "e.");
+            this.rbtnExtractChapters.UseVisualStyleBackColor = true;
+            // 
             // chkboxOutputChapterfile
             // 
             this.chkboxOutputChapterfile.AutoSize = true;
-            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 41);
+            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 23);
             this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
             this.chkboxOutputChapterfile.Size = new System.Drawing.Size(265, 17);
             this.chkboxOutputChapterfile.TabIndex = 0;
@@ -424,7 +440,7 @@
             // 
             this.lblStatus.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(168, 149);
+            this.lblStatus.Location = new System.Drawing.Point(166, 146);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(94, 13);
             this.lblStatus.TabIndex = 28;
@@ -436,9 +452,9 @@
             this.btnMerge.AllowDrop = true;
             this.btnMerge.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnMerge.Enabled = false;
-            this.btnMerge.Location = new System.Drawing.Point(174, 125);
+            this.btnMerge.Location = new System.Drawing.Point(166, 115);
             this.btnMerge.Name = "btnMerge";
-            this.btnMerge.Size = new System.Drawing.Size(85, 23);
+            this.btnMerge.Size = new System.Drawing.Size(90, 23);
             this.btnMerge.TabIndex = 18;
             this.btnMerge.Text = "Chapterize";
             this.btnMerge.UseVisualStyleBackColor = true;
@@ -467,7 +483,7 @@
             this.cboxOverwrite.Checked = true;
             this.cboxOverwrite.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cboxOverwrite.Enabled = false;
-            this.cboxOverwrite.Location = new System.Drawing.Point(314, 129);
+            this.cboxOverwrite.Location = new System.Drawing.Point(315, 121);
             this.cboxOverwrite.Name = "cboxOverwrite";
             this.cboxOverwrite.Size = new System.Drawing.Size(111, 17);
             this.cboxOverwrite.TabIndex = 22;
@@ -591,6 +607,9 @@
             // 
             this.grpboxChapterFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpboxChapterFile.Controls.Add(this.btnChapterFormat);
+            this.grpboxChapterFile.Controls.Add(this.rbtnExtractChapters);
+            this.grpboxChapterFile.Controls.Add(this.rbtnGenerateNew);
             this.grpboxChapterFile.Controls.Add(this.chkboxOutputChapterfile);
             this.grpboxChapterFile.Location = new System.Drawing.Point(6, 76);
             this.grpboxChapterFile.Name = "grpboxChapterFile";
@@ -598,6 +617,19 @@
             this.grpboxChapterFile.TabIndex = 2;
             this.grpboxChapterFile.TabStop = false;
             this.grpboxChapterFile.Text = "Chapter file creation";
+            // 
+            // rbtnGenerateNew
+            // 
+            this.rbtnGenerateNew.AutoSize = true;
+            this.rbtnGenerateNew.Checked = true;
+            this.rbtnGenerateNew.Enabled = false;
+            this.rbtnGenerateNew.Location = new System.Drawing.Point(36, 43);
+            this.rbtnGenerateNew.Name = "rbtnGenerateNew";
+            this.rbtnGenerateNew.Size = new System.Drawing.Size(153, 17);
+            this.rbtnGenerateNew.TabIndex = 1;
+            this.rbtnGenerateNew.TabStop = true;
+            this.rbtnGenerateNew.Text = "Generate the chapter files";
+            this.rbtnGenerateNew.UseVisualStyleBackColor = true;
             // 
             // grpboxMKVHasChapters
             // 
@@ -658,6 +690,16 @@
             this.progressBar.Size = new System.Drawing.Size(431, 23);
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
+            // 
+            // btnChapterFormat
+            // 
+            this.btnChapterFormat.Location = new System.Drawing.Point(322, 43);
+            this.btnChapterFormat.Name = "btnChapterFormat";
+            this.btnChapterFormat.Size = new System.Drawing.Size(56, 34);
+            this.btnChapterFormat.TabIndex = 3;
+            this.btnChapterFormat.Text = "Format";
+            this.btnChapterFormat.UseVisualStyleBackColor = true;
+            this.btnChapterFormat.Click += new System.EventHandler(this.btnChapterFormat_Click);
             // 
             // MKVC
             // 
@@ -754,6 +796,9 @@
         private System.Windows.Forms.Label lblUIMode;
         private System.Windows.Forms.Panel pnlUIMode;
         private System.Windows.Forms.Panel pnlSettings;
+        private System.Windows.Forms.RadioButton rbtnExtractChapters;
+        private System.Windows.Forms.RadioButton rbtnGenerateNew;
+        private System.Windows.Forms.Button btnChapterFormat;
     }
 }
 

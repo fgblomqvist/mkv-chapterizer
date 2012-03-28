@@ -602,7 +602,7 @@ namespace MKV_Chapterizer
             else
             {
                 //Normal
-                UseChapterizer();
+                UseChapterizer(ModifierKeys == Keys.Alt);
             }
 
         }
@@ -659,7 +659,7 @@ namespace MKV_Chapterizer
             }
         }
 
-        private void UseChapterizer()
+        private void UseChapterizer(bool extractChapterFiles)
         {
             if (Properties.Settings.Default.customMKVMerge)
             {
@@ -672,6 +672,8 @@ namespace MKV_Chapterizer
                 thechapterizer.MKVMergePath = "mkvmerge\\mkvmerge.exe";
             }
 
+            thechapterizer.ChapterCreationPattern = Properties.Settings.Default.chapterPattern;
+            thechapterizer.MKVExtractPath = "mkvmerge\\mkvextract.exe";
             thechapterizer.CustomChapterName = Properties.Settings.Default.customChapterName;
             thechapterizer.ShowConsole = Properties.Settings.Default.showConsole;
 
@@ -731,19 +733,31 @@ namespace MKV_Chapterizer
             }
             else if (btnMerge.Text == "Cancel")
             {
-
                 //Cancel the ongoing merge
                 WriteLog("User chose to cancel current operation");
 
                 btnMerge.Text = "Cancelling...";
                 thechapterizer.Cancel();
                 return;
-
             }
 
             WriteLog("Starting chapterizer");
 
-            thechapterizer.Start(!chkboxOutputChapterfile.Checked ? Chapterizer.Operations.Chapterize : Chapterizer.Operations.Chapterfile);
+            if (UIMode == UIModes.Queue)
+            {
+                if (!chkboxOutputChapterfile.Checked)
+                {
+                    thechapterizer.Start(Chapterizer.Operations.Chapterize);
+                }
+                else
+                {
+                    thechapterizer.Start(rbtnExtractChapters.Checked ? Chapterizer.Operations.ExtractChapter : Chapterizer.Operations.Chapterfile);
+                }
+            }
+            else
+            {
+                thechapterizer.Start(!extractChapterFiles ? Chapterizer.Operations.Chapterize : Chapterizer.Operations.ExtractChapter);
+            }
         }
 
         private void thechapterizer_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -835,6 +849,12 @@ namespace MKV_Chapterizer
 
             lblTrackbarValue.Text = tbarInterval.Value.ToString();
             lblVersion.Text = "v" + Convert.ToString(GetVersion(Version.Parse(Application.ProductVersion)));
+
+            //Check if any format is set
+            if (String.IsNullOrWhiteSpace(Properties.Settings.Default.chapterPattern))
+            {
+                Properties.Settings.Default.chapterPattern = string.Join(((char)0).ToString(), "CHAPTER%I=%T" + Environment.NewLine + "CHAPTER%INAME=%N", "%L");
+            }
 
         }
 
@@ -1105,7 +1125,7 @@ namespace MKV_Chapterizer
 
         private void bwCheckUpdates_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if ((bool)e.Result)
+            if (e.Result != null && (bool)e.Result)
             {
                 MessageBox.Show("There is a new version available at http://code.google.com/p/mkv-chapterizer/!",
                                 "New Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1159,6 +1179,7 @@ namespace MKV_Chapterizer
         {
             if (log != null)
             {
+                //TODO: Fix error if the log is unwriteable
                 log.Write(message);
             }
         }
@@ -1184,6 +1205,8 @@ namespace MKV_Chapterizer
         private void chkboxOutputChapterfile_CheckedChanged(object sender, EventArgs e)
         {
             grpboxMKVHasChapters.Enabled = !chkboxOutputChapterfile.Checked;
+            rbtnGenerateNew.Enabled = chkboxOutputChapterfile.Checked;
+            rbtnExtractChapters.Enabled = chkboxOutputChapterfile.Checked;
         }
 
         private void cboxUnit_SelectedIndexChanged(object sender, EventArgs e)
@@ -1321,6 +1344,12 @@ namespace MKV_Chapterizer
         private void pnlUIMode_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnChapterFormat_Click(object sender, EventArgs e)
+        {
+            ChapterFormat chapterFormat = new ChapterFormat();
+            chapterFormat.ShowDialog();
         }
     }
 }
