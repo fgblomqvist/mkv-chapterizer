@@ -30,21 +30,18 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MKVC));
-            this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmtWebsite = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.queueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
             this.bwCheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
-            this.pnlUIMode = new System.Windows.Forms.Panel();
-            this.lblUIMode = new System.Windows.Forms.Label();
-            this.rbtnExtractChapters = new System.Windows.Forms.RadioButton();
-            this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.pnlSettings = new System.Windows.Forms.Panel();
             this.lblSettings = new System.Windows.Forms.Label();
+            this.pnlUIMode = new System.Windows.Forms.Panel();
+            this.lblUIMode = new System.Windows.Forms.Label();
             this.pnlModeChange = new System.Windows.Forms.Panel();
             this.btnSwitch = new System.Windows.Forms.Button();
             this.lblMode = new System.Windows.Forms.Label();
@@ -74,19 +71,21 @@
             this.lboxFiles = new System.Windows.Forms.ListBox();
             this.tpAdvSettings = new System.Windows.Forms.TabPage();
             this.grpboxChapterFile = new System.Windows.Forms.GroupBox();
+            this.btnChapterFormat = new System.Windows.Forms.Button();
+            this.rbtnExtractChapters = new System.Windows.Forms.RadioButton();
             this.rbtnGenerateNew = new System.Windows.Forms.RadioButton();
+            this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
             this.grpboxMKVHasChapters = new System.Windows.Forms.GroupBox();
             this.rbtnDoNothing = new System.Windows.Forms.RadioButton();
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
-            this.btnChapterFormat = new System.Windows.Forms.Button();
             this.contextMenu.SuspendLayout();
-            this.pnlUIMode.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.pnlSettings.SuspendLayout();
+            this.pnlUIMode.SuspendLayout();
             this.pnlModeChange.SuspendLayout();
             this.pnlInterval.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbarInterval)).BeginInit();
@@ -97,28 +96,19 @@
             this.grpboxMKVHasChapters.SuspendLayout();
             this.SuspendLayout();
             // 
-            // websiteToolStripMenuItem
+            // tsmtWebsite
             // 
-            this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-            this.websiteToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
-            this.websiteToolStripMenuItem.Text = "Website";
-            this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
+            this.tsmtWebsite.Name = "tsmtWebsite";
+            this.tsmtWebsite.Size = new System.Drawing.Size(116, 22);
+            this.tsmtWebsite.Text = "Website";
+            this.tsmtWebsite.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
             // 
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.websiteToolStripMenuItem,
-            this.queueToolStripMenuItem});
+            this.tsmtWebsite});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(144, 48);
-            // 
-            // queueToolStripMenuItem
-            // 
-            this.queueToolStripMenuItem.CheckOnClick = true;
-            this.queueToolStripMenuItem.Name = "queueToolStripMenuItem";
-            this.queueToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
-            this.queueToolStripMenuItem.Text = "Queue Mode";
-            this.queueToolStripMenuItem.Click += new System.EventHandler(this.queueToolStripMenuItem_Click);
+            this.contextMenu.Size = new System.Drawing.Size(117, 26);
             // 
             // openMKVdlg
             // 
@@ -130,59 +120,6 @@
             // 
             this.bwCheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckUpdates_DoWork);
             this.bwCheckUpdates.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCheckUpdates_RunWorkerCompleted);
-            // 
-            // pnlUIMode
-            // 
-            this.pnlUIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pnlUIMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlUIMode.Controls.Add(this.lblUIMode);
-            this.pnlUIMode.Location = new System.Drawing.Point(58, 144);
-            this.pnlUIMode.Name = "pnlUIMode";
-            this.pnlUIMode.Size = new System.Drawing.Size(72, 18);
-            this.pnlUIMode.TabIndex = 35;
-            this.ttInfo.SetToolTip(this.pnlUIMode, "Switch");
-            // 
-            // lblUIMode
-            // 
-            this.lblUIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblUIMode.AutoSize = true;
-            this.lblUIMode.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblUIMode.Location = new System.Drawing.Point(3, 1);
-            this.lblUIMode.Name = "lblUIMode";
-            this.lblUIMode.Size = new System.Drawing.Size(65, 13);
-            this.lblUIMode.TabIndex = 34;
-            this.lblUIMode.Text = "Batch Mode";
-            this.ttInfo.SetToolTip(this.lblUIMode, "Switch mode");
-            this.lblUIMode.Click += new System.EventHandler(this.lblUIMode_Click);
-            this.lblUIMode.MouseEnter += new System.EventHandler(this.MouseEnter_ToHand);
-            this.lblUIMode.MouseLeave += new System.EventHandler(this.MouseLeave_ToDefault);
-            // 
-            // rbtnExtractChapters
-            // 
-            this.rbtnExtractChapters.AutoSize = true;
-            this.rbtnExtractChapters.Enabled = false;
-            this.rbtnExtractChapters.Location = new System.Drawing.Point(36, 60);
-            this.rbtnExtractChapters.Name = "rbtnExtractChapters";
-            this.rbtnExtractChapters.Size = new System.Drawing.Size(181, 17);
-            this.rbtnExtractChapters.TabIndex = 2;
-            this.rbtnExtractChapters.Text = "Extract chapters from the mkv\'s";
-            this.ttInfo.SetToolTip(this.rbtnExtractChapters, "If the mkv has chapters, they will get extracted.\r\nOtherwise, nothing will be don" +
-        "e.");
-            this.rbtnExtractChapters.UseVisualStyleBackColor = true;
-            // 
-            // chkboxOutputChapterfile
-            // 
-            this.chkboxOutputChapterfile.AutoSize = true;
-            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 23);
-            this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
-            this.chkboxOutputChapterfile.Size = new System.Drawing.Size(265, 17);
-            this.chkboxOutputChapterfile.TabIndex = 0;
-            this.chkboxOutputChapterfile.Text = "Only output chapter files in the mkvs\' directories";
-            this.ttInfo.SetToolTip(this.chkboxOutputChapterfile, "If this is checked, MKV Chapterizer will output a\r\nfile called \"chapters\" in the " +
-        "directory of each mkv.\r\nThis file can later be used to merge manually with\r\nmkvm" +
-        "erge.");
-            this.chkboxOutputChapterfile.UseVisualStyleBackColor = true;
-            this.chkboxOutputChapterfile.CheckedChanged += new System.EventHandler(this.chkboxOutputChapterfile_CheckedChanged);
             // 
             // tabControl
             // 
@@ -252,6 +189,32 @@
             this.lblSettings.Click += new System.EventHandler(this.pnlSettings_Click);
             this.lblSettings.MouseEnter += new System.EventHandler(this.MouseEnter_ToHand);
             this.lblSettings.MouseLeave += new System.EventHandler(this.MouseLeave_ToDefault);
+            // 
+            // pnlUIMode
+            // 
+            this.pnlUIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlUIMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlUIMode.Controls.Add(this.lblUIMode);
+            this.pnlUIMode.Location = new System.Drawing.Point(58, 144);
+            this.pnlUIMode.Name = "pnlUIMode";
+            this.pnlUIMode.Size = new System.Drawing.Size(93, 18);
+            this.pnlUIMode.TabIndex = 35;
+            this.ttInfo.SetToolTip(this.pnlUIMode, "Switch");
+            // 
+            // lblUIMode
+            // 
+            this.lblUIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblUIMode.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblUIMode.Location = new System.Drawing.Point(3, 1);
+            this.lblUIMode.Name = "lblUIMode";
+            this.lblUIMode.Size = new System.Drawing.Size(86, 13);
+            this.lblUIMode.TabIndex = 34;
+            this.lblUIMode.Text = "Advanced Mode";
+            this.lblUIMode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ttInfo.SetToolTip(this.lblUIMode, "Switch mode");
+            this.lblUIMode.Click += new System.EventHandler(this.lblUIMode_Click);
+            this.lblUIMode.MouseEnter += new System.EventHandler(this.MouseEnter_ToHand);
+            this.lblUIMode.MouseLeave += new System.EventHandler(this.MouseLeave_ToDefault);
             // 
             // pnlModeChange
             // 
@@ -494,11 +457,11 @@
             // 
             this.lblTutorial.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblTutorial.AutoSize = true;
-            this.lblTutorial.Location = new System.Drawing.Point(44, 86);
+            this.lblTutorial.Location = new System.Drawing.Point(32, 86);
             this.lblTutorial.Name = "lblTutorial";
-            this.lblTutorial.Size = new System.Drawing.Size(343, 13);
+            this.lblTutorial.Size = new System.Drawing.Size(364, 13);
             this.lblTutorial.TabIndex = 24;
-            this.lblTutorial.Text = "Start by either dropping a MKV file on me or switching to batch mode";
+            this.lblTutorial.Text = "Start by either dropping a MKV file on me or switching to advanced mode";
             // 
             // tpQueue
             // 
@@ -513,7 +476,7 @@
             this.tpQueue.Padding = new System.Windows.Forms.Padding(3);
             this.tpQueue.Size = new System.Drawing.Size(437, 170);
             this.tpQueue.TabIndex = 1;
-            this.tpQueue.Text = "Queue";
+            this.tpQueue.Text = "Advanced";
             this.tpQueue.UseVisualStyleBackColor = true;
             // 
             // btnExport
@@ -618,6 +581,29 @@
             this.grpboxChapterFile.TabStop = false;
             this.grpboxChapterFile.Text = "Chapter file creation";
             // 
+            // btnChapterFormat
+            // 
+            this.btnChapterFormat.Location = new System.Drawing.Point(322, 43);
+            this.btnChapterFormat.Name = "btnChapterFormat";
+            this.btnChapterFormat.Size = new System.Drawing.Size(56, 34);
+            this.btnChapterFormat.TabIndex = 3;
+            this.btnChapterFormat.Text = "Format";
+            this.btnChapterFormat.UseVisualStyleBackColor = true;
+            this.btnChapterFormat.Click += new System.EventHandler(this.btnChapterFormat_Click);
+            // 
+            // rbtnExtractChapters
+            // 
+            this.rbtnExtractChapters.AutoSize = true;
+            this.rbtnExtractChapters.Enabled = false;
+            this.rbtnExtractChapters.Location = new System.Drawing.Point(36, 60);
+            this.rbtnExtractChapters.Name = "rbtnExtractChapters";
+            this.rbtnExtractChapters.Size = new System.Drawing.Size(181, 17);
+            this.rbtnExtractChapters.TabIndex = 2;
+            this.rbtnExtractChapters.Text = "Extract chapters from the mkv\'s";
+            this.ttInfo.SetToolTip(this.rbtnExtractChapters, "If the mkv has chapters, they will get extracted.\r\nOtherwise, nothing will be don" +
+        "e.");
+            this.rbtnExtractChapters.UseVisualStyleBackColor = true;
+            // 
             // rbtnGenerateNew
             // 
             this.rbtnGenerateNew.AutoSize = true;
@@ -630,6 +616,20 @@
             this.rbtnGenerateNew.TabStop = true;
             this.rbtnGenerateNew.Text = "Generate the chapter files";
             this.rbtnGenerateNew.UseVisualStyleBackColor = true;
+            // 
+            // chkboxOutputChapterfile
+            // 
+            this.chkboxOutputChapterfile.AutoSize = true;
+            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 23);
+            this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
+            this.chkboxOutputChapterfile.Size = new System.Drawing.Size(265, 17);
+            this.chkboxOutputChapterfile.TabIndex = 0;
+            this.chkboxOutputChapterfile.Text = "Only output chapter files in the mkvs\' directories";
+            this.ttInfo.SetToolTip(this.chkboxOutputChapterfile, "If this is checked, MKV Chapterizer will output a\r\nfile called \"chapters\" in the " +
+        "directory of each mkv.\r\nThis file can later be used to merge manually with\r\nmkvm" +
+        "erge.");
+            this.chkboxOutputChapterfile.UseVisualStyleBackColor = true;
+            this.chkboxOutputChapterfile.CheckedChanged += new System.EventHandler(this.chkboxOutputChapterfile_CheckedChanged);
             // 
             // grpboxMKVHasChapters
             // 
@@ -691,16 +691,6 @@
             this.progressBar.TabIndex = 25;
             this.progressBar.Text = "0%";
             // 
-            // btnChapterFormat
-            // 
-            this.btnChapterFormat.Location = new System.Drawing.Point(322, 43);
-            this.btnChapterFormat.Name = "btnChapterFormat";
-            this.btnChapterFormat.Size = new System.Drawing.Size(56, 34);
-            this.btnChapterFormat.TabIndex = 3;
-            this.btnChapterFormat.Text = "Format";
-            this.btnChapterFormat.UseVisualStyleBackColor = true;
-            this.btnChapterFormat.Click += new System.EventHandler(this.btnChapterFormat_Click);
-            // 
             // MKVC
             // 
             this.AllowDrop = true;
@@ -721,14 +711,13 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MKVC_Closing);
             this.Load += new System.EventHandler(this.MKVC_Load);
             this.contextMenu.ResumeLayout(false);
-            this.pnlUIMode.ResumeLayout(false);
-            this.pnlUIMode.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.tpSettings.ResumeLayout(false);
             this.pnlMain.ResumeLayout(false);
             this.pnlMain.PerformLayout();
             this.pnlSettings.ResumeLayout(false);
             this.pnlSettings.PerformLayout();
+            this.pnlUIMode.ResumeLayout(false);
             this.pnlModeChange.ResumeLayout(false);
             this.pnlModeChange.PerformLayout();
             this.pnlInterval.ResumeLayout(false);
@@ -750,7 +739,7 @@
 
         private System.Windows.Forms.Panel pnlMain;
         private WinForms.Controls.ProgressBarWithPercentage progressBar;
-        private System.Windows.Forms.ToolStripMenuItem websiteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsmtWebsite;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.Label lblSettings;
         private System.Windows.Forms.Button btnMerge;
@@ -769,7 +758,6 @@
         private System.Windows.Forms.RadioButton rbtnDoNothing;
         private System.Windows.Forms.RadioButton rbtnRemoveThem;
         private System.Windows.Forms.RadioButton rbtnReplaceThem;
-        private System.Windows.Forms.ToolStripMenuItem queueToolStripMenuItem;
         private System.Windows.Forms.Label lblStatus;
         private System.ComponentModel.BackgroundWorker bwCheckUpdates;
         private System.Windows.Forms.Button btnSwitch;

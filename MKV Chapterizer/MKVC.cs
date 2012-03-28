@@ -120,8 +120,8 @@ namespace MKV_Chapterizer
 
         public enum UIModes
         {
-            Single,
-            Queue,
+            Simple,
+            Advanced,
         }
 
         public enum UIStatuses
@@ -162,7 +162,7 @@ namespace MKV_Chapterizer
                         grpboxChapterFile.Enabled = true;
 
                         grpboxMKVHasChapters.Enabled = !chkboxOutputChapterfile.Checked;
-                        ShowModeChange = (UIMode == UIModes.Single);
+                        ShowModeChange = (UIMode == UIModes.Simple);
 
                         btnMerge.Text = "Chapterize";
                         progressBar.Value = 0;
@@ -268,27 +268,25 @@ namespace MKV_Chapterizer
 
                 switch (value)
                 {
-                    case UIModes.Queue:
+                    case UIModes.Advanced:
 
-                        WriteLog("Setting UI to Queue mode");
+                        WriteLog("Setting UI to Advanced mode");
                         tabControl.HideTabs = false;
-                        queueToolStripMenuItem.Checked = true;
                         lblChapterCount.Visible = false;
                         lblNumOfChapters.Visible = false;
                         cboxOverwrite.Text = "Overwrite old files";
-                        lblUIMode.Text = "Batch Mode";
+                        lblUIMode.Text = "Simple Mode";
 
                         break;
 
-                    case UIModes.Single:
+                    case UIModes.Simple:
 
-                        WriteLog("Setting UI to Single mode");
+                        WriteLog("Setting UI to Simple mode");
                         tabControl.HideTabs = true;
-                        queueToolStripMenuItem.Checked = false;
                         lblChapterCount.Visible = true;
                         lblNumOfChapters.Visible = true;
                         cboxOverwrite.Text = "Overwrite old file";
-                        lblUIMode.Text = "Single Mode";
+                        lblUIMode.Text = "Advanced Mode";
 
                         //Navigate back to first tab in-case the user is on another tab
                         tabControl.SelectedIndex = 0;
@@ -412,7 +410,7 @@ namespace MKV_Chapterizer
 
             string[] s = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-            if (UIMode == UIModes.Single)
+            if (UIMode == UIModes.Simple)
             {
                 if (s != null && s.Count() != 1)
                 {
@@ -445,7 +443,7 @@ namespace MKV_Chapterizer
             WriteLog("User dropped mkv(s) on the UI");
 
             //temp: Clear the lboxFiles if no queue
-            if (UIMode == UIModes.Single)
+            if (UIMode == UIModes.Simple)
             {
                 lboxFiles.Items.Clear();
             }
@@ -466,7 +464,7 @@ namespace MKV_Chapterizer
                 if (exist != true)
                 {
                     lboxFiles.Items.Add(str);
-                    if (UIMode == UIModes.Queue)
+                    if (UIMode == UIModes.Advanced)
                     {
                         tabControl.SelectedIndex = 1;
                     }
@@ -490,7 +488,7 @@ namespace MKV_Chapterizer
                 return;
             }
 
-            if (UIMode == UIModes.Single)
+            if (UIMode == UIModes.Simple)
             {
                 if (ChaptersExist(fi.FullName))
                 {
@@ -592,18 +590,7 @@ namespace MKV_Chapterizer
                 return;
             }
 
-            if (UIMode == UIModes.Single && ModifierKeys == Keys.Shift)
-            {
-                if (CreateChapterFile(lboxFiles.Items[0].ToString()))
-                {
-                    UIStatus = UIStatuses.AwaitFileDrop;
-                }
-            }
-            else
-            {
-                //Normal
-                UseChapterizer(ModifierKeys == Keys.Alt);
-            }
+            UseChapterizer();
 
         }
 
@@ -659,7 +646,7 @@ namespace MKV_Chapterizer
             }
         }
 
-        private void UseChapterizer(bool extractChapterFiles)
+        private void UseChapterizer()
         {
             if (Properties.Settings.Default.customMKVMerge)
             {
@@ -743,7 +730,7 @@ namespace MKV_Chapterizer
 
             WriteLog("Starting chapterizer");
 
-            if (UIMode == UIModes.Queue)
+            if (UIMode == UIModes.Advanced)
             {
                 if (!chkboxOutputChapterfile.Checked)
                 {
@@ -756,7 +743,8 @@ namespace MKV_Chapterizer
             }
             else
             {
-                thechapterizer.Start(!extractChapterFiles ? Chapterizer.Operations.Chapterize : Chapterizer.Operations.ExtractChapter);
+                //Chapterize is the only mode availbe in single mode
+                thechapterizer.Start(Chapterizer.Operations.Chapterize);
             }
         }
 
@@ -797,7 +785,7 @@ namespace MKV_Chapterizer
 
         private void thechapterizer_Finished(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (UIMode == UIModes.Single)
+            if (UIMode == UIModes.Simple)
             {
                 UIStatus = UIStatuses.AwaitFileDrop;
             }
@@ -842,7 +830,7 @@ namespace MKV_Chapterizer
             WriteLog(string.Format("Screen scale multiplier = {0}", screenMultiplier));
 
             //Set to default mode
-            UIMode = UIModes.Single;
+            UIMode = UIModes.Simple;
             UIStatus = UIStatuses.AwaitFileDrop;
 
             tbarInterval.Value = Properties.Settings.Default.defChapInterval;
@@ -1049,20 +1037,6 @@ namespace MKV_Chapterizer
                 {
                     lboxFiles.Items.Add(file);
                 }
-            }
-        }
-
-        private void queueToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (queueToolStripMenuItem.Checked)
-            {
-                UIMode = UIModes.Queue;
-                UIStatus = UIStatuses.Input;
-            }
-            else
-            {
-                UIMode = UIModes.Single;
-                UIStatus = UIStatuses.AwaitFileDrop;
             }
         }
 
@@ -1323,15 +1297,15 @@ namespace MKV_Chapterizer
 
         private void lblUIMode_Click(object sender, EventArgs e)
         {
-            if (UIMode == UIModes.Single)
+            if (UIMode == UIModes.Simple)
             {
                 //Change to batch mode
-                UIMode = UIModes.Queue;
+                UIMode = UIModes.Advanced;
                 UIStatus = UIStatuses.Input;
             }
             else
             {
-                UIMode = UIModes.Single;
+                UIMode = UIModes.Simple;
                 UIStatus = UIStatuses.AwaitFileDrop;
             }
         }
