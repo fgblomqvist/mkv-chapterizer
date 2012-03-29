@@ -303,11 +303,7 @@ namespace MKV_Chapterizer
         {
             get
             {
-                if (pnlChapterDB.Visible)
-                {
-                    return ChapterMode.ChapterDB;
-                }
-                return ChapterMode.Interval;
+                return pnlChapterDB.Visible ? ChapterMode.ChapterDB : ChapterMode.Interval;
             }
 
             set
@@ -573,11 +569,7 @@ namespace MKV_Chapterizer
 
             info.Option("Inform", "XML");
             info.Option("Complete");
-            if (info.Inform().Contains("<track type=\"Menu\""))
-            {
-                return true;
-            }
-            return false;
+            return info.Inform().Contains("<track type=\"Menu\"");
         }
 
         private void btnMerge_Click(object sender, EventArgs e)
@@ -592,43 +584,6 @@ namespace MKV_Chapterizer
 
             UseChapterizer();
 
-        }
-
-        private bool CreateChapterFile(string moviePath)
-        {
-            //Only produce a chapter-file
-
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.AddExtension = true;
-            dlg.CheckPathExists = true;
-            dlg.DefaultExt = "xml";
-            dlg.DereferenceLinks = true;
-            dlg.FileName = "chapters.xml";
-            dlg.Filter = "(*.xml)|*.xml";
-            dlg.InitialDirectory = Path.GetDirectoryName(lboxFiles.Items[0].ToString());
-            dlg.Title = "Please choose where to save the chapterfile";
-            dlg.ValidateNames = true;
-
-            if (dlg.ShowDialog() == DialogResult.OK)
-            {
-                //Create a chapterset
-                if (Mode == ChapterMode.Interval)
-                {
-                    //Create a chapterfile at chosen destination
-                    thechapterizer.CustomChapterName = Properties.Settings.Default.customChapterName;
-                    thechapterizer.CreateChapterFile(
-                        thechapterizer.CreateChapterSet(thechapterizer.GetMovieRuntime(moviePath),
-                                                        ConvertToSeconds(tbarInterval.Value, cboxUnit.Text)),
-                        dlg.FileName);
-                }
-                else if (Mode == ChapterMode.ChapterDB && chapterSet != null)
-                {
-                    thechapterizer.CustomChapterSet = chapterSet;
-                    thechapterizer.CreateChapterFile(chapterSet, dlg.FileName);
-                }
-                return true;
-            }
-            return false;
         }
 
         private int ConvertToSeconds(int p, string currentUnit)
@@ -663,6 +618,9 @@ namespace MKV_Chapterizer
             thechapterizer.MKVExtractPath = "mkvmerge\\mkvextract.exe";
             thechapterizer.CustomChapterName = Properties.Settings.Default.customChapterName;
             thechapterizer.ShowConsole = Properties.Settings.Default.showConsole;
+            thechapterizer.CustomOutputName = Properties.Settings.Default.customOutputName;
+            thechapterizer.ExtraChapterEnd = Properties.Settings.Default.extraChapEnd;
+            thechapterizer.ExtraChapterStart = Properties.Settings.Default.extraChapStart;
 
             if (btnMerge.Text == "Chapterize")
             {
@@ -780,7 +738,7 @@ namespace MKV_Chapterizer
             }
 
             lblStatus.Text = status;
-            ReCalcStatusPos();
+            ReFormatStatus();
         }
 
         private void thechapterizer_Finished(object sender, RunWorkerCompletedEventArgs e)
@@ -926,7 +884,7 @@ namespace MKV_Chapterizer
 
             int count = Convert.ToInt32(Math.Floor((decimal)runtime/interval));
 
-            if (Properties.Settings.Default.firstChap00)
+            if (Properties.Settings.Default.extraChapStart)
             {
                 count += 1;
             }
@@ -954,7 +912,6 @@ namespace MKV_Chapterizer
                 tbarInterval.Value = value;
                 lblTrackbarValue.Text = tbarInterval.Value.ToString();
             }
-
         }
 
         private void pnlSettings_Click(object sender, EventArgs e)
@@ -1142,11 +1099,19 @@ namespace MKV_Chapterizer
             }
         }
 
-        private void ReCalcStatusPos()
+        private void ReFormatStatus()
         {
-            int newx = (int) Math.Round((decimal)Width/2, 0, MidpointRounding.ToEven) -
-                       (int) Math.Round(Convert.ToDecimal(lblStatus.Width/2), 0, MidpointRounding.ToEven);
-            lblStatus.Location = new Point(newx, lblStatus.Location.Y);
+            //Strip down the text to the max number of characters (25)
+            int newStatusLength = lblStatus.Text.Length;
+            if (newStatusLength > 26)
+            {
+                string[] parts = lblStatus.Text.Split(Convert.ToChar("."));
+                string extension = parts[parts.Length - 1];
+
+                string newStatus = lblStatus.Text.Remove(23 - extension.Length);
+                newStatus = String.Join("...", newStatus, extension);
+                lblStatus.Text = newStatus;
+            }
         }
 
         private void WriteLog(string message)
@@ -1308,16 +1273,6 @@ namespace MKV_Chapterizer
                 UIMode = UIModes.Simple;
                 UIStatus = UIStatuses.AwaitFileDrop;
             }
-        }
-
-        private void lblSettings_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pnlUIMode_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void btnChapterFormat_Click(object sender, EventArgs e)
