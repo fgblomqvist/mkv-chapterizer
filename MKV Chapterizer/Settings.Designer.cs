@@ -42,6 +42,7 @@
             this.lblMkv = new System.Windows.Forms.Label();
             this.infoTip = new System.Windows.Forms.ToolTip(this.components);
             this.txtChapterName = new System.Windows.Forms.TextBox();
+            this.chkboxShowConsole = new System.Windows.Forms.CheckBox();
             this.lblChapterName = new System.Windows.Forms.Label();
             this.lblChapterVariables = new System.Windows.Forms.Label();
             this.chkUseLocalMKVMerge = new System.Windows.Forms.CheckBox();
@@ -50,7 +51,6 @@
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnRestoreWarnings = new System.Windows.Forms.Button();
             this.chkboxAutoUpdate = new System.Windows.Forms.CheckBox();
-            this.chkboxShowConsole = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnOK
@@ -80,7 +80,7 @@
             this.lblMinute.AutoSize = true;
             this.lblMinute.Location = new System.Drawing.Point(177, 20);
             this.lblMinute.Name = "lblMinute";
-            this.lblMinute.Size = new System.Drawing.Size(23, 13);
+            this.lblMinute.Size = new System.Drawing.Size(25, 13);
             this.lblMinute.TabIndex = 6;
             this.lblMinute.Text = "min";
             // 
@@ -89,7 +89,7 @@
             this.lblDefaultInterval.AutoSize = true;
             this.lblDefaultInterval.Location = new System.Drawing.Point(9, 16);
             this.lblDefaultInterval.Name = "lblDefaultInterval";
-            this.lblDefaultInterval.Size = new System.Drawing.Size(122, 26);
+            this.lblDefaultInterval.Size = new System.Drawing.Size(127, 26);
             this.lblDefaultInterval.TabIndex = 7;
             this.lblDefaultInterval.Text = "Default Chapter Interval:\r\n(Restart required)";
             // 
@@ -107,7 +107,7 @@
             this.chkboxFirstChapter00.AutoSize = true;
             this.chkboxFirstChapter00.Location = new System.Drawing.Point(12, 60);
             this.chkboxFirstChapter00.Name = "chkboxFirstChapter00";
-            this.chkboxFirstChapter00.Size = new System.Drawing.Size(157, 17);
+            this.chkboxFirstChapter00.Size = new System.Drawing.Size(163, 17);
             this.chkboxFirstChapter00.TabIndex = 9;
             this.chkboxFirstChapter00.Text = "Create first chapter at 00:00";
             this.chkboxFirstChapter00.UseVisualStyleBackColor = true;
@@ -117,7 +117,7 @@
             this.chkboxExtraChapter.AutoSize = true;
             this.chkboxExtraChapter.Location = new System.Drawing.Point(12, 83);
             this.chkboxExtraChapter.Name = "chkboxExtraChapter";
-            this.chkboxExtraChapter.Size = new System.Drawing.Size(122, 17);
+            this.chkboxExtraChapter.Size = new System.Drawing.Size(125, 17);
             this.chkboxExtraChapter.TabIndex = 10;
             this.chkboxExtraChapter.Text = "Extra chapter at end";
             this.infoTip.SetToolTip(this.chkboxExtraChapter, "Example:\r\nVideo is 1 hour 23 minutes.\r\nThe last chapter will be at \r\n1 hour 23 mi" +
@@ -127,7 +127,7 @@
             // txtboxCustomName
             // 
             this.txtboxCustomName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtboxCustomName.Location = new System.Drawing.Point(229, 143);
+            this.txtboxCustomName.Location = new System.Drawing.Point(229, 127);
             this.txtboxCustomName.Name = "txtboxCustomName";
             this.txtboxCustomName.Size = new System.Drawing.Size(150, 20);
             this.txtboxCustomName.TabIndex = 12;
@@ -136,27 +136,27 @@
             // lblCustomName2
             // 
             this.lblCustomName2.AutoSize = true;
-            this.lblCustomName2.Location = new System.Drawing.Point(226, 127);
+            this.lblCustomName2.Location = new System.Drawing.Point(226, 150);
             this.lblCustomName2.Name = "lblCustomName2";
-            this.lblCustomName2.Size = new System.Drawing.Size(93, 13);
+            this.lblCustomName2.Size = new System.Drawing.Size(101, 13);
             this.lblCustomName2.TabIndex = 13;
             this.lblCustomName2.Text = "%O = Old filename";
             // 
             // lblCustomName
             // 
             this.lblCustomName.AutoSize = true;
-            this.lblCustomName.Location = new System.Drawing.Point(226, 105);
+            this.lblCustomName.Location = new System.Drawing.Point(226, 98);
             this.lblCustomName.Name = "lblCustomName";
-            this.lblCustomName.Size = new System.Drawing.Size(133, 13);
+            this.lblCustomName.Size = new System.Drawing.Size(138, 26);
             this.lblCustomName.TabIndex = 14;
-            this.lblCustomName.Text = "Custom name for new files:";
+            this.lblCustomName.Text = "Custom name for new files\r\nwhen not overwriting:";
             // 
             // lblMkv
             // 
             this.lblMkv.AutoSize = true;
-            this.lblMkv.Location = new System.Drawing.Point(385, 146);
+            this.lblMkv.Location = new System.Drawing.Point(384, 130);
             this.lblMkv.Name = "lblMkv";
-            this.lblMkv.Size = new System.Drawing.Size(33, 13);
+            this.lblMkv.Size = new System.Drawing.Size(34, 13);
             this.lblMkv.TabIndex = 15;
             this.lblMkv.Text = ". mkv";
             // 
@@ -174,12 +174,24 @@
             this.txtChapterName.TabIndex = 17;
             this.infoTip.SetToolTip(this.txtChapterName, "Example:\r\nChapter %N - %T\r\nChapter 3 - 05:00");
             // 
+            // chkboxShowConsole
+            // 
+            this.chkboxShowConsole.AutoSize = true;
+            this.chkboxShowConsole.Location = new System.Drawing.Point(229, 183);
+            this.chkboxShowConsole.Name = "chkboxShowConsole";
+            this.chkboxShowConsole.Size = new System.Drawing.Size(153, 30);
+            this.chkboxShowConsole.TabIndex = 25;
+            this.chkboxShowConsole.Text = "Show mkvmerge console \r\nwhen chapterizing";
+            this.infoTip.SetToolTip(this.chkboxShowConsole, "Don\'t enable this if you don\'t know what it means");
+            this.chkboxShowConsole.UseVisualStyleBackColor = true;
+            this.chkboxShowConsole.Visible = false;
+            // 
             // lblChapterName
             // 
             this.lblChapterName.AutoSize = true;
             this.lblChapterName.Location = new System.Drawing.Point(12, 111);
             this.lblChapterName.Name = "lblChapterName";
-            this.lblChapterName.Size = new System.Drawing.Size(133, 13);
+            this.lblChapterName.Size = new System.Drawing.Size(140, 13);
             this.lblChapterName.TabIndex = 16;
             this.lblChapterName.Text = "Custom name for chapters:";
             // 
@@ -188,7 +200,7 @@
             this.lblChapterVariables.AutoSize = true;
             this.lblChapterVariables.Location = new System.Drawing.Point(12, 127);
             this.lblChapterVariables.Name = "lblChapterVariables";
-            this.lblChapterVariables.Size = new System.Drawing.Size(124, 26);
+            this.lblChapterVariables.Size = new System.Drawing.Size(130, 26);
             this.lblChapterVariables.TabIndex = 18;
             this.lblChapterVariables.Text = "%N = Chapter Number\r\n%T =  Chapter Timecode";
             // 
@@ -197,7 +209,7 @@
             this.chkUseLocalMKVMerge.AutoSize = true;
             this.chkUseLocalMKVMerge.Location = new System.Drawing.Point(229, 12);
             this.chkUseLocalMKVMerge.Name = "chkUseLocalMKVMerge";
-            this.chkUseLocalMKVMerge.Size = new System.Drawing.Size(135, 30);
+            this.chkUseLocalMKVMerge.Size = new System.Drawing.Size(139, 30);
             this.chkUseLocalMKVMerge.TabIndex = 19;
             this.chkUseLocalMKVMerge.Text = "Try to use MKV Merge \r\n from local mkvtoolnix";
             this.chkUseLocalMKVMerge.UseVisualStyleBackColor = true;
@@ -206,7 +218,7 @@
             // lblPath
             // 
             this.lblPath.AutoSize = true;
-            this.lblPath.Location = new System.Drawing.Point(226, 54);
+            this.lblPath.Location = new System.Drawing.Point(226, 44);
             this.lblPath.Name = "lblPath";
             this.lblPath.Size = new System.Drawing.Size(32, 13);
             this.lblPath.TabIndex = 20;
@@ -214,14 +226,14 @@
             // 
             // txtMKVPath
             // 
-            this.txtMKVPath.Location = new System.Drawing.Point(229, 70);
+            this.txtMKVPath.Location = new System.Drawing.Point(229, 60);
             this.txtMKVPath.Name = "txtMKVPath";
             this.txtMKVPath.Size = new System.Drawing.Size(159, 20);
             this.txtMKVPath.TabIndex = 21;
             // 
             // btnBrowse
             // 
-            this.btnBrowse.Location = new System.Drawing.Point(394, 68);
+            this.btnBrowse.Location = new System.Drawing.Point(394, 58);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(24, 23);
             this.btnBrowse.TabIndex = 22;
@@ -245,22 +257,10 @@
             this.chkboxAutoUpdate.AutoSize = true;
             this.chkboxAutoUpdate.Location = new System.Drawing.Point(12, 190);
             this.chkboxAutoUpdate.Name = "chkboxAutoUpdate";
-            this.chkboxAutoUpdate.Size = new System.Drawing.Size(193, 17);
+            this.chkboxAutoUpdate.Size = new System.Drawing.Size(198, 17);
             this.chkboxAutoUpdate.TabIndex = 24;
             this.chkboxAutoUpdate.Text = "Auto-search for updates on Launch";
             this.chkboxAutoUpdate.UseVisualStyleBackColor = true;
-            // 
-            // chkboxShowConsole
-            // 
-            this.chkboxShowConsole.AutoSize = true;
-            this.chkboxShowConsole.Location = new System.Drawing.Point(229, 183);
-            this.chkboxShowConsole.Name = "chkboxShowConsole";
-            this.chkboxShowConsole.Size = new System.Drawing.Size(148, 30);
-            this.chkboxShowConsole.TabIndex = 25;
-            this.chkboxShowConsole.Text = "Show mkvmerge console \r\nwhen chapterizing";
-            this.infoTip.SetToolTip(this.chkboxShowConsole, "Don\'t enable this if you don\'t know what it means");
-            this.chkboxShowConsole.UseVisualStyleBackColor = true;
-            this.chkboxShowConsole.Visible = false;
             // 
             // Settings
             // 

@@ -623,7 +623,7 @@ namespace MKV_Chapterizer
                 }
                 else if (Mode == ChapterMode.ChapterDB && chapterSet != null)
                 {
-                    thechapterizer.ChapterSet = chapterSet;
+                    thechapterizer.CustomChapterSet = chapterSet;
                     thechapterizer.CreateChapterFile(chapterSet, dlg.FileName);
                 }
                 return true;
@@ -675,14 +675,14 @@ namespace MKV_Chapterizer
 
                 if (Mode == ChapterMode.ChapterDB && chapterSet != null)
                 {
-                    thechapterizer.ChapterSet = chapterSet;
+                    thechapterizer.CustomChapterSet = chapterSet;
                 }
                 else
                 {
                     thechapterizer.ChapterInterval = ConvertToSeconds(tbarInterval.Value, cboxUnit.Text);
                 }
 
-                thechapterizer.Overwrite = cboxOverwrite.Checked;
+                thechapterizer.OverwriteOutput = cboxOverwrite.Checked;
 
             }
             else if (btnMerge.Text == "Re-Chapterize")
@@ -696,14 +696,14 @@ namespace MKV_Chapterizer
 
                 if (pnlChapterDB.Visible && chapterSet != null)
                 {
-                    thechapterizer.ChapterSet = chapterSet;
+                    thechapterizer.CustomChapterSet = chapterSet;
                 }
                 else
                 {
                     thechapterizer.ChapterInterval = ConvertToSeconds(tbarInterval.Value, cboxUnit.Text);
                 }
 
-                thechapterizer.Overwrite = cboxOverwrite.Checked;
+                thechapterizer.OverwriteOutput = cboxOverwrite.Checked;
 
             }
             else if (btnMerge.Text == "De-Chapterize")
@@ -715,7 +715,7 @@ namespace MKV_Chapterizer
                 thechapterizer.Files = mkvList;
                 thechapterizer.ChaptersExistAction = 2;
                 thechapterizer.ChapterInterval = ConvertToSeconds(tbarInterval.Value, cboxUnit.Text);
-                thechapterizer.Overwrite = cboxOverwrite.Checked;
+                thechapterizer.OverwriteOutput = cboxOverwrite.Checked;
 
             }
             else if (btnMerge.Text == "Cancel")

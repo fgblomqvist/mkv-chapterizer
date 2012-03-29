@@ -19,41 +19,18 @@ namespace MKV_Chapterizer
         #region Delegates
 
         public delegate void FinishedEventHandler(object sender, RunWorkerCompletedEventArgs ps);
-
         public delegate void ProgressChangedEventHandler(object sender, ProgressChangedEventArgs pa);
 
         #endregion
 
-        #region Operations enum
+        private int chapterizerProgress;
+        private string status;
+        private string error;
+        private string workDir;
 
-        public enum Operations
-        {
-            Chapterize,
-            Chapterfile,
-            ExtractChapter,
-        }
-
-        #endregion
-
-        private static int pProgress;
-        private static List<string> pFiles;
-        private static int pChaptersExistAction;
-        private static bool pOverwrite;
-        private static int pChapterInterval;
-        private static bool pIsBusy;
-        private static string pStatus;
-        private static string pError;
-        private static ChapterDBAccess.ChapterSet pChapterSet;
-        private static string pMKVMergePath;
-        private static string pMKVExtractPath;
-        private static string pCustomChapterName;
-        private static string workDir;
-        private static bool pShowConsole;
-        private static string pchapterCreationPattern;
-
-        private static readonly BackgroundWorker chapterizeWorker = new BackgroundWorker();
-        private static readonly BackgroundWorker chapterfileWorker = new BackgroundWorker();
-        private static readonly BackgroundWorker chapterExtractorWorker = new BackgroundWorker();
+        private readonly BackgroundWorker chapterizeWorker = new BackgroundWorker();
+        private readonly BackgroundWorker chapterfileWorker = new BackgroundWorker();
+        private readonly BackgroundWorker chapterExtractorWorker = new BackgroundWorker();
 
         public Chapterizer()
         {
@@ -77,97 +54,57 @@ namespace MKV_Chapterizer
         //   External used Properties and Enumerators
         //------------------------------------------------------
 
-        // delegate declaration
+        #region Operations enum
 
+        public enum Operations
+        {
+            Chapterize,
+            Chapterfile,
+            ExtractChapter,
+        }
+
+        #endregion
+
+        #region Properties
         public string Status
         {
-            get { return pStatus; }
+            get { return status; }
 
             set
             {
-                pStatus = value;
-                var ps = new ProgressChangedEventArgs(0, pStatus);
+                status = value;
+                var ps = new ProgressChangedEventArgs(0, status);
                 StatusChanged(this, ps);
             }
         }
 
         public int Progress
         {
-            get { return pProgress; }
+            get { return chapterizerProgress; }
 
             set
             {
-                pProgress = value;
-                var ps = new ProgressChangedEventArgs(pProgress, null);
+                chapterizerProgress = value;
+                var ps = new ProgressChangedEventArgs(chapterizerProgress, null);
                 ProgressChanged(this, ps);
             }
         }
 
-        /// <summary>
-        /// Gets or sets the chapter interval.
-        /// </summary>
-        /// <value>
-        /// The chapter interval in seconds.
-        /// </value>
-        public int ChapterInterval
-        {
-            get { return pChapterInterval; }
-
-            set { pChapterInterval = value; }
-        }
-
-        public ChapterDBAccess.ChapterSet ChapterSet
-        {
-            get { return pChapterSet; }
-
-            set { pChapterSet = value; }
-        }
-
-        public List<string> Files
-        {
-            get { return pFiles; }
-
-            set { pFiles = value; }
-        }
-
-        public bool Overwrite
-        {
-            get { return pOverwrite; }
-
-            set { pOverwrite = value; }
-        }
-
-        public bool IsBusy
-        {
-            get { return pIsBusy; }
-
-            set { pIsBusy = value; }
-        }
-
-        public bool ShowConsole
-        {
-            get { return pShowConsole; }
-
-            set { pShowConsole = value; }
-        }
+        public ChapterDBAccess.ChapterSet CustomChapterSet { get; set; }
+        public List<string> Files { get; set; }
+        public bool OverwriteOutput { get; set; }
+        public bool IsBusy { get; set; }
+        public bool ShowConsole { get; set; }
+        public string MKVMergePath { get; set; }
+        public string MKVExtractPath { get; set; }
+        public string CustomChapterName { get; set; }
+        public string CustomOutputName { get; set; }
 
         /// <summary>
         /// What to do if the file has chapters.
         /// 1 = Replace; 2 = Remove; 3 = Skip File
         /// </summary>
-        public int ChaptersExistAction
-        {
-            get { return pChaptersExistAction; }
-
-            set { pChaptersExistAction = value; }
-        }
-
-        public string MKVMergePath
-        {
-            get { return pMKVMergePath; }
-
-            set { pMKVMergePath = value; }
-        }
+        public int ChaptersExistAction { get; set; }
 
         /// <summary>
         /// Gets or sets the regex pattern used when generating raw chapter files.
@@ -175,25 +112,16 @@ namespace MKV_Chapterizer
         /// <value>
         /// The chapter creation pattern (regex).
         /// </value>
-        public string ChapterCreationPattern
-        {
-            get { return pchapterCreationPattern; }
-            set { pchapterCreationPattern = value; }
-        }
+        public string ChapterCreationPattern { get; set; }
 
-        public string MKVExtractPath
-        {
-            get { return pMKVExtractPath; }
-
-            set { pMKVExtractPath = value; }
-        }
-
-        public string CustomChapterName
-        {
-            get { return pCustomChapterName; }
-
-            set { pCustomChapterName = value; }
-        }
+        /// <summary>
+        /// Gets or sets the chapter interval.
+        /// </summary>
+        /// <value>
+        /// The chapter interval in seconds.
+        /// </value>
+        public int ChapterInterval { get; set; }
+        #endregion
 
         /// <summary>
         /// Log entries will be sent to this.
@@ -315,7 +243,7 @@ namespace MKV_Chapterizer
                                 chapterizeWorker.Dispose();
 
                                 //Pass the new file to the complete event for cleaning
-                                pError = (string)file;
+                                error = (string)file;
                                 return;
                             }
                             
@@ -323,14 +251,14 @@ namespace MKV_Chapterizer
                             nfile = (FileInfo)file;
 
                             WriteLog("Handling the finished file");
-                            if (Overwrite)
+                            if (OverwriteOutput)
                             {
                                 //Handle the finished file
-                                HandleFinishedFile(nfile.FullName, s, Overwrite);
+                                HandleFinishedFile(nfile.FullName, s, OverwriteOutput);
                             }
                             else
                             {
-                                HandleFinishedFile(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name, Overwrite);
+                                HandleFinishedFile(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name, OverwriteOutput);
                             }
 
                             break;
@@ -346,24 +274,22 @@ namespace MKV_Chapterizer
                                 chapterizeWorker.Dispose();
 
                                 //Pass the new file to the complete event for cleaning
-                                pError = (string)file;
+                                error = (string)file;
                                 return;
+                            }
+
+                            WriteLog("Succeeded removing chapters");
+                            nfile = (FileInfo)file;
+
+                            //check if the user want to overwrite
+                            WriteLog("Handling the finished file");
+                            if (OverwriteOutput)
+                            {
+                                HandleFinishedFile(nfile.FullName, fi.FullName, OverwriteOutput);
                             }
                             else
                             {
-                                WriteLog("Succeeded removing chapters");
-                                nfile = (FileInfo)file;
-
-                                //check if the user want to overwrite
-                                WriteLog("Handling the finished file");
-                                if (Overwrite)
-                                {
-                                    HandleFinishedFile(nfile.FullName, fi.FullName, Overwrite);
-                                }
-                                else
-                                {
-                                    HandleFinishedFile(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name, Overwrite);
-                                }
+                                HandleFinishedFile(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name, OverwriteOutput);
                             }
                             break;
 
@@ -384,24 +310,22 @@ namespace MKV_Chapterizer
                         chapterizeWorker.Dispose();
 
                         //Pass the new file to the complete event for cleaning
-                        pError = (string)file;
+                        error = (string)file;
                         return;
+                    }
+                    
+                    WriteLog("Succeeded inserting chapters");
+                    var nfile = (FileInfo)file;
+
+                    WriteLog("Handling the finished file");
+                    if (OverwriteOutput)
+                    {
+                        //Rename -new file to original name
+                        HandleFinishedFile(nfile.FullName, s, OverwriteOutput);
                     }
                     else
                     {
-                        WriteLog("Succeeded inserting chapters");
-                        var nfile = (FileInfo)file;
-
-                        WriteLog("Handling the finished file");
-                        if (Overwrite)
-                        {
-                            //Rename -new file to original name
-                            HandleFinishedFile(nfile.FullName, s, Overwrite);
-                        }
-                        else
-                        {
-                            HandleFinishedFile(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name, Overwrite);
-                        }
+                        HandleFinishedFile(nfile.FullName, Path.GetDirectoryName(s) + "\\" + nfile.Name, OverwriteOutput);
                     }
                 }
             }
@@ -436,7 +360,7 @@ namespace MKV_Chapterizer
 
                 try
                 {
-                    File.Delete(pError);
+                    File.Delete(error);
                 }
                 catch (Exception ex)
                 {
@@ -517,8 +441,6 @@ namespace MKV_Chapterizer
                     Status = doneMovies.ToString() + "/" + Files.Count.ToString() + " " + Path.GetFileName(s);
                 }
 
-                FileInfo fi = new FileInfo(s);
-
                 //check if it has chapters
                 if (ChaptersExist(s))
                 {
@@ -536,7 +458,7 @@ namespace MKV_Chapterizer
                     catch (IOException)
                     {
                         //File already exists, if overwrite, then overwrite
-                        if (Overwrite)
+                        if (OverwriteOutput)
                         {
                             File.Delete(Path.GetDirectoryName(s) + "\\chapters.txt");
                             File.Move(path, Path.GetDirectoryName(s) + "\\chapters.txt");
@@ -584,40 +506,25 @@ namespace MKV_Chapterizer
         /// <returns></returns>
         public ChapterDBAccess.ChapterSet CreateChapterSet(int runtime, int interval)
         {
-            var chapterSet = new ChapterDBAccess.ChapterSet();
+            ChapterDBAccess.ChapterSet newChapterSet = new ChapterDBAccess.ChapterSet();
             ChapterDBAccess.Chapter chapter;
 
             decimal count = runtime / interval;
 
-            int nmbr = Convert.ToInt32(count);
             int start;
             int extraval = 0;
             int[] time = {00, 00, 00};
-
-            if (count < 0)
-            {
-                MessageBox.Show("Too high interval!");
-            }
-            else
-            {
-                count = Math.Floor(count);
-
-                if (Properties.Settings.Default.firstChap00)
-                {
-                    count += 1;
-                }
-            }
 
             if (Properties.Settings.Default.firstChap00)
             {
                 chapter = new ChapterDBAccess.Chapter();
                 chapter.Time = TimeSpan.Parse(time[0] + ":" + time[1] + ":" + time[2]);
                 chapter.Name = CustomChapterName.Replace("%N", "1").Replace("%T", string.Format("{0:00}:{1:00}:{2:00}", (int)chapter.Time.TotalHours, chapter.Time.Minutes, chapter.Time.Seconds));
-                chapterSet.Chapters.Add(chapter);
+                newChapterSet.Chapters.Add(chapter);
                 extraval = 1;
             }
 
-            for (start = 0 + extraval; start <= nmbr; start++)
+            for (start = 0 + extraval; start <= count; start++)
             {
                 time[2] += interval;
 
@@ -637,7 +544,7 @@ namespace MKV_Chapterizer
                 chapter.Time = TimeSpan.Parse(time[0] + ":" + time[1] + ":" + time[2]);
                 chapter.Name = CustomChapterName.Replace("%N", Convert.ToString(start + 1)).Replace("%T", string.Format("{0:00}:{1:00}:{2:00}", (int)chapter.Time.TotalHours, chapter.Time.Minutes, chapter.Time.Seconds));
 
-                chapterSet.Chapters.Add(chapter);
+                newChapterSet.Chapters.Add(chapter);
             }
 
             if (Properties.Settings.Default.extraChapEnd)
@@ -663,7 +570,7 @@ namespace MKV_Chapterizer
                 chapter.Name = CustomChapterName.Replace("%N", Convert.ToString(start + 1)).Replace("%T", string.Format("{0:00}:{1:00}:{2:00}", (int)chapter.Time.TotalHours, chapter.Time.Minutes, chapter.Time.Seconds));
             }
 
-            return chapterSet;
+            return newChapterSet;
         }
 
         public string CreateChapterFile(ChapterDBAccess.ChapterSet chapterSet, string path)
@@ -688,18 +595,9 @@ namespace MKV_Chapterizer
                     //If we shouldn't overwrite, exit
                     return null;
                 }
-                else
-                {
-                    //Delete the existing file
-                    try
-                    {
-                        File.Delete(path);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
-                }
+
+                //Delete the existing file
+                File.Delete(path);
             }
 
             var xwrite = new XmlTextWriter(path, Encoding.UTF8);
@@ -748,11 +646,9 @@ namespace MKV_Chapterizer
                 WriteLog("It contains chapters");
                 return true;
             }
-            else
-            {
-                WriteLog("It didn't contain chapters");
-                return false;
-            }
+            
+            WriteLog("It didn't contain chapters");
+            return false;
         }
 
         private void ReFormatChapters(string path)
@@ -769,10 +665,10 @@ namespace MKV_Chapterizer
             }
 
             //Now format the chapters according to how the users has set it
-            if (pchapterCreationPattern != null)
+            if (ChapterCreationPattern != null)
             {
-                string chapterPattern = pchapterCreationPattern.Split(Convert.ToChar(0))[0];
-                string chapterSeparator = pchapterCreationPattern.Split(Convert.ToChar(0))[1];
+                string chapterPattern = ChapterCreationPattern.Split(Convert.ToChar(0))[0];
+                string chapterSeparator = ChapterCreationPattern.Split(Convert.ToChar(0))[1];
                 string chaptersText = string.Empty;
                 int i = 0; //Chapter number
 
@@ -797,7 +693,7 @@ namespace MKV_Chapterizer
             var info = new FileInfo(file);
             String cpath;
 
-            if (ChapterSet == null)
+            if (CustomChapterSet == null)
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
                 cpath = CreateChapterFile(CreateChapterSet(GetMovieRuntime(info.FullName), ChapterInterval), workDir + "\\chapters.xml");
@@ -805,12 +701,11 @@ namespace MKV_Chapterizer
             else
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
-                cpath = CreateChapterFile(ChapterSet, workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CustomChapterSet, workDir + "\\chapters.xml");
             }
 
-            String newFileName = null;
-
-            newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
+            //TODO: Remove all the references to the settings and use custom properties instead
+            string newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
 
             var prcinfo = new ProcessStartInfo();
             var prc = new Process();
@@ -826,14 +721,7 @@ namespace MKV_Chapterizer
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;
 
-            if (ShowConsole)
-            {
-                prcinfo.CreateNoWindow = false;
-            }
-            else
-            {
-                prcinfo.CreateNoWindow = true;
-            }
+            prcinfo.CreateNoWindow = !ShowConsole;
 
             prcinfo.UseShellExecute = false;
 
@@ -909,14 +797,7 @@ namespace MKV_Chapterizer
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;
 
-            if (ShowConsole)
-            {
-                prcinfo.CreateNoWindow = false;
-            }
-            else
-            {
-                prcinfo.CreateNoWindow = true;
-            }
+            prcinfo.CreateNoWindow = !ShowConsole;
 
             prcinfo.UseShellExecute = false;
 
@@ -978,14 +859,7 @@ namespace MKV_Chapterizer
             prcinfo.RedirectStandardOutput = true;
             prcinfo.RedirectStandardError = true;
 
-            if (ShowConsole)
-            {
-                prcinfo.CreateNoWindow = false;
-            }
-            else
-            {
-                prcinfo.CreateNoWindow = true;
-            }
+            prcinfo.CreateNoWindow = !ShowConsole;
 
             prcinfo.UseShellExecute = false;
 
@@ -1028,7 +902,7 @@ namespace MKV_Chapterizer
             MI.Open(info2.FullName);
 
             string cpath;
-            if (ChapterSet == null)
+            if (CustomChapterSet == null)
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
                 cpath = CreateChapterFile(CreateChapterSet(GetMovieRuntime(info2.FullName), ChapterInterval), workDir + "\\chapters.xml");
@@ -1036,7 +910,7 @@ namespace MKV_Chapterizer
             else
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
-                cpath = CreateChapterFile(ChapterSet, workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CustomChapterSet, workDir + "\\chapters.xml");
             }
 
             string newFileName2 = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info2.FullName)) + ".mkv";
@@ -1166,7 +1040,7 @@ namespace MKV_Chapterizer
             }
         }
 
-        private bool HandleFinishedFile(string path, string newpath, bool overwrite)
+        private void HandleFinishedFile(string path, string newpath, bool overwrite)
         {
             string inputDrive = Path.GetPathRoot(path);
             string outputDrive = Path.GetPathRoot(newpath);
@@ -1174,32 +1048,27 @@ namespace MKV_Chapterizer
             if (inputDrive == outputDrive)
             {
                 WriteLog("Deleting the input file");
-                //Delete the input file
                 File.Delete(newpath);
                 WriteLog("Moving the finished file");
-                //Move the file
                 File.Move(path, newpath);
-                return true;
+                return;
             }
-            else
-            {
-                WriteLog("Starting to copy the finished file");
-                //Copy the file
-                var callback = new CopyFileCallback(CopyProgressChanged);
-                try
-                {
-                    AdvancedFileHandling.CopyFile(path, newpath, CopyFileOptions.None, callback);
-                }
-                catch (IOException)
-                {
-                    //Assume the user cancelled
-                    return false;
-                }
 
-                //Then delete the input
-                File.Delete(path);
-                return true;
+            WriteLog("Starting to copy the finished file");
+            //Copy the file
+            CopyFileCallback callback = new CopyFileCallback(CopyProgressChanged);
+            try
+            {
+                AdvancedFileHandling.CopyFile(path, newpath, CopyFileOptions.None, callback);
             }
+            catch (IOException)
+            {
+                //Assume the user cancelled
+                return;
+            }
+
+            //Then delete the input
+            File.Delete(path);
         }
 
         private CopyFileCallbackAction CopyProgressChanged(string source, string destination, object state, long totalFileSize, long totalBytesTransferred)
@@ -1208,20 +1077,12 @@ namespace MKV_Chapterizer
             {
                 return CopyFileCallbackAction.Cancel;
             }
-            else
-            {
-                var progress = (int)Math.Round(Convert.ToDecimal(totalBytesTransferred / (decimal)totalFileSize * 100), 0, MidpointRounding.ToEven);
-                if (Overwrite)
-                {
-                    Status = string.Format("Overwriting old file: {0}%", progress.ToString());
-                }
-                else
-                {
-                    Status = string.Format("Moving chapterized file: {0}%", progress.ToString());
-                }
+            
+            int progress = (int)Math.Round(Convert.ToDecimal(totalBytesTransferred / (decimal)totalFileSize * 100), 0, MidpointRounding.ToEven);
+            
+            Status = string.Format(OverwriteOutput ? "Overwriting old file: {0}%" : "Moving chapterized file: {0}%", progress.ToString());
 
-                return CopyFileCallbackAction.Continue;
-            }
+            return CopyFileCallbackAction.Continue;
         }
 
         /// <summary>
@@ -1234,8 +1095,7 @@ namespace MKV_Chapterizer
             var MI = new MediaInfo();
             MI.Open(movie);
 
-            decimal dd;
-            dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 1000);
+            decimal dd = Math.Floor(decimal.Parse(MI.Get(StreamKind.Video, 0, "Duration")) / 1000);
             MI.Close();
 
             return Convert.ToInt32(dd);
