@@ -99,6 +99,8 @@ namespace MKV_Chapterizer
         public string MKVExtractPath { get; set; }
         public string CustomChapterName { get; set; }
         public string CustomOutputName { get; set; }
+        public bool ExtraChapterStart { get; set; }
+        public bool ExtraChapterEnd { get; set; }
 
         /// <summary>
         /// What to do if the file has chapters.
@@ -515,7 +517,7 @@ namespace MKV_Chapterizer
             int extraval = 0;
             int[] time = {00, 00, 00};
 
-            if (Properties.Settings.Default.firstChap00)
+            if (ExtraChapterStart)
             {
                 chapter = new ChapterDBAccess.Chapter();
                 chapter.Time = TimeSpan.Parse(time[0] + ":" + time[1] + ":" + time[2]);
@@ -547,7 +549,7 @@ namespace MKV_Chapterizer
                 newChapterSet.Chapters.Add(chapter);
             }
 
-            if (Properties.Settings.Default.extraChapEnd)
+            if (ExtraChapterEnd)
             {
                 int hours = 0;
                 int minutes = 0;
@@ -704,8 +706,7 @@ namespace MKV_Chapterizer
                 cpath = CreateChapterFile(CustomChapterSet, workDir + "\\chapters.xml");
             }
 
-            //TODO: Remove all the references to the settings and use custom properties instead
-            string newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
+            string newFileName = CustomOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
 
             var prcinfo = new ProcessStartInfo();
             var prc = new Process();
@@ -781,7 +782,7 @@ namespace MKV_Chapterizer
 
             var info = new FileInfo(file);
 
-            String newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
+            String newFileName = CustomOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
 
             Char q = Convert.ToChar(34);
             String newpath = q + workDir + "\\" + newFileName + q;
@@ -843,7 +844,7 @@ namespace MKV_Chapterizer
 
             var info = new FileInfo(file);
 
-            String newFileName = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
+            String newFileName = CustomOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
 
             Char q = Convert.ToChar(34);
             String newpath = q + workDir + "\\" + newFileName + q;
@@ -913,7 +914,7 @@ namespace MKV_Chapterizer
                 cpath = CreateChapterFile(CustomChapterSet, workDir + "\\chapters.xml");
             }
 
-            string newFileName2 = Properties.Settings.Default.customOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info2.FullName)) + ".mkv";
+            string newFileName2 = CustomOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info2.FullName)) + ".mkv";
 
             newpath = q + workDir + "\\" + newFileName2 + q;
             oldpath = q + info2.FullName + q;
