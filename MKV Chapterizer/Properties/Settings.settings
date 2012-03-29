@@ -8,7 +8,7 @@
     <Setting Name="extraChapEnd" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="firstChap00" Type="System.Boolean" Scope="User">
+    <Setting Name="extraChapStart" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="customOutputName" Type="System.String" Scope="User">

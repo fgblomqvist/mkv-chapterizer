@@ -50,12 +50,12 @@ namespace MKV_Chapterizer.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool firstChap00 {
+        public bool extraChapStart {
             get {
-                return ((bool)(this["firstChap00"]));
+                return ((bool)(this["extraChapStart"]));
             }
             set {
-                this["firstChap00"] = value;
+                this["extraChapStart"] = value;
             }
         }
         

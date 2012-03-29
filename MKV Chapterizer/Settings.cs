@@ -1,42 +1,11 @@
-﻿/* 
- 
-  MKV Chapterizer
-  ---------------------------
- 
-  Copyright © 2010-2011 Fredrik Blomqvist
-
-  This file is part of MKV Chapterizer.
-
-    MKV Chapterizer is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    MKV Chapterizer is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with MKV Chapterizer.  If not, see <http://www.gnu.org/licenses/>.
-
-*/
-
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System;
 using System.IO;
+using System.Windows.Forms;
 
 namespace MKV_Chapterizer
 {
     public partial class Settings : Form
     {
-
         public Settings()
         {
             InitializeComponent();
@@ -64,7 +33,7 @@ namespace MKV_Chapterizer
                 Properties.Settings.Default.customMKVMerge = false;
             }
 
-            Properties.Settings.Default.firstChap00 = chkboxFirstChapter00.Checked;
+            Properties.Settings.Default.extraChapStart = chkboxFirstChapter00.Checked;
             Properties.Settings.Default.extraChapEnd = chkboxExtraChapter.Checked;
             Properties.Settings.Default.autoUpdate = chkboxAutoUpdate.Checked;
             Properties.Settings.Default.customOutputName = txtboxCustomName.Text;
@@ -73,15 +42,14 @@ namespace MKV_Chapterizer
             Properties.Settings.Default.showConsole = chkboxShowConsole.Checked;
             Properties.Settings.Default.Save();
 
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Close();
-
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void Settings_Load(object sender, EventArgs e)
         {
             txtboxDefaultInterval.Text = Properties.Settings.Default.defChapInterval.ToString();
-            chkboxFirstChapter00.Checked = Properties.Settings.Default.firstChap00;
+            chkboxFirstChapter00.Checked = Properties.Settings.Default.extraChapStart;
             chkboxExtraChapter.Checked = Properties.Settings.Default.extraChapEnd;
             chkboxAutoUpdate.Checked = Properties.Settings.Default.autoUpdate;
             txtboxCustomName.Text = Properties.Settings.Default.customOutputName;
@@ -105,7 +73,7 @@ namespace MKV_Chapterizer
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void chkUseLocalMKVMerge_CheckedChanged(object sender, EventArgs e)
@@ -144,7 +112,7 @@ namespace MKV_Chapterizer
             openFileDlg.Multiselect = false;
             openFileDlg.Title = "Please browse to mkvmerge";
 
-            if (openFileDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (openFileDlg.ShowDialog() == DialogResult.OK)
             {
                 txtMKVPath.Text = openFileDlg.FileName;
             }
@@ -155,6 +123,5 @@ namespace MKV_Chapterizer
             Properties.Settings.Default.showMKVMergeWarning = true;
             btnRestoreWarnings.Enabled = false;
         }
-
     }
 }

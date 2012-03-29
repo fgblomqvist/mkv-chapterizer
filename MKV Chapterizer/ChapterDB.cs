@@ -3,19 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Collections;
-using System.Xml;
-using System.Threading;
 
 namespace MKV_Chapterizer
 {
     public partial class ChapterDB : Form
     {
-        ChapterDBAccess chapterDBAccess = new ChapterDBAccess();
-        BackgroundWorker bwSearch = new BackgroundWorker();
+        private ChapterDBAccess chapterDBAccess = new ChapterDBAccess();
+        private BackgroundWorker bwSearch = new BackgroundWorker();
         private string pMovieName;
         private ChapterDBAccess.ChapterSet pChosenChapter;
 
@@ -26,35 +21,23 @@ namespace MKV_Chapterizer
 
         public string MovieName
         {
-            get
-            {
-                return pMovieName;
-            }
+            get { return pMovieName; }
 
-            set
-            {
-                pMovieName = value;
-            }
+            set { pMovieName = value; }
         }
 
         public ChapterDBAccess.ChapterSet ChosenChapter
         {
-            get
-            {
-                return pChosenChapter;
-            }
+            get { return pChosenChapter; }
 
-            set
-            {
-                pChosenChapter = value;
-            }
+            set { pChosenChapter = value; }
         }
 
         private void ChapterDB_Load(object sender, EventArgs e)
         {
             lblStatus.TextAlign = ContentAlignment.MiddleCenter;
-            bwSearch.DoWork +=new DoWorkEventHandler(bwSearch_DoWork);
-            bwSearch.RunWorkerCompleted +=new RunWorkerCompletedEventHandler(bwSearch_RunWorkerCompleted);
+            bwSearch.DoWork += new DoWorkEventHandler(bwSearch_DoWork);
+            bwSearch.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwSearch_RunWorkerCompleted);
             bwSearch.WorkerSupportsCancellation = true;
 
             bwSearch.RunWorkerAsync(MovieName);
@@ -65,14 +48,7 @@ namespace MKV_Chapterizer
             MovieName = movieName;
             txtboxSearchName.Text = movieName;
             lblStatus.Text = "Searching...";
-            if (this.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                return ChosenChapter;
-            }
-            else
-            {
-                return null;
-            }
+            return ShowDialog() == DialogResult.OK ? ChosenChapter : null;
         }
 
         private void ApplyColors()
@@ -111,19 +87,17 @@ namespace MKV_Chapterizer
         private void LoadChapters(ChapterDBAccess.ChapterSet chapterSet)
         {
             lviewChapters.Items.Clear();
-            string time = null;
 
             foreach (ChapterDBAccess.Chapter chapter in chapterSet)
             {
-
-                time = chapter.Time.ToString();
+                string time = chapter.Time.ToString();
 
                 if (chapter.Time.ToString().Length >= 12)
                 {
                     time = time.Remove(12);
                 }
 
-                lviewChapters.Items.Add(new ListViewItem(new string[]{chapter.Name, time}));
+                lviewChapters.Items.Add(new ListViewItem(new string[] {chapter.Name, time}));
             }
         }
 
@@ -138,7 +112,6 @@ namespace MKV_Chapterizer
                 }
             }
         }
-
 
         private void txtboxSearchName_KeyDown(object sender, KeyEventArgs e)
         {
@@ -157,7 +130,7 @@ namespace MKV_Chapterizer
 
         private void CenterLabel(Label label)
         {
-            int formMiddle = this.Width;
+            int formMiddle = Width;
             label.Location = new Point(formMiddle - label.Width / 2, label.Location.Y);
         }
 
@@ -188,7 +161,7 @@ namespace MKV_Chapterizer
                     }
                 }
 
-                chapterSet.Quality = (int)Math.Round(((decimal)goodsum / (decimal)totalsum) * 5, 0, MidpointRounding.ToEven); 
+                chapterSet.Quality = (int)Math.Round(((decimal)goodsum / (decimal)totalsum) * 5, 0, MidpointRounding.ToEven);
             }
             return list;
         }
@@ -205,8 +178,8 @@ namespace MKV_Chapterizer
         private void btnUse_Click(object sender, EventArgs e)
         {
             ChosenChapter = (ChapterDBAccess.ChapterSet)dgViewResults.SelectedRows[0].Cells[2].Value;
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void bwSearch_DoWork(object sender, DoWorkEventArgs e)
@@ -229,7 +202,6 @@ namespace MKV_Chapterizer
             }
 
             e.Result = Filter(result);
-
         }
 
         private void bwSearch_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -241,9 +213,9 @@ namespace MKV_Chapterizer
                 lblStatus.Text = string.Format("{0} sets of chapters found", result.Count.ToString());
 
                 DataTable table = new DataTable();
-                table.Columns.Add("Name", typeof(string));
-                table.Columns.Add("Quality", typeof(string));
-                table.Columns.Add("ChapterSet", typeof(ChapterDBAccess.ChapterSet));
+                table.Columns.Add("Name", typeof (string));
+                table.Columns.Add("Quality", typeof (string));
+                table.Columns.Add("ChapterSet", typeof (ChapterDBAccess.ChapterSet));
 
                 dgViewResults.DataSource = table;
                 dgViewResults.Columns["ChapterSet"].Visible = false;

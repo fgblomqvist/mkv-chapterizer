@@ -403,7 +403,7 @@
             // 
             this.lblStatus.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(166, 146);
+            this.lblStatus.Location = new System.Drawing.Point(163, 146);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(94, 13);
             this.lblStatus.TabIndex = 28;
