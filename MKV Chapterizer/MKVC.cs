@@ -1103,12 +1103,12 @@ namespace MKV_Chapterizer
         {
             //Strip down the text to the max number of characters (25)
             int newStatusLength = lblStatus.Text.Length;
-            if (newStatusLength > 26)
+            if (newStatusLength > 30)
             {
                 string[] parts = lblStatus.Text.Split(Convert.ToChar("."));
                 string extension = parts[parts.Length - 1];
 
-                string newStatus = lblStatus.Text.Remove(23 - extension.Length);
+                string newStatus = lblStatus.Text.Remove(27 - extension.Length);
                 newStatus = String.Join("...", newStatus, extension);
                 lblStatus.Text = newStatus;
             }
