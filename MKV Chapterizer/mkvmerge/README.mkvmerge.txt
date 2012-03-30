@@ -1,407 +1,272 @@
-Building mkvtoolnix 3.2.0 on Windows
-====================================
+MKVToolNix 5.4.0
+================
 
-There are currently two ways to build mkvtoolnix for Windows: building
-it on Windows with Microsoft Visual Studio 8 (and maybe newer) or on
-Linux with a mingw cross compiler. Section 1 describes building with
-Visual Studio and section 2 describes the mingw cross compiler way.
+Table of contents
+-----------------
 
-Section 1 -- Building with Microsoft Visual Studio
---------------------------------------------------
+1. Introduction
+2. Installation
+2.1. Requirements
+2.2. Optional components
+2.3. Building libmatroska and libebml
+2.4. Building MKVtoolNix
+2.5. Notes for compilation on (Open)Solaris
+3. Examples
+4. Reporting bugs
 
-1.1. Building third party libraries
 
-Download the following libraries and place them in the same directory
-which contains the mkvtoolnix source code directory. Please refer to
-the mkvtoolnix website for versions and links.
 
-boost
-expat
-libebml
-libmatroska
-libogg
-libvorbis
-zlib
+1. Introduction
+---------------
 
-1.2. Possible compiler errors
+With these tools one can get information about (mkvinfo) Matroska
+files, extract tracks/data from (mkvextract) Matroska files and create
+(mkvmerge) Matroska files from other media files. Matroska is a new
+multimedia file format aiming to become THE new container format for
+the future. You can find more information about it and its underlying
+technology, the Extensible Binary Meta Language (EBML), at
 
-If you have VS 2008 (with no service pack), you may encounter compiler
-error C2471. If so, please download the hotfix from Microsoft:
-http://code.msdn.microsoft.com/KB946040
+http://www.matroska.org/
 
-1.3. Prepare the source tree for building
+The full documentation for each command is now maintained in its
+man page only. Type 'mkvmerge -h' to get you started.
 
-From a command prompt with devenv.exe in the path, run the following
-from your mkvtoolnix source code directory:
+This code comes under the GPL (see www.gnu.org or the file COPYING).
+Modify as needed.
 
-"winbuild\Build using VC8.bat"
+The icons are based on the work of Alexandr Grigorcea. They're
+licensed under the terms of the Creative Commons Attribution 3.0
+Unported license (see http://creativecommons.org/licenses/by/3.0/).
 
-If you do not have devenv.exe in the path, use this command from the
-prompt before running "Build using VC8.bat":
+The newest version can always be found at
+http://www.bunkus.org/videotools/mkvtoolnix/
 
-set PATH=%PATH%;C:\program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\
+Moritz Bunkus <moritz@bunkus.org>
 
-Adjust for different installation paths if neccessary.
 
-1.4. Build mkvtoolnix.sln.
 
-The author of mkvtoolnix is currently not maintaining this port. If
-you, at some later date, need to recreate these project files, please
-be aware that a number of files have the same file names, even within
-a single project. If .obj files are clobbered by the compiler, you
-will get linker errors. Also, zlib uses a dynamic C runtime.
+2. Installation
+---------------
 
+If you want to compile the tools yourself then you must first decide
+if you want to use a 'proper' release version or the current
+development version. As both Matroska and MKVToolNix are under heavy
+development there might be features available in the Subversion
+repository that are not available in the releases. On the other hand
+the Subversion repository version might not even compile.
 
+2.1. Requirements
 
-Section 2 -- Building with a mingw cross compiler
--------------------------------------------------
+In order to compile MKVToolNix you need a couple of libraries. Most of
+them should be available pre-compiled for your distribution. The
+programs and libraries you absolutely need are:
 
-2.1. Preparations
+- A C++ compiler that supports several features of the C++11 standard:
+  initializer lists, range-based 'for' loops, right angle brackets,
+  the 'auto' keyword and lambda functions. For GCC this means at least
+  v4.6.0.
 
-2.1.1. Prerequisites
+- libebml and libmatroska for low-level access to Matroska files.
+  Instructions on how to compile them are a bit further down in this
+  file.
 
-You need:
+- expat ( http://expat.sourceforge.net/ ) -- a light-weight XML
+  parser library
 
-- a mingw cross compiler
-- roughly 2 GB of free space available
-- the "bjam" build utility for the Boost library (see 2.1.3.)
+- libOgg ( http://downloads.xiph.org/releases/ogg/ ) and libVorbis
+  ( http://downloads.xiph.org/releases/vorbis/ ) for access to Ogg/OGM
+  files and Vorbis support
 
-You usually don't need root access unless you have to install mingw
-packages (see 2.1.2.). The mkvtoolnix build process itself can be run
-as any user.
+- zlib ( http://www.zlib.net/ ) -- a compression library
 
-2.1.2. Installing mingw itself
+- Boost ( http://www.boost.org/ ) -- Several of Boost's libraries are
+  used: "format", "RegEx", "filesystem", "system", "foreach",
+  "Range", "rational". At least v1.46.0 is required.
 
-You need a mingw cross compiler with Unicode support enabled in its
-Standard Template Library. If your Linux distribution comes with such
-a compiler then you should use this. Otherwise you'll have to get or
-compile one yourself. How to do the latter is beyond the scope of this
-document.
+You also need the "rake" or "drake" build program or at least the
+programming language Ruby and the "rubygems" package. MKVToolNix comes
+bundled with its own copy of "drake" in case you cannot install it
+yourself. If you want to install it yourself I suggest you use the
+"drake" version because it will be able to use all available CPU cores
+for parallel builds.
 
-Note that "Unicode enabled STL" means that you have to use mingw v4.0
-or newer. The v3.x series does not contain support for wide
-characters.
+Installing "drake" is simple. As root run the following command:
 
-If you're using a Debian or Ubuntu based distribution then all you
-need to do is install three packages:
+gem install drake
 
-  sudo apt-get install mingw32 mingw32-runtime mingw32-binutils
+2.2. Optional components
 
-The rest of the document assumes that the mingw gcc executable is
-called "i586-mingw32msvc-gcc" and can be found in the PATH.
+Other libraries are optional and only limit the features that are
+built. These include:
 
-2.1.3. Obtaining the "bjam" utility
+- wxWidgets ( http://www.wxwidgets.org/ ) -- a cross-platform GUI
+  toolkit. You need this if you want to use mmg (the mkvmerge GUI) or
+  mkvinfo's GUI.
 
-Boost comes with its own build tool called "bjam". This binary must be
-run on your build host, meaning that it must be a Linux executable and
-not the "bjam.exe" for Windows.
+- libFLAC ( http://downloads.xiph.org/releases/flac/ ) for FLAC
+  support (Free Lossless Audio Codec)
 
-Most Linux distributions come with the Boost development tools. For
-Debian and Ubuntu based distributions "bjam" is located in its own
-package that you can install easily:
+- lzo ( http://www.oberhumer.com/opensource/lzo/ ) and bzip2 (
+  http://www.bzip.org/ ) are compression libraries. These are the
+  least important libraries as almost no application supports Matroska
+  content that is compressed with either of these libs. The
+  aforementioned zlib is what every program supports.
 
-  sudo apt-get install bjam
+- libMagic from the "file" package ( http://www.darwinsys.com/file/ )
+  for automatic content type detection
 
-Other distributions might package it in packages named "boost-dev" or
-"boost-devel" or similar.
+- libcurl ( http://curl.haxx.se/ ) for online update checks
 
-2.2. Automatic build script
+2.3. Building libmatroska and libebml
 
-mkvtoolnix contains a script that can download, compile and install
-all required libraries into the directory $HOME/mingw.
+This is optional as MKVToolNix comes with its own set of the
+libraries. It will use them if no version is found on the system.
 
-If the script does not work or you want to do everything yourself
-you'll find instructions for manual compilation in section 2.3.
+Start with the two libraries. Either get libebml 1.2.2 from
+http://dl.matroska.org/downloads/libebml/ and libmatroska 1.3.0 from
+http://dl.matroska.org/downloads/libmatroska/ or a fresh copy from the
+Subversion repository:
 
-2.2.1. Script configuration
+svn co https://svn.matroska.org/svn/matroska/trunk/libebml
+svn co https://svn.matroska.org/svn/matroska/trunk/libmatroska
 
-The script is called winbuild/setup_cross_compilation_env.sh. It
-contains the following variables that can be adjusted to fit your
-needs:
+Change to "libebml/make/linux" and run "make staticlib". If you have
+root-access then run "make install_headers install_staticlib" as
+"root" in order to install the files. Change to
+"libmatroska/make/linux". Once more run "make staticlib". If you have
+root-access then run "make install_headers install_staticlib" as
+"root" in order to install the files.
 
-  BJAM=bjam
+Note that if you don't want the libraries to be installed in
+/usr/local/lib and the headers in /usr/local/include then you can
+alter the prefix (which defaults to /usr/local) by adding an argument
+"prefix=/usr" to the install "make" command. Example:
 
-Path and name of the "bjam" Boost.Build system tool (see section
-2.1.3.)
+make prefix=/usr install_headers install_staticlib
 
-  HOST=i586-mingw32msvc
+2.4. Building MKVtoolNix
 
-The 'host' specification for the standard configure scripts.
+Either download the current release from
+http://www.bunkus.org/videotools/mkvtoolnix/ and unpack it or get a
+development snapshot from my Git repository.
 
-  MINGW_PREFIX=${HOST}-
+ - Getting and building a development snapshot (ignore this subsection
+   if you want to build from a release tarball)
 
-Path and prefix of the cross compiler executables. Defaults to the
-'host' specification followed by '-'. These settings are correct if
-your cross compiler has a standard name, e.g. i586-mingw32msvc-gcc.
+   All you need for Git repository access is to download a Git client
+   from the Git homepage at http://git-scm.com/ . There are clients
+   for both Unix/Linux and Windows.
 
-  INSTALL_DIR=$HOME/mingw
+   First clone my Git repository with this command:
 
-Base installation directory
+   git clone git://github.com/mbunkus/mkvtoolnix.git
 
-  PARALLEL=1
+   Now change to the MKVtoolNix directory with "cd mkvtoolnix" and run
+   "./autogen.sh" which will generate the "configure" script. You need
+   the GNU "autoconf" utility for this step.
 
-Number of processes to execute in parallel. If you have a multi-core
-CPU or multiple CPUs installed set this value to the total number of
-cores you want to use, e.g. for a dual-core CPU use PARALLEL=2.
+If you have run "make install" for both libraries then "configure"
+should automatically find the libraries' position. Otherwise you need
+to tell "configure" where the "libebml" and "libmatroska" include and
+library files are:
 
-2.2.2. Execution
+./configure \
+  --with-extra-includes=/where/i/put/libebml\;/where/i/put/libmatroska \
+  --with-extra-libs=/where/i/put/libebml/make/linux\;/where/i/put/libmatroska/make/linux
 
-From the mkvtoolnix source directory run:
+Now run "rake" and, as "root", "rake install". If you don't have
+"rake" installed yourself then use the version bundled with
+MKVToolNix: "./rake.d/bin/drake" and "./rake.d/bin/drake install".
 
-  ./winbuild/setup_cross_compilation_env.sh
+If you want to use all available CPU cores for building then you have
+to use "drake" instead of "rake". "drake" knows the parameter "-j"
+much like "make" does. You can also set the environment varibale
+DRAKETHREADS to a number and the build process will automatically use
+that number of threads for a parallel build:
 
-If everything works fine you'll end up with a configured mkvtoolnix
-source tree. You just have to run 'make' afterwards. Log files of
-everything can be found in $INSTALL_DIR/logs.
+./drake -j4
 
-2.3. Manual installation
+or
 
-This section mentions libraries with certain version numbers. Unless
-stated otherwise newer (or slightly older) versions will work just as
-well -- just alter the commands to match your actual library version
-numbers.
+export DRAKETHREADS=4
+./drake
 
-This guide assumes that all libraries are downloaded to the
-$HOME/mingw/src directory.
+2.5. Notes for compilation on (Open)Solaris
 
-2.3.1. Preparing the directory tree
+You can compile mkvtoolnix with Sun's sunstudio compiler, but you need
+additional options for "configure":
 
-This guide assumes a certain directory structure. It consists of the
-following directories:
+./configure --prefix=/usr \
+   CXX="/opt/sunstudio12.1/bin/CC -library=stlport4" \
+   CXXFLAGS="-D_POSIX_PTHREAD_SEMANTICS" \
+  --with-extra-includes=/where/i/put/libebml\;/where/i/put/libmatroska \
+  --with-extra-libs=/where/i/put/libebml/make/linux\;/where/i/put/libmatroska/make/linux
 
-$HOME/mingw         -- base directory for everything else
-$HOME/mingw/src     -- contains source code during the build process
-$HOME/mingw/include -- contains include files for installed libraries
-$HOME/mingw/lib     -- contains libraries for installed libraries
 
-Some libraries will not be installed into the .../include and .../lib
-directories but into their own subdirectory, e.g. $HOME/mingw/boost.
 
-Create the directories:
 
-  mkdir $HOME/mingw $HOME/mingw/src $HOME/mingw/include $HOME/mingw/lib
+3. Examples
+-----------
 
-2.3.2. libebml and libmatroska
+Here's a *very* brief example of how you could use mkvmerge
+with mencoder in order to rip a DVD:
 
-Get the source code libraries from
-http://dl.matroska.org/downloads/libebml/ and
-http://dl.matroska.org/downloads/libmatroska/
+a) Extract the audio to PCM audio:
 
-  cd $HOME/mingw/src
-  wget http://dl.matroska.org/downloads/libebml/libebml-1.0.0.tar.bz2 \
-    http://dl.matroska.org/downloads/libmatroska/libmatroska-1.0.0.tar.bz2
-  bunzip2 < libebml-1.0.0.tar.bz2 | tar xf -
-  bunzip2 < libmatroska-1.0.0.tar.bz2 | tar xf -
+mplayer -ao pcm:file=audio.wav -vo null -vc dummy dvd://1
 
-  cd libebml-1.0.0/make/linux
-  perl -pi -e 's/error/info/' Makefile
-  make CXX=i586-mingw32msvc-g++ AR="i586-mingw32msvc-ar rcvu" RANLIB=i586-mingw32msvc-ranlib SHARED=no staticlib
-  cp libebml.a $HOME/mingw/lib/
-  cp -R ../../ebml $HOME/mingw/include/ebml
+b) Normalize the sound (optional)
 
-  cd ../../../libmatroska-1.0.0/make/linux
-  perl -pi -e 's/error/info/' Makefile
-  export CXXFLAGS=-I$HOME/mingw/include
-  export LDFLAGS=-L$HOME/mingw/lib
-  make CXX=i586-mingw32msvc-g++ AR="i586-mingw32msvc-ar rcvu" RANLIB=i586-mingw32msvc-ranlib SHARED=no staticlib
-  cp libmatroska.a $HOME/mingw/lib/
-  cp -R ../../matroska $HOME/mingw/include/matroska
-
-2.3.3. expat
-
-Get precompiled expat binaries for mingw from
-http://sourceforge.net/projects/mingw/files/ You need both the
-"libexpat...-dll-..." and the "libexpat...-dev-..." packages.
-
-  cd $HOME/mingw/src
-  wget 'http://downloads.sourceforge.net/project/mingw/MinGW%20expat/expat-2.0.1-1/libexpat-2.0.1-1-mingw32-dll-1.tar.gz?use_mirror=heanet' \
-    'http://downloads.sourceforge.net/project/mingw/MinGW%20expat/expat-2.0.1-1/libexpat-2.0.1-1-mingw32-dev.tar.gz?use_mirror=heanet'
-  mkdir expat
-  cd expat
-  tar xzf ../libexpat-2.0.1-1-mingw32-dll-1.tar.gz
-  tar xzf ../libexpat-2.0.1-1-mingw32-dev.tar.gz
-  cp -R . $HOME/mingw
+normalize audio.wav
 
-2.3.4. zlib
-
-Get precompiled zlib binaries for mingw from
-http://sourceforge.net/projects/mingw/files/ You need both the
-"libz...-dll-..." and the "libz...-dev-..." packages.
-
-  cd $HOME/mingw/src
-  wget 'http://downloads.sourceforge.net/project/mingw/MinGW%20zlib/zlib-1.2.3-1-mingw32/libz-1.2.3-1-mingw32-dll-1.tar.gz?use_mirror=heanet' \
-    'http://downloads.sourceforge.net/project/mingw/MinGW%20zlib/zlib-1.2.3-1-mingw32/libz-1.2.3-1-mingw32-dev.tar.gz?use_mirror=heanet'
-  mkdir zlib
-  cd zlib
-  tar xzf ../libz-1.2.3-1-mingw32-dll-1.tar.gz
-  tar xzf ../libz-1.2.3-1-mingw32-dev.tar.gz
-  cp -R . $HOME/mingw
-
-2.3.5. iconv
-
-Get precompiled iconv binaries for mingw from
-http://sourceforge.net/projects/mingw/files/ You need the
-"libiconv...-dll-...", the "libiconv...-dev-..." and the
-"libcharset...-dll-..." packages.
-
-  cd $HOME/mingw/src
-  wget 'http://downloads.sourceforge.net/project/mingw/MinGW%20libiconv/libiconv-1.13.1-1/libiconv-1.13.1-1-mingw32-dll-2.tar.lzma?use_mirror=heanet' \
-    'http://downloads.sourceforge.net/project/mingw/MinGW%20libiconv/libiconv-1.13.1-1/libcharset-1.13.1-1-mingw32-dll-1.tar.lzma?use_mirror=heanet' \
-    'http://downloads.sourceforge.net/project/mingw/MinGW%20libiconv/libiconv-1.13.1-1/libiconv-1.13.1-1-mingw32-dev.tar.lzma?use_mirror=heanet'
-  mkdir iconv
-  cd iconv
-  lzma -d < ../libiconv-1.13.1-1-mingw32-dll-2.tar.lzma | tar xf -
-  lzma -d < ../libcharset-1.13.1-1-mingw32-dll-1.tar.lzma | tar xf -
-  lzma -d < ../libiconv-1.13.1-1-mingw32-dev.tar.lzma | tar xf -
-  cp -R . $HOME/mingw
-
-2.3.6. libogg, libvorbis and libFLAC
-
-Get the source code archives from
-http://downloads.xiph.org/releases/ogg/
-http://downloads.xiph.org/releases/vorbis/
-http://downloads.xiph.org/releases/flac/
-
-  cd $HOME/mingw/src
-  wget http://downloads.xiph.org/releases/ogg/libogg-1.1.4.tar.gz \
-    http://downloads.xiph.org/releases/vorbis/libvorbis-1.2.3.tar.bz2 \
-    http://downloads.xiph.org/releases/flac/flac-1.2.1.tar.gz
-  tar xzf libogg-1.1.4.tar.gz
-  bunzip2 < libvorbis-1.2.3.tar.bz2 | tar xf -
-  tar xzf flac-1.2.1.tar.gz
-  export CFLAGS=-I$HOME/mingw/include
-  export CXXFLAGS=-I$HOME/mingw/include
-  export LDFLAGS=-L$HOME/mingw/lib
-  cd libogg-1.1.4
-  ./configure --host=i586-mingw32msvc --prefix=$HOME/mingw
-  make
-  make install
-  cd ../libvorbis-1.2.3
-  ./configure --host=i586-mingw32msvc --prefix=$HOME/mingw
-  make
-  make install
-  cd ../flac-1.2.1
-  export CFLAGS="-I$HOME/mingw -DSIZE_T_MAX=UINT_MAX"
-  export CXXFLAGS="-I$HOME/mingw -DSIZE_T_MAX=UINT_MAX"
-  ./configure --host=i586-mingw32msvc --prefix=$HOME/mingw
-  make
-  make install
-
-2.3.7. boost
-
-Get the Boost source code archive from http://www.boost.org/
-
-Building Boost requires tht you tell the "bjam" build utility which
-gcc to use. Note that you also need a working "bjam" binary before
-building this library. See section 2.1.3 for details.
-
-  cd $HOME/mingw/src
-  wget 'http://downloads.sourceforge.net/project/boost/boost/1.42.0/boost_1_42_0.tar.bz2?use_mirror=heanet'
-  bunzip2 < boost_1_42_0.tar.bz2 | tar xf -
-  cd boost_1_42_0
-  ./bootstrap.sh --with-bjam=/usr/bin/bjam --without-libraries=python,mpi \
-    --without-icu --prefix=$HOME/mingw/boost
-  echo "using gcc : : i586-mingw32msvc-g++ ;" > user-config.jam
-  bjam \
-    target-os=windows threading=single threadapi=win32 \
-    link=static runtime-link=static variant=release \
-    include=$HOME/mingw/include \
-    --user-config=user-config.jam --prefix=$HOME/mingw/boost \
-    install
-  cd $HOME/mingw/boost/lib
-  for i in *.lib ; do mv $i $(basename $i .lib).a ; done
-  for i in *.a ; do i586-mingw32msvc-ranlib $i ; done
-
-Check if $HOME/prog/mingw/lib contains the filesystem, system and
-regex libraries:
-
-  ls $HOME/mingw/boost/lib/libboost_{filesystem,system,regex}*
-
-2.3.8. wxWidgets
-
-Get the full wxWidgets source archive from http://www.wxwidgets.org/
-
-  cd $HOME/mingw/src
-  wget 'http://downloads.sourceforge.net/project/wxwindows/wxAll/2.8.10/wxWidgets-2.8.10.tar.bz2?use_mirror=ovh'
-  bunzip2 < wxWidgets-2.8.10.tar.bz2 | tar xf -
-  cd wxWidgets-2.8.10
-  export CFLAGS=-I$HOME/mingw/include
-  export CXXFLAGS=-I$HOME/mingw/include
-  export LDFLAGS=-L$HOME/mingw/lib
-  ./configure --enable-gif --enable-unicode --disable-compat24 --disable-compat26 \
-    --host=i586-mingw32msvc --prefix=$HOME/mingw
-  make
-  make install
-
-2.3.9. gettext (optional)
-
-Get precompiled gettext binaries for mingw from
-http://sourceforge.net/projects/mingw/files/ You need both the
-"libintl...-dll-..." and the "gettext...-dev-..." packages.
-
-  cd $HOME/mingw/src
-  wget 'http://downloads.sourceforge.net/project/mingw/MinGW%20gettext/gettext-0.17-1/libintl-0.17-1-mingw32-dll-8.tar.lzma?use_mirror=heanet' \
-    'http://downloads.sourceforge.net/project/mingw/MinGW%20gettext/gettext-0.17-1/gettext-0.17-1-mingw32-dev.tar.lzma?use_mirror=heanet'
-  mkdir gettext
-  cd gettext
-  lzma -d < ../libintl-0.17-1-mingw32-dll-8.tar.lzma | tar xf -
-  lzma -d < ../gettext-0.17-1-mingw32-dev.tar.lzma | tar xf -
-  cp -R . $HOME/mingw
-
-2.3.10. file/libmagic (optional)
-
-Get precompiled binaries for 'regex' and 'file' for mingw from
-http://gnuwin32.sourceforge.net/packages.html You need both the
-"...-bin.zip" and the "...-lib.zip" packages.
-
-  cd $HOME/mingw/src
-  wget 'http://downloads.sourceforge.net/project/gnuwin32/regex/2.7/regex-2.7-bin.zip' \
-    'http://downloads.sourceforge.net/project/gnuwin32/regex/2.7/regex-2.7-lib.zip' \
-    'http://downloads.sourceforge.net/project/gnuwin32/file/5.03/file-5.03-bin.zip' \
-    'http://downloads.sourceforge.net/project/gnuwin32/file/5.03/file-5.03-lib.zip'
-  mkdir file
-  cd file
-  unzip -o ../regex-2.7-bin.zip
-  unzip -o ../regex-2.7-lib.zip
-  unzip -o ../file-5.03-bin.zip
-  unzip -o ../file-5.03-lib.zip
-  cp -R . $HOME/mingw
-
-2.3.11. bzip2 (optional)
-
-Get precompiled bzip2 binaries for mingw from
-http://sourceforge.net/projects/mingw/files/ You need both the
-"libbz2...-dll-..." and the "libbz2...-dev-..." packages.
-
-  cd $HOME/mingw/src
-  wget 'http://downloads.sourceforge.net/project/mingw/MinGW%20bzip2/release%201.0.5-2/libbz2-1.0.5-2-mingw32-dll-2.tar.gz' \
-   'http://downloads.sourceforge.net/project/mingw/MinGW%20bzip2/release%201.0.5-2/bzip2-1.0.5-2-mingw32-dev.tar.gz'
-  mkdir libbz2
-  cd libbz2
-  tar xzf ../libbz2-1.0.5-2-mingw32-dll-2.tar.gz
-  tar xzf ../bzip2-1.0.5-2-mingw32-dev.tar.gz
-  perl -pi -e 'if (m/Core.*low.*level.*library.*functions/) {
-      $_ .= qq|
-#undef BZ_API
-#undef BZ_EXTERN
-#define BZ_API(func) func
-#define BZ_EXTERN extern
-|;
-    }
-    $_' include/bzlib.h
-  cp -R . $HOME/mingw
-
-2.3.12. mkvtoolnix itself
-
-Change back into the mkvtoolnix source code directory and execute the
-following commands:
-
-  ./configure \
-    --host=i586-mingw32msvc \
-    --with-extra-includes=$HOME/mingw/include \
-    --with-extra-libs=$HOME/mingw/lib \
-    --with-boost=$HOME/mingw/boost \
-    --with-wx-config=$HOME/mingw/bin/wx-config
-  make
-
-You're done.
+c) Encode the audio to Vorbis:
+
+oggenc -q3 -oaudio-q3.ogg audio.wav
+
+d) Somehow calculate the bitrate for your video. Use something like...
+
+video_size = (target_size - audio-size) / 1.005
+video_bitrate = video_size / length / 1024 * 8
+
+target_size, audio_size in bytes
+length in seconds
+1.005 is the overhead caused by putting the streams into an Matroska file
+  (about 0.5%, that's correct ;)).
+video_bitrate will be in kbit/s
+
+e) Use the two-pass encoding for the video:
+
+mencoder -oac copy -ovc lavc \
+  -lavcopts vcodec=mpeg4:vbitrate=1000:vhq:vqmin=2:vpass=1 \
+  -vf scale=....,crop=..... \
+  -o /dev/null dvd://1
+
+mencoder -oac copy -ovc lavc \
+  -lavcopts vcodec=mpeg4:vbitrate=1000:vhq:vqmin=2:vpass=2 \
+  -vf scale=....,crop=..... \
+  -o movie.avi dvd://1
+
+f) Merge:
+
+mkvmerge -o movie.mkv -A movie.avi audio-q3.ogg
+
+-A is necessary in order to avoid copying the raw PCM (or MP3) audio as well.
+
+
+
+4. Reporting bugs
+-----------------
+
+If you're sure you've found a bug - e.g. if one of my programs crashes
+with an obscur error message, or if the resulting file is missing part
+of the original data, then by all means submit a bug report.
+
+I use Trac (https://www.bunkus.org/trac/) as my bug database. You can
+submit your bug reports there. Please be as verbose as possible -
+e.g. include the command line, if you use Windows or Linux etc.pp.
+
+If at all possible please include sample files as well so that I can
+reproduce the issue. If they are larger than 1M then please upload
+them somewhere (e.g. to my FTP server: host name "ftp.bunkus.org",
+user name "upload", password "only" -- each without the quotes) and
+post a link or note in the bug report.
