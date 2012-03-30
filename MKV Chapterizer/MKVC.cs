@@ -151,6 +151,8 @@ namespace MKV_Chapterizer
                         btnMerge.Enabled = true;
                         pnlChapterDB.Enabled = true;
 
+                        lblStatus.Text = string.Empty;
+
                         ShowTutorialMessage = false;
                         ShowProgressBar = false;
                         pnlModeChange.Enabled = true;
@@ -178,6 +180,7 @@ namespace MKV_Chapterizer
 
                         lblNumOfChapters.Enabled = false;
                         lblChapterCount.Text = string.Empty;
+                        lblStatus.Text = string.Empty;
                         lblChapterInterval.Enabled = false;
                         lblTrackbarValue.Enabled = false;
                         lblStatus.Visible = false;

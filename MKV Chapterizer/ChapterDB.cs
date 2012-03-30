@@ -128,12 +128,6 @@ namespace MKV_Chapterizer
             }
         }
 
-        private void CenterLabel(Label label)
-        {
-            int formMiddle = Width;
-            label.Location = new Point(formMiddle - label.Width / 2, label.Location.Y);
-        }
-
         private List<ChapterDBAccess.ChapterSet> Filter(List<ChapterDBAccess.ChapterSet> list)
         {
             int totalsum;
