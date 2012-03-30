@@ -159,6 +159,9 @@ namespace MKV_Chapterizer
 
                         btnAdd.Enabled = true;
                         btnRemove.Enabled = true;
+                        btnAddFolder.Enabled = true;
+                        btnImport.Enabled = true;
+                        btnExport.Enabled = true;
                         lboxFiles.Enabled = true;
 
                         grpboxChapterFile.Enabled = true;
@@ -224,6 +227,9 @@ namespace MKV_Chapterizer
 
                         btnAdd.Enabled = true;
                         btnRemove.Enabled = true;
+                        btnAddFolder.Enabled = true;
+                        btnImport.Enabled = true;
+                        btnExport.Enabled = true;
                         lboxFiles.Enabled = true;
                         grpboxChapterFile.Enabled = true;
                         grpboxMKVHasChapters.Enabled = true;
@@ -241,6 +247,9 @@ namespace MKV_Chapterizer
                         lboxFiles.Enabled = false;
                         btnAdd.Enabled = false;
                         btnRemove.Enabled = false;
+                        btnAddFolder.Enabled = false;
+                        btnImport.Enabled = false;
+                        btnExport.Enabled = false;
                         pnlChapterDB.Enabled = false;
 
                         grpboxChapterFile.Enabled = false;
