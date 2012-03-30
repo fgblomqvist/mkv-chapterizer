@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.ComponentModel;
 using System.Security.Permissions;
 
 namespace MKV_Chapterizer
@@ -38,12 +35,6 @@ namespace MKV_Chapterizer
         [DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool CopyFileEx(string lpExistingFileName, string lpNewFileName, CopyProgressRoutine lpProgressRoutine, IntPtr lpData, ref bool pbCancel, int dwCopyFlags);
 
-        private CopyFileCallbackAction ProgressChanged(string source, string destination, object state, long totalFileSize, long totalBytesTransferred)
-        {
-            //Update progressbar here for example
-            return CopyFileCallbackAction.Continue;
-        }
-
         public static void CopyFile(string source, string destination)
         {
             CopyFile(source, destination, CopyFileOptions.None);
@@ -61,11 +52,18 @@ namespace MKV_Chapterizer
 
         public static void CopyFile(string source, string destination, CopyFileOptions options, CopyFileCallback callback, object state)
         {
-            if (source == null) throw new ArgumentNullException("source");
+            if (source == null)
+            {
+                throw new ArgumentNullException("source");
+            }
             if (destination == null)
+            {
                 throw new ArgumentNullException("destination");
+            }
             if ((options & ~CopyFileOptions.All) != 0)
+            {
                 throw new ArgumentOutOfRangeException("options");
+            }
 
             new FileIOPermission(FileIOPermissionAccess.Read, source).Demand();
             new FileIOPermission(FileIOPermissionAccess.Write, destination).Demand();
@@ -81,13 +79,13 @@ namespace MKV_Chapterizer
 
         private class CopyProgressData
         {
-            private string _source = null;
-            private string _destination = null;
-            private CopyFileCallback _callback = null;
-            private object _state = null;
+            private string _source;
+            private string _destination;
+            private CopyFileCallback _callback;
+            private object _state;
 
             public CopyProgressData(string source, string destination,
-                CopyFileCallback callback, object state)
+                                    CopyFileCallback callback, object state)
             {
                 _source = source;
                 _destination = destination;
@@ -102,7 +100,7 @@ namespace MKV_Chapterizer
                 IntPtr sourceFile, IntPtr destinationFile, IntPtr data)
             {
                 return (int)_callback(_source, _destination, _state,
-                    totalFileSize, totalBytesTransferred);
+                                      totalFileSize, totalBytesTransferred);
             }
         }
     }

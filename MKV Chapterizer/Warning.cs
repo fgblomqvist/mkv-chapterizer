@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MKV_Chapterizer
@@ -22,7 +16,7 @@ namespace MKV_Chapterizer
             {
                 Properties.Settings.Default.showMKVMergeWarning = false;
             }
-            this.Close();
+            Close();
         }
     }
 }

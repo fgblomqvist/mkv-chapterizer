@@ -130,13 +130,10 @@ namespace MKV_Chapterizer
 
         private List<ChapterDBAccess.ChapterSet> Filter(List<ChapterDBAccess.ChapterSet> list)
         {
-            int totalsum;
-            double goodsum;
-
             foreach (ChapterDBAccess.ChapterSet chapterSet in list)
             {
-                totalsum = chapterSet.Chapters.Count * 2;
-                goodsum = totalsum;
+                int totalsum = chapterSet.Chapters.Count * 2;
+                double goodsum = totalsum;
 
                 foreach (ChapterDBAccess.Chapter chapter in chapterSet)
                 {
@@ -149,13 +146,13 @@ namespace MKV_Chapterizer
                     {
                         goodsum -= 0.5; //Not that bad, but still bad
                     }
-                    if (chapter.Time == null || chapter.Time.ToString() == "00:00:00")
+                    if (chapter.Time == TimeSpan.Zero || chapter.Time.ToString() == "00:00:00")
                     {
                         goodsum--;
                     }
                 }
 
-                chapterSet.Quality = (int)Math.Round(((decimal)goodsum / (decimal)totalsum) * 5, 0, MidpointRounding.ToEven);
+                chapterSet.Quality = (int)Math.Round(((decimal)goodsum / totalsum) * 5, 0, MidpointRounding.ToEven);
             }
             return list;
         }
@@ -178,12 +175,12 @@ namespace MKV_Chapterizer
 
         private void bwSearch_DoWork(object sender, DoWorkEventArgs e)
         {
-            List<ChapterDBAccess.ChapterSet> result = null;
+            List<ChapterDBAccess.ChapterSet> result;
             try
             {
                 result = chapterDBAccess.GrabChapters((string)e.Argument);
 
-                if (bwSearch.CancellationPending == true)
+                if (bwSearch.CancellationPending)
                 {
                     //Just set the e.Cancel to true
                     e.Cancel = true;
@@ -227,7 +224,7 @@ namespace MKV_Chapterizer
             {
                 lblStatus.Text = e.Error.Message;
             }
-            else if (e.Cancelled == true)
+            else if (e.Cancelled)
             {
                 //It got cancelled
             }

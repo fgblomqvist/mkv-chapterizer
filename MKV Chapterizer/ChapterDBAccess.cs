@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
@@ -11,7 +9,7 @@ namespace MKV_Chapterizer
 {
     public class ChapterDBAccess
     {
-        private string dbUrl = "http://chapterdb.org";
+        private const string dbUrl = "http://chapterdb.org";
 
         #region customTypes
 
@@ -36,7 +34,7 @@ namespace MKV_Chapterizer
 
             public IEnumerator GetEnumerator()
             {
-                return (IEnumerator)this;
+                return this;
             }
 
             public bool MoveNext()
@@ -46,11 +44,8 @@ namespace MKV_Chapterizer
                     ++position;
                     return true;
                 }
-                else
-                {
-                    Reset();
-                    return false;
-                }
+                Reset();
+                return false;
             }
 
             public void Reset()
@@ -70,12 +65,12 @@ namespace MKV_Chapterizer
         #endregion
 
         #region customExceptions
-        [Serializable()]
-        public class NoResultsException : System.Exception
+        [Serializable]
+        public class NoResultsException : Exception
         {
-            public NoResultsException() : base() { }
+            public NoResultsException() { }
             public NoResultsException(string message) : base(message) { }
-            public NoResultsException(string message, System.Exception inner) : base(message, inner) { }
+            public NoResultsException(string message, Exception inner) : base(message, inner) { }
 
             // A constructor is needed for serialization when an
             // exception propagates from a remoting server to the client. 
@@ -101,56 +96,46 @@ namespace MKV_Chapterizer
             {
                 throw new NoResultsException();
             }
-            else
+
+            foreach (XmlNode chapterInfo in chapterInfos)
             {
 
-                foreach (XmlNode chapterInfo in chapterInfos)
+                ChapterSet chapterSet = new ChapterSet();
+
+                XmlDocument xdox = new XmlDocument();
+                xdox.LoadXml(chapterInfo.OuterXml);
+
+                XmlNodeList nameNode = xdox.GetElementsByTagName("title");
+                XmlNodeList chapterNodes = xdox.GetElementsByTagName("chapter");
+
+                chapterSet.Name = nameNode[0].InnerText;
+
+                foreach (XmlNode chapter in chapterNodes)
                 {
+                    Chapter pChapter = new Chapter();
+                    pChapter.Name = chapter.Attributes["name"].Value;
+                    pChapter.Time = TimeSpan.Parse(chapter.Attributes["time"].Value);
 
-                    ChapterSet chapterSet = new ChapterSet();
-
-                    XmlDocument xdox = new XmlDocument();
-                    xdox.LoadXml(chapterInfo.OuterXml);
-
-                    XmlNodeList nameNode = xdox.GetElementsByTagName("title");
-                    XmlNodeList chapterNodes = xdox.GetElementsByTagName("chapter");
-
-                    chapterSet.Name = nameNode[0].InnerText;
-
-                    foreach (XmlNode chapter in chapterNodes)
-                    {
-                        Chapter pChapter = new Chapter();
-                        pChapter.Name = chapter.Attributes["name"].Value;
-                        pChapter.Time = TimeSpan.Parse(chapter.Attributes["time"].Value);
-
-                        chapterSet.Chapters.Add(pChapter);
-                    }
-
-                    Results.Add(chapterSet);
-
+                    chapterSet.Chapters.Add(pChapter);
                 }
 
-                return Results;
+                Results.Add(chapterSet);
+
             }
+
+            return Results;
         }
 
         private string GetXml(string url)
         {
-            string xml = null;
+            string xml;
             using (WebClient client = new WebClient())
             {
                 client.Headers["User-Agent"] = Application.ProductName + " " + Application.ProductVersion;
                 client.Headers["ApiKey"] = "a784c7d08e5fe192ca247d1a2dd5c27f";
                 client.Headers["UserName"] = "MKV Chapterizer";
 
-                try
-                {
-                    xml = client.DownloadString(url);
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
+                xml = client.DownloadString(url);
             }
             return xml;
         }
