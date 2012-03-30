@@ -201,7 +201,7 @@ namespace MKV_Chapterizer
                         }
 
                         //Set the tut message
-                        lblTutorial.Text = "Start by either dropping a MKV file on me or switching to batch mode";
+                        lblTutorial.Text = "Start by either dropping a MKV file on me or switching to advanced mode";
 
                         btnMerge.Text = "Chapterize";
                         progressBar.Value = 0;
@@ -1267,7 +1267,7 @@ namespace MKV_Chapterizer
         {
             if (UIMode == UIModes.Simple)
             {
-                //Change to batch mode
+                //Change to advanced mode
                 UIMode = UIModes.Advanced;
                 UIStatus = UIStatuses.Input;
             }
