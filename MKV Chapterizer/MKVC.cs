@@ -1130,7 +1130,6 @@ namespace MKV_Chapterizer
         {
             if (log != null)
             {
-                //TODO: Fix error if the log is unwriteable
                 log.Write(message);
             }
         }
