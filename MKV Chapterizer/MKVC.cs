@@ -594,8 +594,54 @@ namespace MKV_Chapterizer
                 return;
             }
 
-            UseChapterizer();
+            if (UIMode == UIModes.Simple && ModifierKeys == Keys.Shift)
+            {
+                if (CreateChapterFile(lboxFiles.Items[0].ToString()))
+                {
+                    UIStatus = UIStatuses.AwaitFileDrop;
+                }
+            }
+            else
+            {
+                UseChapterizer();
+            }
+        }
 
+        private bool CreateChapterFile(string moviePath)
+        {
+            //Only produce a chapter-file
+
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.AddExtension = true;
+            dlg.CheckPathExists = true;
+            dlg.DefaultExt = "xml";
+            dlg.DereferenceLinks = true;
+            dlg.FileName = "chapters.xml";
+            dlg.Filter = "(*.xml)|*.xml";
+            dlg.InitialDirectory = Path.GetDirectoryName(lboxFiles.Items[0].ToString());
+            dlg.Title = "Please choose where to save the chapterfile";
+            dlg.ValidateNames = true;
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                //Create a chapterset
+                if (Mode == ChapterMode.Interval)
+                {
+                    //Create a chapterfile at chosen destination
+                    thechapterizer.CustomChapterName = Properties.Settings.Default.customChapterName;
+                    thechapterizer.CreateChapterFile(
+                        thechapterizer.CreateChapterSet(thechapterizer.GetMovieRuntime(moviePath),
+                                                        ConvertToSeconds(tbarInterval.Value, cboxUnit.Text)),
+                        dlg.FileName);
+                }
+                else if (Mode == ChapterMode.ChapterDB && chapterSet != null)
+                {
+                    thechapterizer.CustomChapterSet = chapterSet;
+                    thechapterizer.CreateChapterFile(chapterSet, dlg.FileName);
+                }
+                return true;
+            }
+            return false;
         }
 
         private int ConvertToSeconds(int p, string currentUnit)
