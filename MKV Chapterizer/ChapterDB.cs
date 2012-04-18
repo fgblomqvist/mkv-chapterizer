@@ -99,6 +99,8 @@ namespace MKV_Chapterizer
 
                 lviewChapters.Items.Add(new ListViewItem(new string[] {chapter.Name, time}));
             }
+
+            lblSelected.Text = string.Format("You have selected {0} chapters", chapterSet.Chapters.Count);
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -159,16 +161,32 @@ namespace MKV_Chapterizer
 
         private void dgViewResults_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgViewResults.SelectedRows.Count >= 1)
+            if (dgViewResults.SelectedRows.Count < 1)
             {
-                ChapterDBAccess.ChapterSet selected = (ChapterDBAccess.ChapterSet)dgViewResults.SelectedRows[0].Cells[2].Value;
-                LoadChapters(selected);
+                return;
             }
+
+            ChapterDBAccess.ChapterSet selected = (ChapterDBAccess.ChapterSet)dgViewResults.SelectedRows[0].Cells[2].Value;
+            LoadChapters(selected);
         }
 
         private void btnUse_Click(object sender, EventArgs e)
         {
-            ChosenChapter = (ChapterDBAccess.ChapterSet)dgViewResults.SelectedRows[0].Cells[2].Value;
+            if (lviewChapters.SelectedItems.Count == 0)
+            {
+                ChosenChapter = (ChapterDBAccess.ChapterSet)dgViewResults.SelectedRows[0].Cells[2].Value;
+            }
+            else
+            {
+                //User has selected only a few of the chapters of the selected set
+                ChapterDBAccess.ChapterSet newSet = new ChapterDBAccess.ChapterSet();
+                foreach(ListViewItem item in lviewChapters.SelectedItems)
+                {
+                    newSet.Chapters.Add(new ChapterDBAccess.Chapter(item.Text, TimeSpan.Parse(item.SubItems[1].Text)));
+                }
+
+                ChosenChapter = newSet;
+            }
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -233,6 +251,18 @@ namespace MKV_Chapterizer
         private void ChapterDB_FormClosing(object sender, FormClosingEventArgs e)
         {
             bwSearch.CancelAsync();
+        }
+
+        private void lviewChapters_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lviewChapters.SelectedItems.Count > 0)
+            {
+                lblSelected.Text = string.Format("You have selected {0} chapters", lviewChapters.SelectedItems.Count);
+            }
+            else
+            {
+                lblSelected.Text = string.Format("You have selected {0} chapters", lviewChapters.Items.Count);
+            }
         }
     }
 }

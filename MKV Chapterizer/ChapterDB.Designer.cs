@@ -41,6 +41,7 @@
             this.lblStatus = new System.Windows.Forms.Label();
             this.btnUse = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.lblSelected = new System.Windows.Forms.Label();
             this.grpboxResults.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgViewResults)).BeginInit();
             this.grpboxChapters.SuspendLayout();
@@ -58,14 +59,14 @@
             this.lblName.AutoSize = true;
             this.lblName.Location = new System.Drawing.Point(6, 24);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(38, 13);
+            this.lblName.Size = new System.Drawing.Size(39, 13);
             this.lblName.TabIndex = 0;
             this.lblName.Text = "Name:";
             // 
             // btnSearch
             // 
             this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSearch.Location = new System.Drawing.Point(329, 19);
+            this.btnSearch.Location = new System.Drawing.Point(363, 19);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 23);
             this.btnSearch.TabIndex = 1;
@@ -79,7 +80,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtboxSearchName.Location = new System.Drawing.Point(50, 21);
             this.txtboxSearchName.Name = "txtboxSearchName";
-            this.txtboxSearchName.Size = new System.Drawing.Size(273, 20);
+            this.txtboxSearchName.Size = new System.Drawing.Size(307, 20);
             this.txtboxSearchName.TabIndex = 2;
             this.txtboxSearchName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtboxSearchName_KeyDown);
             // 
@@ -89,7 +90,7 @@
             this.grpboxResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpboxResults.Location = new System.Drawing.Point(0, 0);
             this.grpboxResults.Name = "grpboxResults";
-            this.grpboxResults.Size = new System.Drawing.Size(202, 395);
+            this.grpboxResults.Size = new System.Drawing.Size(218, 372);
             this.grpboxResults.TabIndex = 3;
             this.grpboxResults.TabStop = false;
             this.grpboxResults.Text = "Results";
@@ -111,7 +112,7 @@
             this.dgViewResults.RowTemplate.Height = 15;
             this.dgViewResults.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.dgViewResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgViewResults.Size = new System.Drawing.Size(196, 376);
+            this.dgViewResults.Size = new System.Drawing.Size(212, 353);
             this.dgViewResults.TabIndex = 0;
             this.dgViewResults.SelectionChanged += new System.EventHandler(this.dgViewResults_SelectionChanged);
             this.dgViewResults.Sorted += new System.EventHandler(this.dgViewResults_Sorted);
@@ -122,7 +123,7 @@
             this.grpboxChapters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grpboxChapters.Location = new System.Drawing.Point(0, 0);
             this.grpboxChapters.Name = "grpboxChapters";
-            this.grpboxChapters.Size = new System.Drawing.Size(206, 395);
+            this.grpboxChapters.Size = new System.Drawing.Size(224, 372);
             this.grpboxChapters.TabIndex = 4;
             this.grpboxChapters.TabStop = false;
             this.grpboxChapters.Text = "Chapters";
@@ -133,12 +134,14 @@
             this.columnHeaderName,
             this.columnHeaderTime});
             this.lviewChapters.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lviewChapters.FullRowSelect = true;
             this.lviewChapters.Location = new System.Drawing.Point(3, 16);
             this.lviewChapters.Name = "lviewChapters";
-            this.lviewChapters.Size = new System.Drawing.Size(200, 376);
+            this.lviewChapters.Size = new System.Drawing.Size(218, 353);
             this.lviewChapters.TabIndex = 0;
             this.lviewChapters.UseCompatibleStateImageBehavior = false;
             this.lviewChapters.View = System.Windows.Forms.View.Details;
+            this.lviewChapters.SelectedIndexChanged += new System.EventHandler(this.lviewChapters_SelectedIndexChanged);
             // 
             // columnHeaderName
             // 
@@ -148,6 +151,7 @@
             // columnHeaderTime
             // 
             this.columnHeaderTime.Text = "Time";
+            this.columnHeaderTime.Width = 78;
             // 
             // grpboxSearch
             // 
@@ -159,18 +163,18 @@
             this.grpboxSearch.Controls.Add(this.txtboxSearchName);
             this.grpboxSearch.Location = new System.Drawing.Point(12, 12);
             this.grpboxSearch.Name = "grpboxSearch";
-            this.grpboxSearch.Size = new System.Drawing.Size(412, 80);
+            this.grpboxSearch.Size = new System.Drawing.Size(446, 80);
             this.grpboxSearch.TabIndex = 5;
             this.grpboxSearch.TabStop = false;
             this.grpboxSearch.Text = "Search";
             // 
             // lblStatus
             // 
-            this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblStatus.Location = new System.Drawing.Point(135, 55);
+            this.lblStatus.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(153, 53);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(132, 13);
+            this.lblStatus.Size = new System.Drawing.Size(138, 13);
             this.lblStatus.TabIndex = 3;
             this.lblStatus.Text = "Please enter a moviename";
             // 
@@ -178,9 +182,9 @@
             // 
             this.btnUse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUse.Location = new System.Drawing.Point(12, 499);
+            this.btnUse.Location = new System.Drawing.Point(12, 493);
             this.btnUse.Name = "btnUse";
-            this.btnUse.Size = new System.Drawing.Size(412, 27);
+            this.btnUse.Size = new System.Drawing.Size(446, 27);
             this.btnUse.TabIndex = 6;
             this.btnUse.Text = "Use";
             this.btnUse.UseVisualStyleBackColor = true;
@@ -201,15 +205,26 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.grpboxChapters);
-            this.splitContainer1.Size = new System.Drawing.Size(412, 395);
-            this.splitContainer1.SplitterDistance = 202;
+            this.splitContainer1.Size = new System.Drawing.Size(446, 372);
+            this.splitContainer1.SplitterDistance = 218;
             this.splitContainer1.TabIndex = 7;
+            // 
+            // lblSelected
+            // 
+            this.lblSelected.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lblSelected.AutoSize = true;
+            this.lblSelected.Location = new System.Drawing.Point(150, 473);
+            this.lblSelected.Name = "lblSelected";
+            this.lblSelected.Size = new System.Drawing.Size(153, 13);
+            this.lblSelected.TabIndex = 4;
+            this.lblSelected.Text = "You have selected 0 chapters";
             // 
             // ChapterDB
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(436, 538);
+            this.ClientSize = new System.Drawing.Size(470, 532);
+            this.Controls.Add(this.lblSelected);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.btnUse);
             this.Controls.Add(this.grpboxSearch);
@@ -217,6 +232,7 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ChapterDB";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChapterDB_FormClosing);
             this.Load += new System.EventHandler(this.ChapterDB_Load);
             this.grpboxResults.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgViewResults)).EndInit();
@@ -228,7 +244,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.FormClosing +=new System.Windows.Forms.FormClosingEventHandler(ChapterDB_FormClosing);
+            this.PerformLayout();
 
         }
 
@@ -247,5 +263,6 @@
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.DataGridView dgViewResults;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Label lblSelected;
     }
 }

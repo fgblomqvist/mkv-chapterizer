@@ -17,6 +17,14 @@ namespace MKV_Chapterizer
         {
             public string Name;
             public TimeSpan Time;
+
+            public Chapter() {}
+
+            public Chapter(string name, TimeSpan time)
+            {
+                Name = name;
+                Time = time;
+            }
         }
 
         public class ChapterSet : IEnumerable, IEnumerator
