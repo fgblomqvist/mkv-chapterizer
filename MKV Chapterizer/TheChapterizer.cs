@@ -54,13 +54,20 @@ namespace MKV_Chapterizer
         //   External used Properties and Enumerators
         //------------------------------------------------------
 
-        #region Operations enum
+        #region Enums
 
         public enum Operations
         {
             Chapterize,
             Chapterfile,
             ExtractChapter,
+        }
+
+        public enum ChapterModes
+        {
+            Interval,
+            File,
+            ChapterSet,
         }
 
         #endregion
@@ -123,6 +130,16 @@ namespace MKV_Chapterizer
         /// The chapter interval in seconds.
         /// </value>
         public int ChapterInterval { get; set; }
+
+        /// <summary>
+        /// Gets or sets the custom chapter file.
+        /// </summary>
+        /// <value>
+        /// The path to a chapter file which mkvmerge supports
+        /// </value>
+        public string CustomChapterFile { get; set; }
+
+        public ChapterModes ChapterMode { get; set; }
         #endregion
 
         /// <summary>
@@ -695,15 +712,20 @@ namespace MKV_Chapterizer
             var info = new FileInfo(file);
             String cpath;
 
-            if (CustomChapterSet == null)
+            if (ChapterMode == ChapterModes.ChapterSet)
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
-                cpath = CreateChapterFile(CreateChapterSet(GetMovieRuntime(info.FullName), ChapterInterval), workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CustomChapterSet, workDir + "\\chapters.xml");
+            }
+            else if (ChapterMode == ChapterModes.File)
+            {
+                WriteLog("Using pre-set chapterfile: " + CustomChapterFile);
+                cpath = CustomChapterFile;
             }
             else
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
-                cpath = CreateChapterFile(CustomChapterSet, workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CreateChapterSet(GetMovieRuntime(info.FullName), ChapterInterval), workDir + "\\chapters.xml");
             }
 
             string newFileName = CustomOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info.FullName)) + ".mkv";
@@ -754,7 +776,10 @@ namespace MKV_Chapterizer
                         Thread.Sleep(1000);
                     }
 
-                    File.Delete(cpath);
+                    if (ChapterMode != ChapterModes.File)
+                    {
+                        File.Delete(cpath);
+                    }
                     return workDir + "\\" + newFileName;
                 }
                 //End Check
@@ -772,7 +797,11 @@ namespace MKV_Chapterizer
                 }
             }
 
-            File.Delete(cpath);
+            if (ChapterMode != ChapterModes.File)
+            {
+                File.Delete(cpath);
+            }
+
             return new FileInfo(workDir + "\\" + newFileName);
         }
 
@@ -884,18 +913,22 @@ namespace MKV_Chapterizer
                 }
                 //End Check
 
-                if (str != "")
+                if (str == "")
                 {
-                    if (str.Contains("Progress"))
-                    {
-                        Progress = Convert.ToInt32(parseProgress(str)) / 2;
-                    }
-                    else if (str.Contains("Error"))
-                    {
-                        MessageBox.Show(null, str, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    continue;
+                }
+
+                if (str.Contains("Progress"))
+                {
+                    Progress = Convert.ToInt32(parseProgress(str)) / 2;
+                }
+                else if (str.Contains("Error"))
+                {
+                    MessageBox.Show(null, str, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+
+            //Add the new
 
             var info2 = new FileInfo(workDir + "\\" + newFileName);
             var MI = new MediaInfo();
@@ -903,15 +936,21 @@ namespace MKV_Chapterizer
             MI.Open(info2.FullName);
 
             string cpath;
-            if (CustomChapterSet == null)
+
+            if (ChapterMode == ChapterModes.ChapterSet)
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
-                cpath = CreateChapterFile(CreateChapterSet(GetMovieRuntime(info2.FullName), ChapterInterval), workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CustomChapterSet, workDir + "\\chapters.xml");
+            }
+            else if (ChapterMode == ChapterModes.File)
+            {
+                WriteLog("Using pre-set chapterfile: " + CustomChapterFile);
+                cpath = CustomChapterFile;
             }
             else
             {
                 WriteLog("Creating chapterfile: " + workDir + "\\chapters.xml");
-                cpath = CreateChapterFile(CustomChapterSet, workDir + "\\chapters.xml");
+                cpath = CreateChapterFile(CreateChapterSet(GetMovieRuntime(info.FullName), ChapterInterval), workDir + "\\chapters.xml");
             }
 
             string newFileName2 = CustomOutputName.Replace("%O", Path.GetFileNameWithoutExtension(info2.FullName)) + ".mkv";
@@ -940,7 +979,10 @@ namespace MKV_Chapterizer
                         Thread.Sleep(1000);
                     }
 
-                    File.Delete(cpath);
+                    if (ChapterMode != ChapterModes.File)
+                    {
+                        File.Delete(cpath);
+                    }
                     return workDir + "\\" + newFileName;
                 }
                 //End Check
@@ -958,7 +1000,11 @@ namespace MKV_Chapterizer
                 }
             }
 
-            File.Delete(cpath);
+            if (ChapterMode != ChapterModes.File)
+            {
+                File.Delete(cpath);
+            }
+
             File.Delete(workDir + "\\" + newFileName);
             File.Move(workDir + "\\" + newFileName2, workDir + "\\" + newFileName);
 

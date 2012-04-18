@@ -35,15 +35,14 @@
             this.openMKVdlg = new System.Windows.Forms.OpenFileDialog();
             this.bwCheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.ttInfo = new System.Windows.Forms.ToolTip(this.components);
-            this.pnlUIMode = new System.Windows.Forms.Panel();
-            this.lblUIMode = new System.Windows.Forms.Label();
-            this.rbtnExtractChapters = new System.Windows.Forms.RadioButton();
-            this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
+            this.odlgChooseChapterFile = new System.Windows.Forms.OpenFileDialog();
             this.tabControl = new Dotnetrix.Samples.CSharp.TabControl();
             this.tpSettings = new System.Windows.Forms.TabPage();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.pnlSettings = new System.Windows.Forms.Panel();
             this.lblSettings = new System.Windows.Forms.Label();
+            this.pnlUIMode = new System.Windows.Forms.Panel();
+            this.lblUIMode = new System.Windows.Forms.Label();
             this.pnlModeChange = new System.Windows.Forms.Panel();
             this.btnSwitch = new System.Windows.Forms.Button();
             this.lblMode = new System.Windows.Forms.Label();
@@ -64,6 +63,10 @@
             this.lblVersion = new System.Windows.Forms.Label();
             this.cboxOverwrite = new System.Windows.Forms.CheckBox();
             this.lblTutorial = new System.Windows.Forms.Label();
+            this.pnlChapterFile = new System.Windows.Forms.Panel();
+            this.lblFileLocation = new System.Windows.Forms.Label();
+            this.btnBrowse = new System.Windows.Forms.Button();
+            this.txtChapterFileLocation = new System.Windows.Forms.TextBox();
             this.tpQueue = new System.Windows.Forms.TabPage();
             this.btnExport = new System.Windows.Forms.Button();
             this.btnImport = new System.Windows.Forms.Button();
@@ -74,22 +77,25 @@
             this.tpAdvSettings = new System.Windows.Forms.TabPage();
             this.grpboxChapterFile = new System.Windows.Forms.GroupBox();
             this.btnChapterFormat = new System.Windows.Forms.Button();
+            this.rbtnExtractChapters = new System.Windows.Forms.RadioButton();
             this.rbtnGenerateNew = new System.Windows.Forms.RadioButton();
+            this.chkboxOutputChapterfile = new System.Windows.Forms.CheckBox();
             this.grpboxMKVHasChapters = new System.Windows.Forms.GroupBox();
             this.rbtnDoNothing = new System.Windows.Forms.RadioButton();
             this.rbtnRemoveThem = new System.Windows.Forms.RadioButton();
             this.rbtnReplaceThem = new System.Windows.Forms.RadioButton();
             this.progressBar = new WinForms.Controls.ProgressBarWithPercentage();
             this.contextMenu.SuspendLayout();
-            this.pnlUIMode.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.tpSettings.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.pnlSettings.SuspendLayout();
+            this.pnlUIMode.SuspendLayout();
             this.pnlModeChange.SuspendLayout();
             this.pnlInterval.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbarInterval)).BeginInit();
             this.pnlChapterDB.SuspendLayout();
+            this.pnlChapterFile.SuspendLayout();
             this.tpQueue.SuspendLayout();
             this.tpAdvSettings.SuspendLayout();
             this.grpboxChapterFile.SuspendLayout();
@@ -121,58 +127,9 @@
             this.bwCheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwCheckUpdates_DoWork);
             this.bwCheckUpdates.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bwCheckUpdates_RunWorkerCompleted);
             // 
-            // pnlUIMode
+            // odlgChooseChapterFile
             // 
-            this.pnlUIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.pnlUIMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlUIMode.Controls.Add(this.lblUIMode);
-            this.pnlUIMode.Location = new System.Drawing.Point(58, 144);
-            this.pnlUIMode.Name = "pnlUIMode";
-            this.pnlUIMode.Size = new System.Drawing.Size(93, 18);
-            this.pnlUIMode.TabIndex = 35;
-            this.ttInfo.SetToolTip(this.pnlUIMode, "Switch");
-            // 
-            // lblUIMode
-            // 
-            this.lblUIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblUIMode.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblUIMode.Location = new System.Drawing.Point(3, 1);
-            this.lblUIMode.Name = "lblUIMode";
-            this.lblUIMode.Size = new System.Drawing.Size(86, 13);
-            this.lblUIMode.TabIndex = 34;
-            this.lblUIMode.Text = "Advanced Mode";
-            this.lblUIMode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ttInfo.SetToolTip(this.lblUIMode, "Switch mode");
-            this.lblUIMode.Click += new System.EventHandler(this.lblUIMode_Click);
-            this.lblUIMode.MouseEnter += new System.EventHandler(this.MouseEnter_ToHand);
-            this.lblUIMode.MouseLeave += new System.EventHandler(this.MouseLeave_ToDefault);
-            // 
-            // rbtnExtractChapters
-            // 
-            this.rbtnExtractChapters.AutoSize = true;
-            this.rbtnExtractChapters.Enabled = false;
-            this.rbtnExtractChapters.Location = new System.Drawing.Point(36, 60);
-            this.rbtnExtractChapters.Name = "rbtnExtractChapters";
-            this.rbtnExtractChapters.Size = new System.Drawing.Size(181, 17);
-            this.rbtnExtractChapters.TabIndex = 2;
-            this.rbtnExtractChapters.Text = "Extract chapters from the mkv\'s";
-            this.ttInfo.SetToolTip(this.rbtnExtractChapters, "If the mkv has chapters, they will get extracted.\r\nOtherwise, nothing will be don" +
-        "e.");
-            this.rbtnExtractChapters.UseVisualStyleBackColor = true;
-            // 
-            // chkboxOutputChapterfile
-            // 
-            this.chkboxOutputChapterfile.AutoSize = true;
-            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 23);
-            this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
-            this.chkboxOutputChapterfile.Size = new System.Drawing.Size(265, 17);
-            this.chkboxOutputChapterfile.TabIndex = 0;
-            this.chkboxOutputChapterfile.Text = "Only output chapter files in the mkvs\' directories";
-            this.ttInfo.SetToolTip(this.chkboxOutputChapterfile, "If this is checked, MKV Chapterizer will output a\r\nfile called \"chapters\" in the " +
-        "directory of each mkv.\r\nThis file can later be used to merge manually with\r\nmkvm" +
-        "erge.");
-            this.chkboxOutputChapterfile.UseVisualStyleBackColor = true;
-            this.chkboxOutputChapterfile.CheckedChanged += new System.EventHandler(this.chkboxOutputChapterfile_CheckedChanged);
+            this.odlgChooseChapterFile.Title = "Please choose a chapter file";
             // 
             // tabControl
             // 
@@ -213,6 +170,7 @@
             this.pnlMain.Controls.Add(this.lblVersion);
             this.pnlMain.Controls.Add(this.cboxOverwrite);
             this.pnlMain.Controls.Add(this.lblTutorial);
+            this.pnlMain.Controls.Add(this.pnlChapterFile);
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMain.Location = new System.Drawing.Point(3, 3);
             this.pnlMain.Name = "pnlMain";
@@ -242,6 +200,32 @@
             this.lblSettings.Click += new System.EventHandler(this.pnlSettings_Click);
             this.lblSettings.MouseEnter += new System.EventHandler(this.MouseEnter_ToHand);
             this.lblSettings.MouseLeave += new System.EventHandler(this.MouseLeave_ToDefault);
+            // 
+            // pnlUIMode
+            // 
+            this.pnlUIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlUIMode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlUIMode.Controls.Add(this.lblUIMode);
+            this.pnlUIMode.Location = new System.Drawing.Point(58, 144);
+            this.pnlUIMode.Name = "pnlUIMode";
+            this.pnlUIMode.Size = new System.Drawing.Size(93, 18);
+            this.pnlUIMode.TabIndex = 35;
+            this.ttInfo.SetToolTip(this.pnlUIMode, "Switch");
+            // 
+            // lblUIMode
+            // 
+            this.lblUIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblUIMode.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.lblUIMode.Location = new System.Drawing.Point(3, 1);
+            this.lblUIMode.Name = "lblUIMode";
+            this.lblUIMode.Size = new System.Drawing.Size(86, 13);
+            this.lblUIMode.TabIndex = 34;
+            this.lblUIMode.Text = "Advanced Mode";
+            this.lblUIMode.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ttInfo.SetToolTip(this.lblUIMode, "Switch mode");
+            this.lblUIMode.Click += new System.EventHandler(this.lblUIMode_Click);
+            this.lblUIMode.MouseEnter += new System.EventHandler(this.MouseEnter_ToHand);
+            this.lblUIMode.MouseLeave += new System.EventHandler(this.MouseLeave_ToDefault);
             // 
             // pnlModeChange
             // 
@@ -284,7 +268,7 @@
             // 
             this.lblModeValue.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblModeValue.AutoSize = true;
-            this.lblModeValue.Location = new System.Drawing.Point(52, 6);
+            this.lblModeValue.Location = new System.Drawing.Point(46, 6);
             this.lblModeValue.Name = "lblModeValue";
             this.lblModeValue.Size = new System.Drawing.Size(44, 13);
             this.lblModeValue.TabIndex = 30;
@@ -490,6 +474,49 @@
             this.lblTutorial.TabIndex = 24;
             this.lblTutorial.Text = "Start by either dropping a MKV file on me or switching to advanced mode";
             // 
+            // pnlChapterFile
+            // 
+            this.pnlChapterFile.Controls.Add(this.lblFileLocation);
+            this.pnlChapterFile.Controls.Add(this.btnBrowse);
+            this.pnlChapterFile.Controls.Add(this.txtChapterFileLocation);
+            this.pnlChapterFile.Location = new System.Drawing.Point(0, 0);
+            this.pnlChapterFile.Name = "pnlChapterFile";
+            this.pnlChapterFile.Size = new System.Drawing.Size(431, 71);
+            this.pnlChapterFile.TabIndex = 29;
+            this.pnlChapterFile.Visible = false;
+            // 
+            // lblFileLocation
+            // 
+            this.lblFileLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblFileLocation.AutoSize = true;
+            this.lblFileLocation.Location = new System.Drawing.Point(12, 17);
+            this.lblFileLocation.Name = "lblFileLocation";
+            this.lblFileLocation.Size = new System.Drawing.Size(196, 13);
+            this.lblFileLocation.TabIndex = 2;
+            this.lblFileLocation.Text = "Choose the location of the chapter file:";
+            // 
+            // btnBrowse
+            // 
+            this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowse.Location = new System.Drawing.Point(396, 31);
+            this.btnBrowse.Name = "btnBrowse";
+            this.btnBrowse.Size = new System.Drawing.Size(30, 23);
+            this.btnBrowse.TabIndex = 1;
+            this.btnBrowse.Text = "...";
+            this.btnBrowse.UseVisualStyleBackColor = true;
+            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
+            // 
+            // txtChapterFileLocation
+            // 
+            this.txtChapterFileLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtChapterFileLocation.Location = new System.Drawing.Point(15, 33);
+            this.txtChapterFileLocation.Name = "txtChapterFileLocation";
+            this.txtChapterFileLocation.Size = new System.Drawing.Size(375, 20);
+            this.txtChapterFileLocation.TabIndex = 0;
+            // 
             // tpQueue
             // 
             this.tpQueue.Controls.Add(this.btnExport);
@@ -618,6 +645,19 @@
             this.btnChapterFormat.UseVisualStyleBackColor = true;
             this.btnChapterFormat.Click += new System.EventHandler(this.btnChapterFormat_Click);
             // 
+            // rbtnExtractChapters
+            // 
+            this.rbtnExtractChapters.AutoSize = true;
+            this.rbtnExtractChapters.Enabled = false;
+            this.rbtnExtractChapters.Location = new System.Drawing.Point(36, 60);
+            this.rbtnExtractChapters.Name = "rbtnExtractChapters";
+            this.rbtnExtractChapters.Size = new System.Drawing.Size(181, 17);
+            this.rbtnExtractChapters.TabIndex = 2;
+            this.rbtnExtractChapters.Text = "Extract chapters from the mkv\'s";
+            this.ttInfo.SetToolTip(this.rbtnExtractChapters, "If the mkv has chapters, they will get extracted.\r\nOtherwise, nothing will be don" +
+        "e.");
+            this.rbtnExtractChapters.UseVisualStyleBackColor = true;
+            // 
             // rbtnGenerateNew
             // 
             this.rbtnGenerateNew.AutoSize = true;
@@ -630,6 +670,20 @@
             this.rbtnGenerateNew.TabStop = true;
             this.rbtnGenerateNew.Text = "Generate the chapter files";
             this.rbtnGenerateNew.UseVisualStyleBackColor = true;
+            // 
+            // chkboxOutputChapterfile
+            // 
+            this.chkboxOutputChapterfile.AutoSize = true;
+            this.chkboxOutputChapterfile.Location = new System.Drawing.Point(17, 23);
+            this.chkboxOutputChapterfile.Name = "chkboxOutputChapterfile";
+            this.chkboxOutputChapterfile.Size = new System.Drawing.Size(265, 17);
+            this.chkboxOutputChapterfile.TabIndex = 0;
+            this.chkboxOutputChapterfile.Text = "Only output chapter files in the mkvs\' directories";
+            this.ttInfo.SetToolTip(this.chkboxOutputChapterfile, "If this is checked, MKV Chapterizer will output a\r\nfile called \"chapters\" in the " +
+        "directory of each mkv.\r\nThis file can later be used to merge manually with\r\nmkvm" +
+        "erge.");
+            this.chkboxOutputChapterfile.UseVisualStyleBackColor = true;
+            this.chkboxOutputChapterfile.CheckedChanged += new System.EventHandler(this.chkboxOutputChapterfile_CheckedChanged);
             // 
             // grpboxMKVHasChapters
             // 
@@ -711,13 +765,13 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MKVC_Closing);
             this.Load += new System.EventHandler(this.MKVC_Load);
             this.contextMenu.ResumeLayout(false);
-            this.pnlUIMode.ResumeLayout(false);
             this.tabControl.ResumeLayout(false);
             this.tpSettings.ResumeLayout(false);
             this.pnlMain.ResumeLayout(false);
             this.pnlMain.PerformLayout();
             this.pnlSettings.ResumeLayout(false);
             this.pnlSettings.PerformLayout();
+            this.pnlUIMode.ResumeLayout(false);
             this.pnlModeChange.ResumeLayout(false);
             this.pnlModeChange.PerformLayout();
             this.pnlInterval.ResumeLayout(false);
@@ -725,6 +779,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.tbarInterval)).EndInit();
             this.pnlChapterDB.ResumeLayout(false);
             this.pnlChapterDB.PerformLayout();
+            this.pnlChapterFile.ResumeLayout(false);
+            this.pnlChapterFile.PerformLayout();
             this.tpQueue.ResumeLayout(false);
             this.tpAdvSettings.ResumeLayout(false);
             this.grpboxChapterFile.ResumeLayout(false);
@@ -787,6 +843,11 @@
         private System.Windows.Forms.RadioButton rbtnExtractChapters;
         private System.Windows.Forms.RadioButton rbtnGenerateNew;
         private System.Windows.Forms.Button btnChapterFormat;
+        private System.Windows.Forms.Panel pnlChapterFile;
+        private System.Windows.Forms.Label lblFileLocation;
+        private System.Windows.Forms.Button btnBrowse;
+        private System.Windows.Forms.TextBox txtChapterFileLocation;
+        private System.Windows.Forms.OpenFileDialog odlgChooseChapterFile;
     }
 }
 
