@@ -154,5 +154,41 @@ namespace MKV_Chapterizer.Properties {
                 this["chapterPattern"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool rememberOverwrite {
+            get {
+                return ((bool)(this["rememberOverwrite"]));
+            }
+            set {
+                this["rememberOverwrite"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool overwrite {
+            get {
+                return ((bool)(this["overwrite"]));
+            }
+            set {
+                this["overwrite"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Simple")]
+        public string defaultMode {
+            get {
+                return ((string)(this["defaultMode"]));
+            }
+            set {
+                this["defaultMode"] = value;
+            }
+        }
     }
 }

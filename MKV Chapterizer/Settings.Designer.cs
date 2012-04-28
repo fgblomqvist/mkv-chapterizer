@@ -51,12 +51,15 @@
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnRestoreWarnings = new System.Windows.Forms.Button();
             this.chkboxAutoUpdate = new System.Windows.Forms.CheckBox();
+            this.chkboxRememberOverwrite = new System.Windows.Forms.CheckBox();
+            this.lblDefaultMode = new System.Windows.Forms.Label();
+            this.cboxDefaultMode = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(245, 223);
+            this.btnOK.Location = new System.Drawing.Point(245, 280);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 2;
@@ -67,7 +70,7 @@
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Location = new System.Drawing.Point(326, 223);
+            this.btnCancel.Location = new System.Drawing.Point(326, 280);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
@@ -244,7 +247,7 @@
             // btnRestoreWarnings
             // 
             this.btnRestoreWarnings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRestoreWarnings.Location = new System.Drawing.Point(12, 223);
+            this.btnRestoreWarnings.Location = new System.Drawing.Point(12, 280);
             this.btnRestoreWarnings.Name = "btnRestoreWarnings";
             this.btnRestoreWarnings.Size = new System.Drawing.Size(106, 23);
             this.btnRestoreWarnings.TabIndex = 23;
@@ -262,11 +265,45 @@
             this.chkboxAutoUpdate.Text = "Auto-search for updates on Launch";
             this.chkboxAutoUpdate.UseVisualStyleBackColor = true;
             // 
+            // chkboxRememberOverwrite
+            // 
+            this.chkboxRememberOverwrite.AutoSize = true;
+            this.chkboxRememberOverwrite.Location = new System.Drawing.Point(229, 235);
+            this.chkboxRememberOverwrite.Name = "chkboxRememberOverwrite";
+            this.chkboxRememberOverwrite.Size = new System.Drawing.Size(176, 17);
+            this.chkboxRememberOverwrite.TabIndex = 26;
+            this.chkboxRememberOverwrite.Text = "Remember \"Overwrite\" setting";
+            this.chkboxRememberOverwrite.UseVisualStyleBackColor = true;
+            // 
+            // lblDefaultMode
+            // 
+            this.lblDefaultMode.AutoSize = true;
+            this.lblDefaultMode.Location = new System.Drawing.Point(12, 219);
+            this.lblDefaultMode.Name = "lblDefaultMode";
+            this.lblDefaultMode.Size = new System.Drawing.Size(75, 13);
+            this.lblDefaultMode.TabIndex = 27;
+            this.lblDefaultMode.Text = "Default mode:";
+            // 
+            // cboxDefaultMode
+            // 
+            this.cboxDefaultMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboxDefaultMode.FormattingEnabled = true;
+            this.cboxDefaultMode.Items.AddRange(new object[] {
+            "Simple",
+            "Advanced"});
+            this.cboxDefaultMode.Location = new System.Drawing.Point(12, 235);
+            this.cboxDefaultMode.Name = "cboxDefaultMode";
+            this.cboxDefaultMode.Size = new System.Drawing.Size(190, 21);
+            this.cboxDefaultMode.TabIndex = 28;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(431, 258);
+            this.ClientSize = new System.Drawing.Size(431, 315);
+            this.Controls.Add(this.cboxDefaultMode);
+            this.Controls.Add(this.lblDefaultMode);
+            this.Controls.Add(this.chkboxRememberOverwrite);
             this.Controls.Add(this.chkboxShowConsole);
             this.Controls.Add(this.chkboxAutoUpdate);
             this.Controls.Add(this.btnRestoreWarnings);
@@ -325,5 +362,8 @@
         private System.Windows.Forms.Button btnRestoreWarnings;
         private System.Windows.Forms.CheckBox chkboxAutoUpdate;
         private System.Windows.Forms.CheckBox chkboxShowConsole;
+        private System.Windows.Forms.CheckBox chkboxRememberOverwrite;
+        private System.Windows.Forms.Label lblDefaultMode;
+        private System.Windows.Forms.ComboBox cboxDefaultMode;
     }
 }

@@ -11,27 +11,15 @@ namespace MKV_Chapterizer
     {
         private ChapterDBAccess chapterDBAccess = new ChapterDBAccess();
         private BackgroundWorker bwSearch = new BackgroundWorker();
-        private string pMovieName;
-        private ChapterDBAccess.ChapterSet pChosenChapter;
+        private ChapterDBAccess.ChapterSet LoadedChapterSet;
 
         public ChapterDB()
         {
             InitializeComponent();
         }
 
-        public string MovieName
-        {
-            get { return pMovieName; }
-
-            set { pMovieName = value; }
-        }
-
-        public ChapterDBAccess.ChapterSet ChosenChapter
-        {
-            get { return pChosenChapter; }
-
-            set { pChosenChapter = value; }
-        }
+        public string MovieName { get; set; }
+        public ChapterDBAccess.ChapterSet ChosenChapter { get; set; }
 
         private void ChapterDB_Load(object sender, EventArgs e)
         {
@@ -86,6 +74,7 @@ namespace MKV_Chapterizer
 
         private void LoadChapters(ChapterDBAccess.ChapterSet chapterSet)
         {
+            LoadedChapterSet = chapterSet;
             lviewChapters.Items.Clear();
 
             foreach (ChapterDBAccess.Chapter chapter in chapterSet)
@@ -263,6 +252,34 @@ namespace MKV_Chapterizer
             {
                 lblSelected.Text = string.Format("You have selected {0} chapters", lviewChapters.Items.Count);
             }
+        }
+
+        private void useAsBaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lviewChapters.SelectedIndices.Count != 1)
+            {
+                MessageBox.Show("Only one chapter can be the base, neither more or less!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                LoadChapters(ReCalcBase(LoadedChapterSet, lviewChapters.SelectedIndices[0]));
+            }
+        }
+
+        private ChapterDBAccess.ChapterSet ReCalcBase(ChapterDBAccess.ChapterSet chapterSet, int index)
+        {
+            //Recalculate all the chapters times with the index chapter as base (00:00)
+            //Get the difference in time all chapters should be adjusted
+            TimeSpan diff = chapterSet.Chapters[index].Time;
+
+            //Then subtract that difference from all chapters
+            foreach (ChapterDBAccess.Chapter t in chapterSet.Chapters)
+            {
+                t.Time = t.Time.Subtract(diff);
+            }
+
+            //Return the modified chapterSet
+            return chapterSet;
         }
     }
 }

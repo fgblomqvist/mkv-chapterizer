@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.lblName = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
             this.txtboxSearchName = new System.Windows.Forms.TextBox();
@@ -42,6 +43,8 @@
             this.btnUse = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lblSelected = new System.Windows.Forms.Label();
+            this.cmenuBase = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.useAsBaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grpboxResults.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgViewResults)).BeginInit();
             this.grpboxChapters.SuspendLayout();
@@ -50,6 +53,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.cmenuBase.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblName
@@ -133,6 +137,7 @@
             this.lviewChapters.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderName,
             this.columnHeaderTime});
+            this.lviewChapters.ContextMenuStrip = this.cmenuBase;
             this.lviewChapters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lviewChapters.FullRowSelect = true;
             this.lviewChapters.Location = new System.Drawing.Point(3, 16);
@@ -219,6 +224,20 @@
             this.lblSelected.TabIndex = 4;
             this.lblSelected.Text = "You have selected 0 chapters";
             // 
+            // cmenuBase
+            // 
+            this.cmenuBase.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.useAsBaseToolStripMenuItem});
+            this.cmenuBase.Name = "cmenuBase";
+            this.cmenuBase.Size = new System.Drawing.Size(153, 48);
+            // 
+            // useAsBaseToolStripMenuItem
+            // 
+            this.useAsBaseToolStripMenuItem.Name = "useAsBaseToolStripMenuItem";
+            this.useAsBaseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.useAsBaseToolStripMenuItem.Text = "Use as base";
+            this.useAsBaseToolStripMenuItem.Click += new System.EventHandler(this.useAsBaseToolStripMenuItem_Click);
+            // 
             // ChapterDB
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -243,6 +262,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.cmenuBase.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -264,5 +284,7 @@
         private System.Windows.Forms.DataGridView dgViewResults;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label lblSelected;
+        private System.Windows.Forms.ContextMenuStrip cmenuBase;
+        private System.Windows.Forms.ToolStripMenuItem useAsBaseToolStripMenuItem;
     }
 }

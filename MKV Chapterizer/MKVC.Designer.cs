@@ -61,7 +61,7 @@
             this.lblStatus = new System.Windows.Forms.Label();
             this.btnMerge = new System.Windows.Forms.Button();
             this.lblVersion = new System.Windows.Forms.Label();
-            this.cboxOverwrite = new System.Windows.Forms.CheckBox();
+            this.chkboxOverwrite = new System.Windows.Forms.CheckBox();
             this.lblTutorial = new System.Windows.Forms.Label();
             this.pnlChapterFile = new System.Windows.Forms.Panel();
             this.lblFileLocation = new System.Windows.Forms.Label();
@@ -168,7 +168,7 @@
             this.pnlMain.Controls.Add(this.lblStatus);
             this.pnlMain.Controls.Add(this.btnMerge);
             this.pnlMain.Controls.Add(this.lblVersion);
-            this.pnlMain.Controls.Add(this.cboxOverwrite);
+            this.pnlMain.Controls.Add(this.chkboxOverwrite);
             this.pnlMain.Controls.Add(this.lblTutorial);
             this.pnlMain.Controls.Add(this.pnlChapterFile);
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -450,19 +450,20 @@
             this.lblVersion.MouseEnter += new System.EventHandler(this.MouseEnter_ToHand);
             this.lblVersion.MouseLeave += new System.EventHandler(this.MouseLeave_ToDefault);
             // 
-            // cboxOverwrite
+            // chkboxOverwrite
             // 
-            this.cboxOverwrite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cboxOverwrite.AutoSize = true;
-            this.cboxOverwrite.Checked = true;
-            this.cboxOverwrite.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cboxOverwrite.Enabled = false;
-            this.cboxOverwrite.Location = new System.Drawing.Point(315, 121);
-            this.cboxOverwrite.Name = "cboxOverwrite";
-            this.cboxOverwrite.Size = new System.Drawing.Size(111, 17);
-            this.cboxOverwrite.TabIndex = 22;
-            this.cboxOverwrite.Text = "Overwrite old file";
-            this.cboxOverwrite.UseVisualStyleBackColor = true;
+            this.chkboxOverwrite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkboxOverwrite.AutoSize = true;
+            this.chkboxOverwrite.Checked = true;
+            this.chkboxOverwrite.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkboxOverwrite.Enabled = false;
+            this.chkboxOverwrite.Location = new System.Drawing.Point(315, 121);
+            this.chkboxOverwrite.Name = "chkboxOverwrite";
+            this.chkboxOverwrite.Size = new System.Drawing.Size(111, 17);
+            this.chkboxOverwrite.TabIndex = 22;
+            this.chkboxOverwrite.Text = "Overwrite old file";
+            this.chkboxOverwrite.UseVisualStyleBackColor = true;
+            this.chkboxOverwrite.CheckedChanged += new System.EventHandler(this.cboxOverwrite_CheckedChanged);
             // 
             // lblTutorial
             // 
@@ -800,7 +801,7 @@
         private System.Windows.Forms.Label lblSettings;
         private System.Windows.Forms.Button btnMerge;
         private System.Windows.Forms.Label lblVersion;
-        private System.Windows.Forms.CheckBox cboxOverwrite;
+        private System.Windows.Forms.CheckBox chkboxOverwrite;
         private System.Windows.Forms.Label lblTutorial;
         private Dotnetrix.Samples.CSharp.TabControl tabControl;
         private System.Windows.Forms.TabPage tpSettings;

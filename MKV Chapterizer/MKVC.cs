@@ -147,7 +147,7 @@ namespace MKV_Chapterizer
                         lblChapterInterval.Enabled = true;
                         lblTrackbarValue.Enabled = true;
                         cboxUnit.Enabled = true;
-                        cboxOverwrite.Enabled = true;
+                        chkboxOverwrite.Enabled = true;
                         tbarInterval.Enabled = true;
                         btnMerge.Enabled = true;
                         pnlChapterDB.Enabled = true;
@@ -167,6 +167,8 @@ namespace MKV_Chapterizer
 
                         grpboxChapterFile.Enabled = true;
 
+                        cboxUnit.SelectedIndex = 1;
+
                         grpboxMKVHasChapters.Enabled = !chkboxOutputChapterfile.Checked;
                         ShowModeChange = (UIMode == UIModes.Simple);
 
@@ -180,7 +182,7 @@ namespace MKV_Chapterizer
                         WriteLog("Setting UI to await file drop");
                         tbarInterval.Enabled = false;
                         btnMerge.Enabled = false;
-                        cboxOverwrite.Enabled = false;
+                        chkboxOverwrite.Enabled = false;
 
                         lblNumOfChapters.Enabled = false;
                         lblChapterCount.Text = string.Empty;
@@ -216,7 +218,7 @@ namespace MKV_Chapterizer
                         lblChapterInterval.Enabled = false;
                         lblTrackbarValue.Enabled = false;
                         cboxUnit.Enabled = false;
-                        cboxOverwrite.Enabled = true;
+                        chkboxOverwrite.Enabled = true;
                         tbarInterval.Enabled = false;
                         btnMerge.Enabled = true;
 
@@ -239,7 +241,7 @@ namespace MKV_Chapterizer
 
                         tbarInterval.Enabled = false;
                         cboxUnit.Enabled = false;
-                        cboxOverwrite.Enabled = false;
+                        chkboxOverwrite.Enabled = false;
                         btnAdd.Enabled = false;
                         btnRemove.Enabled = false;
                         lboxFiles.Enabled = false;
@@ -284,7 +286,7 @@ namespace MKV_Chapterizer
                         tabControl.HideTabs = false;
                         lblChapterCount.Visible = false;
                         lblNumOfChapters.Visible = false;
-                        cboxOverwrite.Text = "Overwrite old files";
+                        chkboxOverwrite.Text = "Overwrite old files";
                         lblUIMode.Text = "Simple Mode";
 
                         break;
@@ -295,7 +297,7 @@ namespace MKV_Chapterizer
                         tabControl.HideTabs = true;
                         lblChapterCount.Visible = true;
                         lblNumOfChapters.Visible = true;
-                        cboxOverwrite.Text = "Overwrite old file";
+                        chkboxOverwrite.Text = "Overwrite old file";
                         lblUIMode.Text = "Advanced Mode";
 
                         //Navigate back to first tab in-case the user is on another tab
@@ -586,7 +588,7 @@ namespace MKV_Chapterizer
             }
 
             btnMerge.Enabled = true;
-            cboxOverwrite.Enabled = true;
+            chkboxOverwrite.Enabled = true;
         }
 
         private bool ChaptersExist(String file)
@@ -726,7 +728,7 @@ namespace MKV_Chapterizer
                     thechapterizer.ChapterMode = Chapterizer.ChapterModes.Interval;
                 }
 
-                thechapterizer.OverwriteOutput = cboxOverwrite.Checked;
+                thechapterizer.OverwriteOutput = chkboxOverwrite.Checked;
 
             }
             else if (btnMerge.Text == "Re-Chapterize")
@@ -747,7 +749,7 @@ namespace MKV_Chapterizer
                     thechapterizer.ChapterInterval = ConvertToSeconds(tbarInterval.Value, cboxUnit.Text);
                 }
 
-                thechapterizer.OverwriteOutput = cboxOverwrite.Checked;
+                thechapterizer.OverwriteOutput = chkboxOverwrite.Checked;
 
             }
             else if (btnMerge.Text == "De-Chapterize")
@@ -759,7 +761,7 @@ namespace MKV_Chapterizer
                 thechapterizer.Files = mkvList;
                 thechapterizer.ChaptersExistAction = 2;
                 thechapterizer.ChapterInterval = ConvertToSeconds(tbarInterval.Value, cboxUnit.Text);
-                thechapterizer.OverwriteOutput = cboxOverwrite.Checked;
+                thechapterizer.OverwriteOutput = chkboxOverwrite.Checked;
 
             }
             else if (btnMerge.Text == "Cancel")
@@ -873,8 +875,17 @@ namespace MKV_Chapterizer
             WriteLog(string.Format("Screen scale multiplier = {0}", screenMultiplier));
 
             //Set to default mode
-            UIMode = UIModes.Simple;
-            UIStatus = UIStatuses.AwaitFileDrop;
+            switch (Properties.Settings.Default.defaultMode)
+            {
+                case "Simple":
+                    UIMode = UIModes.Simple;
+                    UIStatus = UIStatuses.AwaitFileDrop;
+                    break;
+                case "Advanced":
+                    UIMode = UIModes.Advanced;
+                    UIStatus = UIStatuses.Input;
+                    break;
+            }
 
             tbarInterval.Value = Properties.Settings.Default.defChapInterval;
 
@@ -885,6 +896,11 @@ namespace MKV_Chapterizer
             if (String.IsNullOrWhiteSpace(Properties.Settings.Default.chapterPattern))
             {
                 Properties.Settings.Default.chapterPattern = string.Join(((char)0).ToString(), "CHAPTER%I=%T" + Environment.NewLine + "CHAPTER%INAME=%N", "%L");
+            }
+
+            if (Properties.Settings.Default.rememberOverwrite)
+            {
+                chkboxOverwrite.Checked = Properties.Settings.Default.overwrite;
             }
 
         }
@@ -1390,6 +1406,15 @@ namespace MKV_Chapterizer
             if (odlgChooseChapterFile.ShowDialog() == DialogResult.OK)
             {
                 txtChapterFileLocation.Text = odlgChooseChapterFile.FileName;
+            }
+        }
+
+        private void cboxOverwrite_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Properties.Settings.Default.rememberOverwrite)
+            {
+                Properties.Settings.Default.overwrite = chkboxOverwrite.Checked;
+                Properties.Settings.Default.Save();
             }
         }
     }

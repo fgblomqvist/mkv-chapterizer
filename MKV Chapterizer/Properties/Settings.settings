@@ -35,5 +35,14 @@
     <Setting Name="chapterPattern" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="rememberOverwrite" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="overwrite" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="defaultMode" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Simple</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

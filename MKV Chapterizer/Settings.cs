@@ -40,6 +40,8 @@ namespace MKV_Chapterizer
             Properties.Settings.Default.defChapInterval = Int32.Parse(txtboxDefaultInterval.Text);
             Properties.Settings.Default.customChapterName = txtChapterName.Text;
             Properties.Settings.Default.showConsole = chkboxShowConsole.Checked;
+            Properties.Settings.Default.rememberOverwrite = chkboxRememberOverwrite.Checked;
+            Properties.Settings.Default.defaultMode = cboxDefaultMode.Text;
             Properties.Settings.Default.Save();
 
             DialogResult = DialogResult.OK;
@@ -57,6 +59,8 @@ namespace MKV_Chapterizer
             chkUseLocalMKVMerge.Checked = Properties.Settings.Default.customMKVMerge;
             txtMKVPath.Text = Properties.Settings.Default.customMKVMergePath;
             chkboxShowConsole.Checked = Properties.Settings.Default.showConsole;
+            chkboxRememberOverwrite.Checked = Properties.Settings.Default.rememberOverwrite;
+            cboxDefaultMode.Text = Properties.Settings.Default.defaultMode;
 
             if (!chkUseLocalMKVMerge.Checked)
             {
