@@ -463,7 +463,7 @@ namespace MKV_Chapterizer
                 //check if it has chapters
                 if (ChaptersExist(s))
                 {
-                    //the file has chapters, extract them
+                    //the mkv has chapters, extract them
                     string path = ExtractChapters(s);
 
                     //Format it right before you output it to the mkv's folder
