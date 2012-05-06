@@ -168,6 +168,32 @@ namespace MKV_Chapterizer
             else
             {
                 //User has selected only a few of the chapters of the selected set
+                //Check if he already set a chapter as base
+                if (lviewChapters.SelectedItems[0].SubItems[1].Text != "00:00:00")
+                {
+                    //He hasn't (I guess), prompt him
+                    DialogResult result = MessageBox.Show("You have selected only a part of the chapters,\r\ndo you want to recalculate their times so the earliest selected is the base (00:00:00)? " +
+                                                          "\r\n\r\nTo preview how it will look, click cancel then right click the chapter you want as base and select \"Use as base\".",
+                                                          "Part selection", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        //Save all selected indexes
+                        int[] selectedIndexes = new int[lviewChapters.SelectedIndices.Count];
+                        lviewChapters.SelectedIndices.CopyTo(selectedIndexes, 0);
+
+                        LoadChapters(ReCalcBase(LoadedChapterSet, lviewChapters.SelectedIndices[0]));
+
+                        //Now selected all the previously selected items
+                        foreach(int i in selectedIndexes)
+                        {
+                            lviewChapters.Items[i].Selected = true;
+                        }
+                    }
+                    else if(result == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                }
                 ChapterDBAccess.ChapterSet newSet = new ChapterDBAccess.ChapterSet();
                 foreach(ListViewItem item in lviewChapters.SelectedItems)
                 {
