@@ -1284,11 +1284,9 @@ namespace MKV_Chapterizer
             }
 
             //Ask if we should scan recursively
-            if (
-                MessageBox.Show("Do you want to scan recursively?", "", MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Do you want to scan recursively?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                IEnumerable<string> mkvs = FindMKV(dlg.SelectedPath, new List<string>());
+                List<string> mkvs = FindMKV(dlg.SelectedPath, new List<string>());
                 foreach (string file in mkvs)
                 {
                     lboxFiles.Items.Add(file);
@@ -1306,18 +1304,16 @@ namespace MKV_Chapterizer
             }
         }
 
-        private IEnumerable<string> FindMKV(string selectedPath, List<string> ongoingList)
+        private List<string> FindMKV(string selectedPath, List<string> ongoingList)
         {
             try
             {
+                //First scan this folder
+                ongoingList.AddRange(Directory.GetFiles(selectedPath, "*.mkv"));
+
+                //Then scan all the other folders
                 foreach (string d in Directory.GetDirectories(selectedPath))
                 {
-                    if (d.EndsWith("Converted"))
-                    {
-                        continue;
-                    }
-
-                    ongoingList.AddRange(Directory.GetFiles(d).Where(f => Path.GetExtension(f) == ".mkv"));
                     FindMKV(d, ongoingList);
                 }
             }
